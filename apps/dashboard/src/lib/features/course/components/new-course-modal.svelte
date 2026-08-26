@@ -8,54 +8,12 @@
   import { InputField } from '@cio/ui/custom/input-field';
   import * as Dialog from '@cio/ui/base/dialog';
   import { Button } from '@cio/ui/base/button';
-  import * as Field from '@cio/ui/base/field';
-  import { RadioOptionCardGroup } from '@cio/ui/custom/radio-option-card';
   import { t } from '$lib/utils/functions/translations';
-  import type { TCourseType } from '@cio/db/types';
+  import { snackbar } from '$features/ui/snackbar/store';
   import { courseApi } from '../api';
+  import { CELLULOPLAST_AUTHORING, isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
 
-  let step = $state(0);
-
-  const options = [
-    {
-      id: 'self-paced',
-      title: $t('new_course_modal.self_paced_label'),
-      subtitle: $t('new_course_modal.self_paced_subtitle'),
-      type: 'SELF_PACED' as TCourseType,
-      isDisabled: false
-    },
-    {
-      id: 'live-class',
-      title: $t('new_course_modal.live_class_label'),
-      subtitle: $t('new_course_modal.live_class_subtitle'),
-      type: 'LIVE_CLASS' as TCourseType,
-      isDisabled: false
-    },
-    {
-      id: 'compliance',
-      title: $t('new_course_modal.compliance_label'),
-      subtitle: $t('new_course_modal.compliance_subtitle'),
-      type: 'COMPLIANCE' as TCourseType,
-      isDisabled: false
-    },
-    {
-      id: 'public',
-      title: $t('new_course_modal.public_label'),
-      subtitle: $t('new_course_modal.public_subtitle'),
-      type: 'PUBLIC' as TCourseType,
-      isDisabled: false
-    }
-  ];
-  const courseTypeOptionsForGroup = options.map((o) => ({
-    id: o.id,
-    title: o.title,
-    description: o.subtitle,
-    value: o.type
-  }));
-
-  let type = $state(options[0].type);
-
-  function onClose(redirectTo) {
+  function onClose(redirectTo: string) {
     goto(redirectTo);
 
     createCourseModal.update(() => ({
@@ -69,21 +27,32 @@
   }
 
   async function createCourse() {
-    await courseApi.create({
-      title: $createCourseModal.title,
-      description: $createCourseModal.description,
-      type: type
-    });
+    await courseApi.create(
+      {
+        title: $createCourseModal.title,
+        description: $createCourseModal.description,
+        type: CELLULOPLAST_AUTHORING.defaultCourseType
+      },
+      async (courseId) => {
+        await courseApi.update(
+          courseId,
+          {
+            certificate: {
+              isDownloadable: CELLULOPLAST_AUTHORING.defaultCertificate.isDownloadable,
+              threshold: CELLULOPLAST_AUTHORING.defaultCertificate.threshold
+            }
+          },
+          { showSuccessToast: false }
+        );
+
+        snackbar.success('celluloplast_authoring.created');
+        onClose(CELLULOPLAST_AUTHORING.afterCreatePath(courseId));
+      }
+    );
   }
 
   let open = $derived(new URLSearchParams(page.url.search).get('create') === 'true');
 </script>
-
-{#snippet course_type_selector()}
-  <Field.Description>{$t('courses.new_course_modal.type_selector_title')}</Field.Description>
-
-  <RadioOptionCardGroup options={courseTypeOptionsForGroup} bind:value={type} class="grid-cols-1 md:grid-cols-2" />
-{/snippet}
 
 <Dialog.Root
   bind:open
@@ -91,55 +60,39 @@
     if (!isOpen) onClose(page.url.pathname);
   }}
 >
-  <Dialog.Content class="mx-auto w-4/5 max-w-2xl md:w-2/5 md:min-w-[600px]">
+  <Dialog.Content class="mx-auto w-4/5 max-w-lg md:w-2/5">
     <Dialog.Header>
-      <Dialog.Title>{$t('courses.new_course_modal.heading')}</Dialog.Title>
+      <Dialog.Title>{$t('celluloplast_authoring.new_training_title')}</Dialog.Title>
+      <Dialog.Description>{$t('celluloplast_authoring.new_training_subtitle')}</Dialog.Description>
     </Dialog.Header>
-    {#if step === 0}
-      <div class="my-4 space-y-4">
-        {@render course_type_selector()}
 
-        <Dialog.Footer>
-          <Button onclick={() => (step = 1)} disabled={!type}>
-            {$t('courses.new_course_modal.next')}
-          </Button>
-        </Dialog.Footer>
-      </div>
-    {:else}
-      <form onsubmit={preventDefault(createCourse)}>
-        <div class="mb-4 flex items-end space-x-2">
-          <InputField
-            label={$t('courses.new_course_modal.course_name')}
-            bind:value={$createCourseModal.title}
-            placeholder={$t('courses.new_course_modal.course_name_placeholder')}
-            className="w-full"
-            isRequired={true}
-            errorMessage={courseApi.errors.title}
-            autoComplete={false}
-          />
-        </div>
+    <form onsubmit={preventDefault(createCourse)} class="space-y-4">
+      <InputField
+        label={$t('celluloplast_authoring.name_label')}
+        bind:value={$createCourseModal.title}
+        placeholder={$t('celluloplast_authoring.name_placeholder')}
+        className="w-full"
+        isRequired={true}
+        errorMessage={courseApi.errors.title}
+        autoComplete={false}
+      />
 
-        <TextareaField
-          label={$t('courses.new_course_modal.short_description')}
-          bind:value={$createCourseModal.description}
-          rows={4}
-          placeholder={$t('courses.new_course_modal.short_description_placeholder')}
-          className="mb-4"
-          isRequired={true}
-          errorMessage={courseApi.errors.description}
-          isAIEnabled={true}
-          initAIPrompt="Write a 30 word description for a course titled: {$createCourseModal.title}"
-        />
+      <TextareaField
+        label={$t('celluloplast_authoring.description_label')}
+        bind:value={$createCourseModal.description}
+        rows={4}
+        placeholder={$t('celluloplast_authoring.description_placeholder')}
+        className="mb-2"
+        isRequired={true}
+        errorMessage={courseApi.errors.description}
+        isAIEnabled={isCelluloplastAiUiEnabled()}
+      />
 
-        <Dialog.Footer>
-          <Button variant="outline" onclick={() => (step = 0)}>
-            {$t('courses.new_course_modal.back')}
-          </Button>
-          <Button type="submit" disabled={courseApi.isLoading} loading={courseApi.isLoading}>
-            {$t('courses.new_course_modal.button')}
-          </Button>
-        </Dialog.Footer>
-      </form>
-    {/if}
+      <Dialog.Footer>
+        <Button type="submit" disabled={courseApi.isLoading} loading={courseApi.isLoading}>
+          {$t('celluloplast_authoring.create_button')}
+        </Button>
+      </Dialog.Footer>
+    </form>
   </Dialog.Content>
 </Dialog.Root>

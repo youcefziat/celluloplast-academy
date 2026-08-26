@@ -17,6 +17,7 @@ type CourseSettings = {
   callout: TCourseCallout | null;
   welcomeEmailMessage: string;
   certificate: {
+    isDownloadable: boolean;
     deadline: string | null;
     threshold: number;
     requiredExerciseId: string | null;
@@ -44,6 +45,7 @@ export const settings = writable<CourseSettings>({
   callout: null,
   welcomeEmailMessage: '',
   certificate: {
+    isDownloadable: true,
     deadline: null,
     threshold: 100,
     requiredExerciseId: null,

@@ -41,7 +41,7 @@
       />
       <div class="flex-1">
         <Field.Label for="certificate-downloadable" class="text-gray-600">
-          {$t('course.navItem.certificates.allow')}
+          {$t('celluloplast_authoring.certificate_toggle')}
         </Field.Label>
       </div>
     </Field.Field>

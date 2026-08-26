@@ -52,7 +52,7 @@ export async function notifyCourseExerciseService(courseId: string, exerciseId: 
     quizUrl = `${baseUrl}/courses/${courseId}/exercises/${exerciseId}`;
   }
 
-  const orgName = orgData.orgName || 'ClassroomIO';
+  const orgName = orgData.orgName || 'Celluloplast Academy';
 
   const jobId = await enqueueNotifyCourseExercise({
     courseId,
@@ -60,7 +60,7 @@ export async function notifyCourseExerciseService(courseId: string, exerciseId: 
     courseName: course.title,
     orgName,
     organizationId: orgData.orgId,
-    fromName: buildEmailFromName(`${orgName} (via ClassroomIO.com)`),
+    fromName: buildEmailFromName(`${orgName} (via Celluloplast Academy)`),
     quizUrl,
     branding: buildEmailBranding({
       name: orgData.orgName,

@@ -2,7 +2,6 @@
   import type { Snippet } from 'svelte';
   import { page } from '$app/state';
   import { resolve } from '$app/paths';
-  import * as Avatar from '@cio/ui/base/avatar';
   import { t } from '$lib/utils/functions/translations';
   import { currentOrg } from '$lib/utils/store/org';
   import { GoogleIconColored } from '$features/ui/icons';
@@ -14,6 +13,7 @@
   import { preventDefault } from '$lib/utils/functions/svelte';
   import { ROUTE } from '$lib/utils/constants/routes';
   import { DotPattern } from '@cio/ui/custom/animation/dot-pattern';
+  import { APP_DISPLAY_NAME, DEFAULT_LOGO_PATH, appBrandFallback } from '$lib/celluloplast/brand';
 
   interface Props {
     isLogin?: boolean;
@@ -83,18 +83,15 @@
   <Card.Root class="ui:w-full relative z-10 max-w-[400px] shadow-sm">
     {#if !showOnlyContent || showLogo}
       <Card.Header class="ui:flex ui:flex-col ui:items-center ui:gap-4">
-        <a
-          href={resolve(ROUTE.HOME, {})}
-          class="ui:inline-flex"
-          aria-label={$currentOrg.name ? $currentOrg.name : 'ClassroomIO'}
-        >
-          <Avatar.Root>
-            <Avatar.Image
-              src={$currentOrg.avatarUrl ? $currentOrg.avatarUrl : '/logo-192.png'}
-              alt={$currentOrg.name ? $currentOrg.name : 'ClassroomIO'}
-            />
-            <Avatar.Fallback>{$currentOrg.name ? $currentOrg.name : 'ClassroomIO'}</Avatar.Fallback>
-          </Avatar.Root>
+        <a href={resolve(ROUTE.HOME, {})} class="ui:inline-flex" aria-label={appBrandFallback($currentOrg.name)}>
+          <img
+            src={$currentOrg.avatarUrl ? $currentOrg.avatarUrl : DEFAULT_LOGO_PATH}
+            alt={appBrandFallback($currentOrg.name)}
+            class="h-24 w-24 rounded-xl bg-white object-contain p-1"
+            width="96"
+            height="96"
+            decoding="async"
+          />
         </a>
 
         {#if !showOnlyContent}
@@ -103,8 +100,11 @@
               {isLogin ? $t('login.welcome') : $t('login.create_account')}
             </Card.Title>
           </a>
+          <p class="ui:text-center ui:text-sm ui:font-medium ui:tracking-wide ui:text-muted-foreground">
+            {APP_DISPLAY_NAME}
+          </p>
           {#if isLogin}
-            <Card.Description class="ui:text-center">Sign in to continue</Card.Description>
+            <Card.Description class="ui:text-center">{$t('login.sign_in_to_continue')}</Card.Description>
           {/if}
         {/if}
       </Card.Header>

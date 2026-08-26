@@ -7,8 +7,10 @@
 
 import { readdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const DIST = new URL('../dist/', import.meta.url).pathname;
+// `URL.pathname` yields `/C:/...` on Windows, which `join` then turns into `C:\C:\...`.
+const DIST = fileURLToPath(new URL('../dist/', import.meta.url));
 
 const PATTERNS = [
   // `../../../node_modules/@cio/utils/dist/validation/course/index.js`

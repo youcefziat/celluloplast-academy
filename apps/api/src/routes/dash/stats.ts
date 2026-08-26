@@ -3,16 +3,23 @@ import {
   ZDashAnalyticsRange,
   ZDashComplianceOverview,
   ZDashCourseFunnel,
+  ZDashLearningOverview,
   ZDashStats,
   ZIngestBatch,
   ZLoginActivity
 } from '@cio/utils/validation/dash';
 import { authMiddleware } from '@api/middlewares/auth';
-import { getCurrentUserLoginStreak, getOrganisationAnalytics, getStudentLoginActivity } from '@api/services/dash';
+import {
+  getCurrentUserLoginStreak,
+  getOrganisationAnalytics,
+  getOrgLearningOverview,
+  getStudentLoginActivity
+} from '@api/services/dash';
 import { getOrgComplianceOverview } from '@api/services/course/compliance';
 import { handleError } from '@api/utils/errors';
 import { orgAdminMiddleware } from '@api/middlewares/org-admin';
 import { orgMemberMiddleware } from '@api/middlewares/org-member';
+import { orgTeamMemberMiddleware } from '@api/middlewares/org-team-member';
 import { zValidator } from '@hono/zod-validator';
 import {
   getCountryBreakdown,
@@ -134,6 +141,50 @@ export const dashAnalyticsRouter = new Hono()
         return c.json({ success: true, data: result }, 200);
       } catch (error) {
         return handleError(c, error, 'Failed to load compliance overview');
+      }
+    }
+  )
+  .get(
+    '/learning-overview',
+    authMiddleware,
+    orgTeamMemberMiddleware,
+    zValidator('query', ZDashLearningOverview),
+    async (c) => {
+      try {
+        const { orgId } = c.req.valid('query');
+        const headerOrgId = c.req.header('cio-org-id');
+
+        if (!headerOrgId || headerOrgId !== orgId) {
+          return c.json(
+            {
+              success: false,
+              error: 'Organization mismatch',
+              code: 'ORG_MISMATCH'
+            },
+            403
+          );
+        }
+
+        const user = c.get('user')!;
+        const orgRoles = (c.get('orgRoles') as Record<string, number> | undefined) ?? {};
+        const roleId = orgRoles[orgId];
+
+        if (roleId === undefined) {
+          return c.json(
+            {
+              success: false,
+              error: 'UNAUTHORIZED',
+              code: 'UNAUTHORIZED'
+            },
+            403
+          );
+        }
+
+        const result = await getOrgLearningOverview(orgId, { userId: user.id, roleId });
+
+        return c.json({ success: true, data: result }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to load learning overview');
       }
     }
   );

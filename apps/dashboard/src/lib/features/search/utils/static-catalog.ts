@@ -1,6 +1,6 @@
 import type { AccountOrg } from '$features/app/types';
 import { baseNavConfig as lmsNavConfig } from '$features/ui/navigation/lms-navigation';
-import { baseNavConfig as orgNavConfig } from '$features/ui/navigation/org-navigation';
+import { getOrgNavConfig } from '$features/ui/navigation/org-navigation';
 import type { SearchResultItem } from './types';
 
 function resolveTitle(titleKey: string, translate: (key: string) => string) {
@@ -14,7 +14,7 @@ export function buildStaticCatalog(
 ): SearchResultItem[] {
   const items: SearchResultItem[] = [];
 
-  for (const navItem of orgNavConfig) {
+  for (const navItem of getOrgNavConfig(isOrgAdmin)) {
     if (navItem.requiresAdmin && !isOrgAdmin) {
       continue;
     }

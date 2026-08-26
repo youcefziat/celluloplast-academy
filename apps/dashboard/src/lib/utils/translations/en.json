@@ -219,7 +219,7 @@
     },
     "powered_by": {
       "label": "Powered by",
-      "brand": "ClassroomIO"
+      "brand": "Celluloplast Academy"
     },
     "exercise": {
       "submit": "Check my answers",
@@ -346,11 +346,12 @@
     }
   },
   "login": {
-    "welcome": "Welcome back",
-    "email": "Your email",
-    "password": "Your password",
+    "welcome": "Welcome",
+    "sign_in_to_continue": "Sign in to continue",
+    "email": "Email",
+    "password": "Password",
     "forgot": "Forgot password?",
-    "login": "Log In",
+    "login": "Sign in",
     "continue_with": "Or continue With",
     "login_with": "or login with",
     "signup_with": "or sign up with",
@@ -416,7 +417,7 @@
       "teams_tab": "Teams"
     },
     "profile": {
-      "page_subtitle": "Your name, email, and how you appear wherever you work in ClassroomIO.",
+      "page_subtitle": "Your name, email, and how you appear wherever you work in Celluloplast Academy.",
       "profile_picture": {
         "heading": "Profile Picture",
         "upload_image": "Upload Image",
@@ -442,7 +443,7 @@
       "heading": "Notifications",
       "page_title": "Notifications",
       "page_subtitle": "Choose which email notifications you receive and, as an admin, which emails your organization sends.",
-      "personal_page_subtitle": "Choose which email notifications you receive from ClassroomIO.",
+      "personal_page_subtitle": "Choose which email notifications you receive from Celluloplast Academy.",
       "personal": {
         "heading": "Your email preferences",
         "description": "These apply to emails sent to you in this organization. Your organization may still disable certain emails for everyone.",
@@ -744,7 +745,7 @@
       "gallery": {
         "heading": "Popular themes",
         "description": "Made with core features you can easily customize — no coding needed.",
-        "by_classroomio": "by ClassroomIO",
+        "by_classroomio": "by Celluloplast Academy",
         "add": "Add",
         "upgrade": "Upgrade",
         "apply_theme": "Apply Theme",
@@ -1013,7 +1014,7 @@
       "page_subtitle": "Connect Telegram to get notified when important things happen.",
       "heading": "Telegram",
       "sub_heading": "Connect your account to telegram to get notified of any change within the application.",
-      "step_authenticate": "Step 1: Authenticate your account via the ClassroomIO bot.",
+      "step_authenticate": "Step 1: Authenticate your account via the Celluloplast Academy bot.",
       "open_bot_button": "Open Bot",
       "step_chatId": "Step 2: Enter the Chat ID given to you by the bot.",
       "connect_button": "Connect",
@@ -1021,7 +1022,7 @@
       "disconnect": "Disconnect"
     },
     "billing": {
-      "page_subtitle": "Your plan, billing portal, and how you pay for ClassroomIO.",
+      "page_subtitle": "Your plan, billing portal, and how you pay for Celluloplast Academy.",
       "sub_title": "Billing details",
       "manage": "Manage your billing",
       "active": "You don't have any active billing",
@@ -1092,7 +1093,7 @@
     }
   },
   "media_manager": {
-    "page_title": "Media Manager - ClassroomIO",
+    "page_title": "Media Manager - Celluloplast Academy",
     "heading": "Media Manager",
     "page_subtitle": "Keep files, videos, and links for your courses in one library.",
     "empty": "No assets found",
@@ -1236,7 +1237,7 @@
     }
   },
   "tags_admin": {
-    "page_title": "Tags - ClassroomIO",
+    "page_title": "Tags - Celluloplast Academy",
     "heading": "Tags",
     "page_subtitle": "Organize courses with labels so filters and lists stay easy to scan.",
     "create": "Create",
@@ -1287,7 +1288,7 @@
     }
   },
   "public_courses": {
-    "page_title": "Courses - ClassroomIO",
+    "page_title": "Courses - Celluloplast Academy",
     "heading": "Courses",
     "subtitle": "Browse all published courses",
     "clear_filters": "Clear Filters",
@@ -1626,13 +1627,13 @@
     "goto": "Go to",
     "courses": "Courses",
     "home": "Home",
-    "classroomio_home": "ClassroomIO Home",
+    "classroomio_home": "Celluloplast Academy Home",
     "dashboard": "Dashboard",
     "discussion": "Discussion",
     "people": "People",
     "goto_lms": "Go to LMS",
     "goto_dashboard": "Dashboard",
-    "goto_home": "Go to ClassroomIO Home",
+    "goto_home": "Go to Celluloplast Academy Home",
     "login": "Login",
     "signup": "Sign Up",
     "redirecting": "Redirecting",
@@ -1841,7 +1842,7 @@
   "courses": {
     "heading": "Courses",
     "page_subtitle": "Where lessons turn into courses and courses turn into enrollments.",
-    "heading_button": "Create Course",
+    "heading_button": "Create training",
     "search_placeholder": "Find Course",
     "tag_filters": {
       "filter": "Filter",
@@ -1868,8 +1869,8 @@
       "lessons": "Lessons"
     },
     "course_card": {
-      "empty_title": "No Courses Created",
-      "empty_description": "Share your knowledge with the world by creating engaging courses for your students.",
+      "empty_title": "No trainings yet",
+      "empty_description": "Create a training, add modules and lessons, then assign it to employees.",
       "context_menu": {
         "open": "Open",
         "clone": "Clone",
@@ -1886,7 +1887,7 @@
       "exercise": "exercise",
       "students": "students",
       "published": "Published",
-      "unpublished": "Unpublished",
+      "unpublished": "Draft",
       "continue_course": "Continue",
       "learn_more": "Learn more",
       "public_badge": "Public",
@@ -1905,14 +1906,14 @@
       }
     },
     "new_course_modal": {
-      "heading": "Create a Course",
-      "course_name": "Course name",
-      "type": "Course type",
-      "course_name_placeholder": "Your course name",
-      "short_description": "Short Description",
-      "short_description_placeholder": "A little description about this course",
-      "type_selector_title": "What type of course are you looking at?",
-      "button": "Finish",
+      "heading": "New training",
+      "course_name": "Training name",
+      "type": "Training type",
+      "course_name_placeholder": "e.g. Cybersecurity awareness",
+      "short_description": "Description",
+      "short_description_placeholder": "A short description of this training",
+      "type_selector_title": "What type of training are you creating?",
+      "button": "Create training",
       "back": "Back",
       "next": "Next"
     },
@@ -1931,7 +1932,7 @@
   "course": {
     "creator": {
       "heading": "What course do you want to create?",
-      "placeholder": "Ask ClassroomIO to create a course for you...",
+      "placeholder": "Ask Celluloplast Academy to create a course for you...",
       "drafting": {
         "heading": "Drafting your course idea",
         "subtext": "We're turning your prompt into a course title and workspace.",
@@ -1993,7 +1994,7 @@
       "nav_submissions": "Submissions",
       "nav_marks": "Marks",
       "nav_compliance": "Compliance",
-      "nav_people": "People",
+      "nav_people": "Employees",
       "nav_analytics": "Analytics",
       "nav_certificates": "Certificates",
       "nav_landing_page": "Landing Page",
@@ -2271,18 +2272,18 @@
         "add_content_create_section_first": "Create a section first to add lessons or exercises.",
         "add_content_back": "Back",
         "add_content_create": "Create",
-        "add_content_create_section": "Create section",
-        "add_content_create_lesson": "Create lesson",
+        "add_content_create_section": "Add module",
+        "add_content_create_lesson": "Add lesson",
         "add_content_options": {
-          "section_title": "Section",
-          "section_description": "Group lessons and exercises together.",
+          "section_title": "Module",
+          "section_description": "Group lessons and quizzes together.",
           "lesson_title": "Lesson",
-          "lesson_description": "Teach with notes, slides, and videos.",
-          "exercise_title": "Exercise",
-          "exercise_description": "Assess students with quizzes and tasks."
+          "lesson_description": "Teach with notes, documents, and videos.",
+          "exercise_title": "Quiz",
+          "exercise_description": "Assess learners with quizzes and tasks."
         },
         "add_content_section_title_placeholder": "e.g., Module 1: Introduction",
-        "add_content_lesson_title_placeholder": "e.g., Getting Started with Variables",
+        "add_content_lesson_title_placeholder": "e.g., Getting started",
         "content_menu": {
           "label": "Content options",
           "unlock_all": "Unlock all content",
@@ -3230,24 +3231,24 @@
         }
       },
       "people": {
-        "title": "People",
-        "add": "Add",
-        "search": "Search people",
+        "title": "Assigned employees",
+        "add": "Assign employees",
+        "search": "Search employees",
         "you": "You",
         "pending": "Pending",
-        "name": "Name",
+        "name": "Employee",
         "role": "Role",
         "action": "Action",
         "feedback": "Copied Email to clipboard",
         "view": "View",
         "delete_profile": "Delete profile",
         "invite_modal": {
-          "title": "Invite people",
+          "title": "Assign employees",
           "invite": "Invite Tutors",
           "select": "Select tutors in organization...",
           "to_add": "To add tutor to your organization,",
           "go_to": "go to organization settings",
-          "invite_students": "Add Students",
+          "invite_students": "Assign employees",
           "student_limit_reached": "You've reached your plan's student limit. Upgrade to invite more students.",
           "via_link": "You can invite students via an invite link",
           "via_qr": "You can invite students via QR",
@@ -3318,7 +3319,7 @@
           "audit_actor": "Actor",
           "audit_ip": "IP",
           "scan_qr": "Scan QR",
-          "classroomio_brand": "ClassroomIO.com",
+          "classroomio_brand": "Celluloplast Academy",
           "snackbar_invite_link_copied": "Invite link copied",
           "snackbar_invite_link_regenerated": "A new invite link has been generated",
           "snackbar_failed_generate_link": "Failed to generate invite link",
@@ -3665,10 +3666,10 @@
         "download": "Download",
         "allow": "Allow New Students",
         "access": "Allow new students to access this course",
-        "publish": "Publish Course",
-        "determines": "This determines if your course displays on your landing page",
+        "publish": "Publish training",
+        "determines": "Published trainings can be assigned to employees",
         "published": "Published",
-        "unpublished": "Unpublished",
+        "unpublished": "Draft",
         "certificate_deadline_required": "Set Certificate Deadline First",
         "certificate_deadline_required_description": "Compliance courses require a certificate deadline before learners can be enrolled. Please set a deadline in the course settings before publishing.",
         "go_to_completion_deadline": "Go to Completion Deadline",
@@ -3771,13 +3772,13 @@
     "all": "All"
   },
   "audience": {
-    "title": "Audience",
-    "page_subtitle": "See who belongs to your org, who is learning, who is invited, and how to reach them.",
+    "title": "Employees",
+    "page_subtitle": "People in your organization, invitations, and assigned trainings.",
     "export": "Export",
     "import_users": "Import Users",
     "import_limit_reached": "You've reached your plan's student limit. Upgrade to import more students.",
-    "no_audience": "No audience to manage",
-    "manage": "Manage all your students here and stay connected with them",
+    "no_audience": "No employees to manage",
+    "manage": "Manage organization employees and their trainings",
     "name": "Name",
     "email": "Email",
     "search_placeholder": "Search…",
@@ -3790,7 +3791,7 @@
     "upgrade": "Upgrade your plan to invite more students",
     "select_all": "Select all",
     "selected_count": "{count} selected",
-    "assign_courses": "Assign to Courses",
+    "assign_courses": "Assign Trainings",
     "delete": {
       "action": "Delete",
       "title": "Delete member",
@@ -3801,8 +3802,8 @@
       "snackbar_success": "Member deleted"
     },
     "user_analytics": {
-      "title": "Student profile",
-      "page_subtitle": "Progress, grades, and activity across their courses."
+      "title": "Employee profile",
+      "page_subtitle": "Progress, grades, and activity across their trainings."
     },
     "import": {
       "page_subtitle": "Add many people at once by email, then assign courses or cohorts if you like.",
@@ -3828,16 +3829,16 @@
       "select_cohorts": "Select specific cohorts"
     },
     "assign": {
-      "title": "Assign to Courses",
-      "description": "Give the selected users access to courses and optionally notify them by email.",
-      "select_courses": "Select courses",
-      "select_courses_placeholder": "Choose courses...",
+      "title": "Assign Trainings",
+      "description": "Give the selected employees access to trainings and optionally notify them by email.",
+      "select_courses": "Select trainings",
+      "select_courses_placeholder": "Choose trainings…",
       "send_email": "Send notification email",
       "submit": "Assign",
       "cancel": "Cancel",
-      "snackbar_success": "Assigned {assigned} users ({alreadyEnrolled} already had access, {emailsSent} emails sent)",
-      "snackbar_no_courses": "Please select at least one course",
-      "snackbar_failed": "Failed to assign courses"
+      "snackbar_success": "Assigned {assigned} employees ({alreadyEnrolled} already had access, {emailsSent} emails sent)",
+      "snackbar_no_courses": "Please select at least one training",
+      "snackbar_failed": "Failed to assign trainings"
     },
     "invite": {
       "row_actions_aria": "Open actions",
@@ -4030,7 +4031,7 @@
       "rotate_confirm": "Rotate this automation key?"
     },
     "mcp": {
-      "page_subtitle": "Connect AI tools to ClassroomIO with org-scoped keys you can rotate anytime.",
+      "page_subtitle": "Connect AI tools to Celluloplast Academy with org-scoped keys you can rotate anytime.",
       "usage": {
         "title": "Usage and limits",
         "description": "MCP is available on every plan. Usage is controlled by key limits and rate limits.",
@@ -4042,14 +4043,14 @@
       },
       "keys": {
         "title": "MCP keys",
-        "description": "These keys authenticate the current organization when an MCP client calls ClassroomIO through `@classroomio/mcp`.",
+        "description": "These keys authenticate the current organization when an MCP client calls Celluloplast Academy through `@classroomio/mcp`.",
         "generate": "Generate MCP key",
         "secret_once": "This secret is shown once. Copy it into your MCP client now.",
         "modal": {
           "title": "Create MCP key",
           "description": "Choose a name for this MCP key before it is generated.",
           "name_label": "Key name",
-          "name_placeholder": "ClassroomIO OpenCode",
+          "name_placeholder": "Celluloplast Academy OpenCode",
           "cancel": "Cancel",
           "save": "Create key"
         }
@@ -4058,21 +4059,21 @@
         "title": "Client setup",
         "description": "Use one org-scoped key per integration. If a key is rotated or revoked, the client stops working until the new secret is configured.",
         "claude_code_description": "Registers `@classroomio/mcp` with Claude Code using the generated org-scoped key.",
-        "codex_description": "Adds the ClassroomIO MCP server to Codex with the same org-scoped key.",
+        "codex_description": "Adds the Celluloplast Academy MCP server to Codex with the same org-scoped key.",
         "cursor_description": "Paste this into `~/.cursor/mcp.json` or your workspace MCP config.",
         "opencode_description": "Add this to `opencode.json` in your project root or `~/.config/opencode/opencode.json`."
       },
       "view_docs": "View Docs"
     },
     "api": {
-      "subtitle": "Manage API keys to integrate with the ClassroomIO public API.",
+      "subtitle": "Manage API keys to integrate with the Celluloplast Academy public API.",
       "keys": {
         "title": "API keys",
-        "description": "These keys authenticate the current organization when calling the ClassroomIO public API.",
+        "description": "These keys authenticate the current organization when calling the Celluloplast Academy public API.",
         "generate": "Generate API key",
         "secret_once": "This secret is shown once. Copy it and store it securely.",
         "empty_title": "No API keys yet",
-        "empty_description": "Create the first org-scoped API key to use the ClassroomIO public API.",
+        "empty_description": "Create the first org-scoped API key to use the Celluloplast Academy public API.",
         "modal": {
           "title": "Create API key",
           "description": "Choose a name for this API key before it is generated.",
@@ -4089,7 +4090,7 @@
       "view_docs": "View Docs"
     },
     "zapier": {
-      "page_subtitle": "Automate ClassroomIO with thousands of apps through Zapier. Coming soon."
+      "page_subtitle": "Automate Celluloplast Academy with thousands of apps through Zapier. Coming soon."
     }
   },
   "lms_navigation": {
@@ -4451,7 +4452,7 @@
   },
   "invite": {
     "organization": {
-      "page_title": "Join {orgName} on ClassroomIO",
+      "page_title": "Join {orgName} on Celluloplast Academy",
       "invitation_student": "You've been invited into {orgName} as a student.",
       "invitation_teacher": "You've been invited into {orgName} as a teacher.",
       "invitation_admin": "You've been invited into {orgName} as an admin.",
@@ -4470,7 +4471,7 @@
       }
     },
     "link": {
-      "page_title": "Join {orgName} on ClassroomIO",
+      "page_title": "Join {orgName} on Celluloplast Academy",
       "invitation_student": "You've been invited to join {orgName} as a student.",
       "invitation_teacher": "You've been invited to join {orgName} as a teacher.",
       "invitation_admin": "You've been invited to join {orgName} as an admin.",
@@ -5020,6 +5021,162 @@
         "overdue": "Overdue",
         "no_deadline": "No deadline"
       }
+    }
+  },
+  "celluloplast_navigation": {
+    "home": "Home",
+    "trainings": "Trainings",
+    "my_trainings": "My trainings",
+    "employees": "Employees",
+    "learners": "Learners",
+    "progress": "Progress",
+    "certifications": "Certifications",
+    "my_certificates": "My certificates",
+    "administration": "Administration"
+  },
+  "celluloplast_certifications": {
+    "title": "Certifications",
+    "subtitle": "Certificates earned across the academy",
+    "search_placeholder": "Search employee…",
+    "empty": "No certificates earned yet.",
+    "download_error": "Could not download this certificate.",
+    "filter": {
+      "training": "Training",
+      "all_trainings": "All trainings"
+    },
+    "table": {
+      "heading": "Certificates",
+      "subtitle": "{count} certificate(s)",
+      "employee": "Employee",
+      "training": "Training",
+      "earned_at": "Earned on",
+      "action": "Action",
+      "view": "View"
+    },
+    "pagination": {
+      "label": "Page {page} of {total} ({count} rows)",
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "celluloplast_authoring": {
+    "new_training_title": "New training",
+    "new_training_subtitle": "Give it a name and a short description to get started.",
+    "name_label": "Training name",
+    "name_placeholder": "e.g. Cybersecurity awareness",
+    "description_label": "Description",
+    "description_placeholder": "What will employees learn?",
+    "create_button": "Create training",
+    "created": "Training created",
+    "assign_employees": "Assign employees",
+    "publish_training": "Publish training",
+    "certificate_toggle": "Issue a certificate at the end"
+  },
+  "celluloplast_settings": {
+    "cover_heading": "Cover image",
+    "cover_description": "Optional image shown on the training card and welcome surface.",
+    "remove_cover": "Remove image",
+    "details_heading": "Training",
+    "name_label": "Name",
+    "name_placeholder": "e.g. Cybersecurity awareness",
+    "description_label": "Description",
+    "description_placeholder": "What will employees learn?",
+    "certificate_heading": "Certificate",
+    "certificate_description": "Learners receive a certificate when the training is fully completed.",
+    "publication_heading": "Publication",
+    "publication_description": "Control whether this training can be assigned to employees.",
+    "status_label": "Status",
+    "published": "Published",
+    "unpublished": "Draft",
+    "publish_button": "Publish training",
+    "unpublish_button": "Remove from publication",
+    "publication_help": "Published trainings can be assigned to employees.",
+    "assignment_heading": "Assignment",
+    "assignment_description": "After publication, use the existing employee assignment flow.",
+    "delete_heading": "Delete training",
+    "delete_description": "Delete this training. This action cannot be undone.",
+    "delete_button": "Delete training"
+  },
+  "celluloplast_people": {
+    "page_title": "Assigned employees",
+    "assign_title": "Assign employees",
+    "assign_button": "Assign employees",
+    "cancel": "Cancel",
+    "search_placeholder": "Search an employee…",
+    "search_list_placeholder": "Search by name or email…",
+    "available_employees": "Available employees",
+    "no_available_employees": "No employees available to assign.",
+    "no_matching_employees": "No employees match your search.",
+    "notify_employees": "Notify employees by email",
+    "select_at_least_one": "Select at least one employee",
+    "empty_list": "No employees assigned to this training yet.",
+    "column_employee": "Employee",
+    "column_email": "Email",
+    "column_assigned_at": "Assigned on",
+    "column_action": "Action"
+  },
+  "celluloplast_lms": {
+    "home_progress_subtitle": "Overall progress: {progress}%",
+    "home_empty_subtitle": "Your assigned trainings will appear here.",
+    "my_trainings": "My trainings",
+    "view_all_trainings": "View all",
+    "my_certificates": "My certificates",
+    "certificates_count": "{count} certificate(s) earned",
+    "view_certificates": "View my certificates",
+    "view_certificate": "View my certificate",
+    "start": "Start",
+    "continue": "Continue",
+    "review": "Review",
+    "items_done": "{completed} / {total} items completed",
+    "module_progress": "{completed} / {total} courses",
+    "empty_trainings_title": "No training assigned",
+    "empty_trainings_description": "When a training is assigned to you, it will show up here.",
+    "tab_in_progress": "In progress ({count})",
+    "tab_not_started": "Not started ({count})",
+    "tab_completed": "Completed ({count})",
+    "empty_in_progress_title": "No training in progress",
+    "empty_in_progress_description": "Start a training to see it here.",
+    "empty_not_started_title": "No training left to start",
+    "empty_not_started_description": "All your assigned trainings have already been started.",
+    "empty_completed_title": "No completed training yet",
+    "empty_completed_description": "Finished trainings will appear here.",
+    "certificates_page_subtitle": "Certificates earned by completing your trainings.",
+    "status": {
+      "NOT_STARTED": "Not started",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed"
+    }
+  },
+  "celluloplast_progress": {
+    "title": "Progress",
+    "subtitle": "Track learner progress across all trainings",
+    "search_placeholder": "Search employee…",
+    "filter": {
+      "all": "All",
+      "training": "Training",
+      "all_trainings": "All trainings"
+    },
+    "status": {
+      "NOT_STARTED": "Not started",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed"
+    },
+    "table": {
+      "heading": "Learner progress",
+      "subtitle": "{count} enrollment(s)",
+      "empty": "No enrollments to display",
+      "employee": "Employee",
+      "training": "Training",
+      "progress": "Progress",
+      "lessons_done": "Lessons completed",
+      "lessons_total": "Total lessons",
+      "status": "Status",
+      "last_activity": "Last activity"
+    },
+    "pagination": {
+      "label": "Page {page} of {total} ({count} rows)",
+      "prev": "Previous",
+      "next": "Next"
     }
   }
 }

@@ -88,7 +88,7 @@ export function scheduleCertificationCompletionWork(params: {
             theme: courseRow.orgTheme
           })
         },
-        from: buildEmailFromName(`${courseRow.orgName} (via ClassroomIO.com)`),
+        from: buildEmailFromName(`${courseRow.orgName} (via Celluloplast Academy)`),
         idempotencyKey: `course-completion:${groupMemberId}`,
         preference: { organizationId: courseRow.orgId, recipientProfileId: profileId }
       });

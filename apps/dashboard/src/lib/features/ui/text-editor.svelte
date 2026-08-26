@@ -44,7 +44,7 @@
     editableStorageKey = 'edra-editable',
     class: className = '',
     editorClass = '',
-    placeholder = 'Welcome to ClassroomIO',
+    placeholder = 'Welcome to Celluloplast Academy',
     onChange,
     onReady,
     onEditorDestroy

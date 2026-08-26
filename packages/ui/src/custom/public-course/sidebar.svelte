@@ -41,7 +41,7 @@
     courseSlug = null,
     orgSlug = null,
     poweredByLabel = 'Powered by',
-    poweredByBrand = 'ClassroomIO',
+    poweredByBrand = 'Celluloplast Academy',
     class: className
   }: Props = $props();
 

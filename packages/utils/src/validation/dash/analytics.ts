@@ -15,6 +15,11 @@ export const ZDashComplianceOverview = z.object({
   orgId: z.string().uuid()
 });
 
+export const ZDashLearningOverview = z.object({
+  orgId: z.string().uuid()
+});
+
 export type TDashAnalyticsRange = z.infer<typeof ZDashAnalyticsRange>;
 export type TDashCourseFunnel = z.infer<typeof ZDashCourseFunnel>;
 export type TDashComplianceOverview = z.infer<typeof ZDashComplianceOverview>;
+export type TDashLearningOverview = z.infer<typeof ZDashLearningOverview>;

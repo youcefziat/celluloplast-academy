@@ -6,7 +6,6 @@
   import AppLogo from './app-logo.svelte';
   import NavMain from './nav-main.svelte';
   import { SidebarFooterMenu } from '../footer';
-  import UpgradeTrigger from './upgrade-trigger.svelte';
   import SidebarSkeleton from '../sidebar-skeleton.svelte';
 
   const isOrgLoaded = $derived($orgs.length > 0 && $profile.id);
@@ -24,8 +23,8 @@
       <NavMain />
     </Sidebar.Content>
 
+    <!-- Celluloplast V1 hides billing: upgrade-trigger.svelte stays in the tree, unused. -->
     <Sidebar.Footer class="gap-4!">
-      <UpgradeTrigger />
       <SidebarFooterMenu />
     </Sidebar.Footer>
 

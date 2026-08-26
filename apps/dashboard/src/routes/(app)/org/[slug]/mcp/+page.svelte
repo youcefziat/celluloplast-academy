@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>{t.get('automation.tabs.mcp')} - ClassroomIO</title>
+  <title>{t.get('automation.tabs.mcp')} - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Root class="mx-auto w-full max-w-4xl">

@@ -18,8 +18,11 @@
   import { courseApi } from '$features/course/api';
   import { getActiveCourseNavKey } from '$features/course/utils/functions';
   import { toggleAiAssistant } from '$features/ai-assistant/utils/store';
+  import { isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
+  import { CELLULOPLAST_AUTHORING } from '$lib/celluloplast/course-authoring';
   import { openCoursePreview } from '$features/course/utils/course-preview';
   import { t } from '$lib/utils/functions/translations';
+  import UsersIcon from '@lucide/svelte/icons/users';
   import CourseProgressPopover from './course-progress-popover.svelte';
   import CoursePublishBadge from './course-publish-badge.svelte';
   import CoursePublicBadge from './course-public-badge.svelte';
@@ -103,36 +106,53 @@
       <CourseProgressPopover class="md:hidden" />
     {/if}
 
-    <Button
-      size="sm"
-      onclick={toggleAiAssistant}
-      class="ui:bg-primary ui:text-primary-foreground relative overflow-hidden border-0"
-    >
-      <Waves
-        lineColor="rgba(255,255,255,0.55)"
-        xGap={8}
-        yGap={12}
-        waveAmpX={18}
-        waveAmpY={9}
-        waveSpeedX={0.04}
-        waveSpeedY={0.02}
-      />
-      <SparklesIcon size={14} class="relative z-10" />
-      <span class="relative z-10">{$t('course.navItems.nav_ai_assistant')}</span>
-    </Button>
+    {#if !$isStudentExperience && courseApi.course?.id}
+      <Button variant="outline" size="sm" href={CELLULOPLAST_AUTHORING.assignPeoplePath(courseApi.course.id)}>
+        <UsersIcon size={14} />
+        <span class="hidden sm:inline">{$t('celluloplast_authoring.assign_employees')}</span>
+      </Button>
+
+      {#if !isPublished}
+        <Button size="sm" href={CELLULOPLAST_AUTHORING.publishSettingsPath(courseApi.course.id)}>
+          {$t('celluloplast_authoring.publish_training')}
+        </Button>
+      {/if}
+    {/if}
+
+    {#if isCelluloplastAiUiEnabled()}
+      <Button
+        size="sm"
+        onclick={toggleAiAssistant}
+        class="ui:bg-primary ui:text-primary-foreground relative overflow-hidden border-0"
+      >
+        <Waves
+          lineColor="rgba(255,255,255,0.55)"
+          xGap={8}
+          yGap={12}
+          waveAmpX={18}
+          waveAmpY={9}
+          waveSpeedX={0.04}
+          waveSpeedY={0.02}
+        />
+        <SparklesIcon size={14} class="relative z-10" />
+        <span class="relative z-10">{$t('course.navItems.nav_ai_assistant')}</span>
+      </Button>
+    {/if}
 
     {#if !$isStudentExperience}
       <ButtonGroup.Root>
-        <Button
-          variant="outline"
-          size="sm"
-          onclick={handleViewCourseSite}
-          disabled={!courseApi.course?.id}
-          aria-label={$t('course.header.view_course_site')}
-        >
-          <ExternalLinkIcon size={14} />
-          <span class="hidden sm:inline">{$t('course.header.view_course_site')}</span>
-        </Button>
+        {#if isCelluloplastAiUiEnabled()}
+          <Button
+            variant="outline"
+            size="sm"
+            onclick={handleViewCourseSite}
+            disabled={!courseApi.course?.id}
+            aria-label={$t('course.header.view_course_site')}
+          >
+            <ExternalLinkIcon size={14} />
+            <span class="hidden sm:inline">{$t('course.header.view_course_site')}</span>
+          </Button>
+        {/if}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             {#snippet child({ props })}

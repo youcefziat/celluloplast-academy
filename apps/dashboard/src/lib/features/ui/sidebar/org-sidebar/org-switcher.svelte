@@ -17,9 +17,11 @@
 
   import ComingSoon from '$features/ui/coming-soon.svelte';
   import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
+  import { CELLULOPLAST_V1 } from '$lib/celluloplast/features';
 
   const sidebar = useSidebar();
-  const isSelfHosted = PUBLIC_IS_SELFHOSTED === 'true';
+  // Celluloplast V1 runs a single internal organization, whatever the deployment mode says.
+  const isSingleOrgMode = PUBLIC_IS_SELFHOSTED === 'true' || !CELLULOPLAST_V1.multiOrganization;
 
   interface Props {
     variant?: 'sidebar' | 'breadcrumb';
@@ -48,8 +50,8 @@
   }
 </script>
 
-{#if isSelfHosted}
-  <!-- Self-hosted: show org name only, no switching -->
+{#if isSingleOrgMode}
+  <!-- Single organization: show org name only, no switching -->
   {#if variant === 'breadcrumb'}
     <Breadcrumb.Link href={$currentOrgPath} class="flex items-center gap-2">
       {#if $currentOrg.name}

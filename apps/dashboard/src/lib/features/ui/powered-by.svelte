@@ -2,7 +2,7 @@
   import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right';
 
   import { PublicCoursePoweredBy } from '@cio/ui/custom/public-course';
-  import { TENANT_ROOT_DOMAIN } from '@cio/utils/constants/domains';
+  import { APP_DISPLAY_NAME, DEFAULT_LOGO_PATH } from '$lib/celluloplast/brand';
   import { t } from '$lib/utils/functions/translations';
   import { currentOrg, isFreePlan } from '$lib/utils/store/org';
   import { cn } from '@cio/ui/tools';
@@ -38,17 +38,13 @@
     orgSlug={attributionOrgSlug}
     utmSource={sidebarUtmSource}
     label={$t('public_course.powered_by.label')}
-    brand="ClassroomIO"
+    brand={APP_DISPLAY_NAME}
     compact={showOnlyLogo}
     align={showOnlyLogo ? 'center' : 'start'}
     class={className}
   />
 {:else if $isFreePlan}
-  <a
-    href={`https://classroomio.com?utm_source=${$currentOrg.siteName}.${TENANT_ROOT_DOMAIN}`}
-    target="_blank"
-    class={cn('group fixed right-9 bottom-14 z-50 hover:no-underline', className)}
-  >
+  <a href="/" class={cn('group fixed right-9 bottom-14 z-50 hover:no-underline', className)}>
     <span
       class={cn(
         'relative flex items-center gap-1 overflow-hidden rounded-md border border-gray-100 bg-white text-sm font-medium text-black shadow-sm transition duration-500 group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white dark:border-neutral-700 dark:bg-transparent dark:text-white',
@@ -61,9 +57,9 @@
         class="custom absolute left-[5%] -translate-x-full translate-y-full text-white
             opacity-0 transition duration-500 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
       />
-      <img src="/logo-192.png" alt="logo" class="h-[24px] opacity-100 group-hover:opacity-0" />
+      <img src={DEFAULT_LOGO_PATH} alt="logo" class="h-[24px] opacity-100 group-hover:opacity-0" />
       {#if !showOnlyLogo}
-        {$t('course.navItem.landing_page.powered_by')} ClassroomIO
+        {$t('course.navItem.landing_page.powered_by')} {APP_DISPLAY_NAME}
       {/if}
     </span>
   </a>

@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard - ClassroomIO</title>
+  <title>Dashboard - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Root class="w-full">

@@ -36,7 +36,7 @@
 </script>
 
 <svelte:head>
-  <title>Student Dashboard - ClassroomIO</title>
+  <title>Student Dashboard - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Root class="mx-auto w-full max-w-4xl">
@@ -49,9 +49,9 @@
       </Page.Title>
       <Page.Subtitle>
         {#if totalLessons > 0}
-          {$t('dashboard.lms_today_progress', { progress: progressPercentage })}
+          {$t('celluloplast_lms.home_progress_subtitle', { progress: progressPercentage })}
         {:else}
-          {$t('dashboard.lms_today_empty')}
+          {$t('celluloplast_lms.home_empty_subtitle')}
         {/if}
       </Page.Subtitle>
     </Page.HeaderContent>

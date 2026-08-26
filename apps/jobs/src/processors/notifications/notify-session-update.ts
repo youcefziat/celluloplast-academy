@@ -104,7 +104,7 @@ export async function processNotifyCourseSessionUpdate(rawPayload: unknown): Pro
             joinUrl: lesson.callUrl,
             branding
           },
-          from: buildEmailFromName(`${orgName} (via ClassroomIO.com)`),
+          from: buildEmailFromName(`${orgName} (via Celluloplast Academy)`),
           ics
         },
         { idempotencyKey: `session-updated:${lesson.id}:${recipient.email}:${sequence}` }

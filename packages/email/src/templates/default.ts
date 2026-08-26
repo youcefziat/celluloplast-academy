@@ -1,7 +1,7 @@
 import type { EmailBranding } from '../core/branding';
+import { EMAIL_APP_NAME } from '../celluloplast-brand';
 
 const DEFAULT_BUTTON_COLOR = '#1D4EE2';
-const CLASSROOMIO_LOGO = 'https://brand.cdn.clsrio.com/cio-bg-transparent.png';
 
 function escapeHtmlAttr(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -22,9 +22,7 @@ function buildMasthead(branding: EmailBranding): string {
     return `<span style="font-size:18px;font-weight:600;color:#111827;">${orgName}</span>`;
   }
 
-  return `<a href="https://classroomio.com" target="_blank">
-        <img src="${CLASSROOMIO_LOGO}" alt="ClassroomIO" width="130" style="width:130px;height:auto;display:block;" />
-      </a>`;
+  return `<span style="font-size:18px;font-weight:600;color:#111827;">${EMAIL_APP_NAME}</span>`;
 }
 
 export const getDefaultTemplate = (content: string, branding?: EmailBranding): string => {
@@ -148,13 +146,7 @@ export const getDefaultTemplate = (content: string, branding?: EmailBranding): s
       color:#94a3b8;
       padding:24px 30px;
       border-top:1px solid #f0f0f0;">
-      ClassroomIO ${new Date().getFullYear()}. All rights reserved.
-      <br />
-      <a href="https://classroomio.com" style="color:#94a3b8;text-decoration:none;">Website</a>
-      &nbsp;&middot;&nbsp;
-      <a href="https://classroomio.com/tos" style="color:#94a3b8;text-decoration:none;">Terms</a>
-      &nbsp;&middot;&nbsp;
-      <a href="https://classroomio.com/privacy" style="color:#94a3b8;text-decoration:none;">Privacy</a>
+      ${EMAIL_APP_NAME} ${new Date().getFullYear()}. All rights reserved.
     </div>
   </div>
 </body>

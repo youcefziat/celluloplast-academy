@@ -91,7 +91,26 @@ async function loadCertificateInput(
     return assembleOwnerPreviewRender(courseId, userId, body);
   }
 
-  await assertCertificateDownloadAllowed(courseId, userId);
+  // When studentId targets another learner, only course team / org admins may download.
+  // Eligibility is then checked against that learner — not the caller — so admins/tutors
+  // can issue the same on-demand PDF students already get from /lms/certificates.
+  const requestedSubjectId = body.studentId;
+  const isProxyDownload = Boolean(requestedSubjectId && requestedSubjectId !== userId);
+
+  if (isProxyDownload) {
+    const isTeam = await isCourseTeamMemberOrOrgAdmin(courseId, userId);
+
+    if (!isTeam) {
+      throw new AppError(
+        "Only course team members or organization admins can download another learner's certificate",
+        ErrorCodes.UNAUTHORIZED,
+        403
+      );
+    }
+  }
+
+  const subjectProfileId = isProxyDownload ? requestedSubjectId! : userId;
+  await assertCertificateDownloadAllowed(courseId, subjectProfileId);
 
   return assembleCertificateRender(courseId, body);
 }

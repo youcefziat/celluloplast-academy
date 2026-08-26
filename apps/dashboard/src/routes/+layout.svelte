@@ -88,6 +88,7 @@
       return;
     }
 
+    appInitApi.ensureCelluloplastLanding();
     void appInitApi.syncOrgContext(appOrgParams);
   });
 </script>

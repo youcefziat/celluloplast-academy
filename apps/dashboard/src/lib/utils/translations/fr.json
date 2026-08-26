@@ -473,27 +473,27 @@
     "lesson": "Leçon"
   },
   "my_learning": {
-    "heading": "Mon apprentissage",
+    "heading": "Mes formations",
     "progress": "En cours",
-    "complete": "Terminé",
-    "search": "Rechercher des cours",
-    "not_in_progress": "Aucun cours en cours",
-    "any_progress": "Tout cours que vous commencez sera affiché ici",
-    "not_completed": "Aucun cours terminé",
-    "any_course": "Tout cours que vous terminez sera affiché ici",
-    "find_courses": "Trouver des cours"
+    "complete": "Terminées",
+    "search": "Rechercher une formation",
+    "not_in_progress": "Aucune formation en cours",
+    "any_progress": "Toute formation que vous commencez sera affichée ici",
+    "not_completed": "Aucune formation terminée",
+    "any_course": "Toute formation que vous terminez sera affichée ici",
+    "find_courses": "Voir mes formations"
   },
   "certificates": {
-    "heading": "Certificats",
-    "description": "Consultez et téléchargez les certificats que vous avez obtenus en terminant des cours.",
-    "search": "Rechercher des certificats",
+    "heading": "Mes certificats",
+    "description": "Consultez et téléchargez les certificats obtenus en terminant vos formations.",
+    "search": "Rechercher un certificat",
     "earned_on": "Obtenu le",
-    "view_certificate": "Voir le certificat",
+    "view_certificate": "Voir mon certificat",
     "empty_title": "Aucun certificat pour le moment",
-    "empty_description": "Terminez un cours pour obtenir votre premier certificat. Vos certificats obtenus apparaîtront ici.",
+    "empty_description": "Terminez une formation pour obtenir votre premier certificat.",
     "no_results_title": "Aucun certificat trouvé",
     "no_results_description": "Essayez un autre terme de recherche.",
-    "go_to_my_learning": "Aller à Mon apprentissage"
+    "go_to_my_learning": "Aller à Mes formations"
   },
   "lms_navigation": {
     "home": "Accueil",
@@ -647,10 +647,10 @@
     }
   },
   "audience": {
-    "title": "Public",
+    "title": "Employés",
     "export": "Exporter",
-    "no_audience": "Aucune audience à gérer",
-    "manage": "Gérez tous vos étudiants ici et restez connecté avec eux",
+    "no_audience": "Aucun employé à gérer",
+    "manage": "Gérez les employés de l’organisation et leurs formations",
     "name": "Nom",
     "email": "E-mail",
     "date_joined": "Date d'adhésion",
@@ -664,7 +664,7 @@
     "status_revoked": "Révoqué",
     "select_all": "Tout sélectionner",
     "selected_count": "{count} sélectionnés",
-    "assign_courses": "Attribuer aux cours",
+    "assign_courses": "Attribuer des formations",
     "invite": {
       "row_actions_aria": "Actions ouvertes",
       "resend": "Renvoyer l'invitation",
@@ -674,16 +674,16 @@
       "revoke_snackbar_success": "Invitation en attente révoquée"
     },
     "assign": {
-      "title": "Attribuer aux cours",
-      "description": "Donnez aux utilisateurs sélectionnés l'accès aux cours et éventuellement les avertir par e-mail.",
-      "select_courses": "Sélectionner des cours",
-      "select_courses_placeholder": "Choisissez des cours...",
+      "title": "Attribuer des formations",
+      "description": "Donnez aux employés sélectionnés l'accès aux formations et éventuellement les avertir par e-mail.",
+      "select_courses": "Sélectionner des formations",
+      "select_courses_placeholder": "Choisissez des formations…",
       "send_email": "Envoyer un e-mail de notification",
       "submit": "Attribuer",
       "cancel": "Annuler",
-      "snackbar_success": "{assigned} utilisateurs affectés aux cours ({alreadyEnrolled} déjà inscrits, {emailsSent} e-mails envoyés)",
-      "snackbar_no_courses": "Veuillez sélectionner au moins un cours",
-      "snackbar_failed": "Échec de l'attribution des cours"
+      "snackbar_success": "{assigned} employés assignés ({alreadyEnrolled} déjà inscrits, {emailsSent} e-mails envoyés)",
+      "snackbar_no_courses": "Veuillez sélectionner au moins une formation",
+      "snackbar_failed": "Échec de l'attribution des formations"
     },
     "import": {
       "title": "Importer des utilisateurs",
@@ -708,10 +708,10 @@
       "select_cohorts": "Sélectionnez des cohortes spécifiques",
       "select_cohorts_placeholder": "Choisissez des cohortes..."
     },
-    "page_subtitle": "Découvrez qui appartient à votre organisation, qui apprend, qui est invité et comment les contacter.",
+    "page_subtitle": "Employés de l’organisation, invitations et formations assignées.",
     "user_analytics": {
-      "title": "Profil étudiant",
-      "page_subtitle": "Progression, notes et activité dans leurs cours."
+      "title": "Profil employé",
+      "page_subtitle": "Progression, notes et activité dans leurs formations."
     },
     "delete": {
       "action": "Supprimer",
@@ -801,10 +801,10 @@
         "download": "Télécharger",
         "allow": "Autoriser les nouveaux étudiants",
         "access": "Autoriser les nouveaux étudiants à accéder à ce cours",
-        "publish": "Publier un cours",
-        "determines": "Cela détermine si votre cours s'affiche sur votre page de destination",
-        "published": "Publié",
-        "unpublished": "Inédit",
+        "publish": "Publier la formation",
+        "determines": "Cela détermine si votre formation peut être assignée aux employés",
+        "published": "Publiée",
+        "unpublished": "Brouillon",
         "type": "Type de cours",
         "course_type_desc": "Mettez à jour le type de cours pour une expérience plus personnalisée",
         "live_class": "Cours en direct",
@@ -1108,12 +1108,12 @@
         }
       },
       "people": {
-        "title": "Les gens",
-        "add": "Ajouter",
-        "search": "Rechercher des personnes",
+        "title": "Employés inscrits",
+        "add": "Assigner des employés",
+        "search": "Rechercher un employé",
         "you": "Vous",
         "pending": "En attente",
-        "name": "Nom",
+        "name": "Employé",
         "role": "Rôle",
         "action": "Action",
         "feedback": "E-mail copié dans le presse-papiers",
@@ -1145,12 +1145,12 @@
         "roles": {
           "admin": "Admin",
           "tutor": "Tuteur",
-          "student": "Étudiant",
+          "student": "Employé",
           "filter": "Filtrer"
         },
         "delete_confirmation": {
-          "title": "Supprimer",
-          "sure": "Etes-vous sûr de vouloir supprimer",
+          "title": "Retirer de la formation",
+          "sure": "Êtes-vous sûr de vouloir retirer",
           "no": "Non",
           "yes": "Oui"
         },
@@ -1175,12 +1175,12 @@
           }
         },
         "invite_modal": {
-          "title": "Inviter des personnes",
+          "title": "Assigner des employés",
           "invite": "Inviter des tuteurs",
           "select": "Sélectionnez les tuteurs dans l'organisation...",
           "to_add": "Pour ajouter un tuteur à votre organisation,",
           "go_to": "accéder aux paramètres de l'organisation",
-          "invite_students": "Inviter des étudiants",
+          "invite_students": "Assigner des employés",
           "via_link": "Vous pouvez inviter des étudiants via un lien d'invitation",
           "via_qr": "Vous pouvez inviter des étudiants via QR",
           "download_qr": "Télécharger le code QR",
@@ -1324,24 +1324,24 @@
         "no_student": "Aucun étudiant ajouté"
       },
       "lessons": {
-        "heading": "Leçons",
+        "heading": "Cours",
         "heading_v2": "Contenu",
         "drag": "faites glisser une carte pour réorganiser",
         "no_lesson": "Pas encore de cours",
-        "share_your_knowledge": "Partagez vos connaissances avec le monde en créant des leçons engageantes. Commencez par cliquer sur le bouton Ajouter.",
+        "share_your_knowledge": "Partagez vos connaissances en créant des cours engageants. Commencez par cliquer sur le bouton Ajouter.",
         "add_content": "Ajouter du contenu",
         "add_content_description": "Sélectionnez le type de contenu que vous souhaitez ajouter.",
         "add_content_details": "Remplissez les détails de ce contenu.",
         "add_content_adding_to": "Ajout à",
-        "add_content_section_fallback": "section",
+        "add_content_section_fallback": "module",
         "add_content_continue": "Continuer",
-        "add_content_section_label": "Section",
-        "add_content_select_section": "Sélectionner une rubrique",
-        "add_content_create_section_first": "Créez d’abord une section pour ajouter des leçons ou des exercices.",
+        "add_content_section_label": "Module",
+        "add_content_select_section": "Sélectionner un module",
+        "add_content_create_section_first": "Créez d’abord un module pour ajouter des cours ou des quiz.",
         "add_content_back": "Retour",
         "add_content_create": "Créer",
-        "add_content_create_section": "Créer une rubrique",
-        "add_content_create_lesson": "Créer une leçon",
+        "add_content_create_section": "Ajouter un module",
+        "add_content_create_lesson": "Ajouter un cours",
         "add_content_section_title_placeholder": "par exemple, Module 1 : Introduction",
         "add_content_lesson_title_placeholder": "par exemple, Premiers pas avec les variables",
         "content_menu": {
@@ -2149,21 +2149,21 @@
           "exercises": "Exercices"
         },
         "add_content_options": {
-          "section_title": "Section",
-          "section_description": "Cours collectifs et exercices ensemble.",
-          "lesson_title": "Leçon",
-          "lesson_description": "Enseignez avec des notes, des diapositives et des vidéos.",
-          "exercise_title": "Exercice",
-          "exercise_description": "Évaluez les étudiants avec des quiz et des tâches."
+          "section_title": "Module",
+          "section_description": "Regroupez des cours et des quiz.",
+          "lesson_title": "Cours",
+          "lesson_description": "Contenu avec notes, documents et vidéos.",
+          "exercise_title": "Quiz",
+          "exercise_description": "Évaluez les apprenants avec des quiz et des exercices."
         },
         "add_lesson": {
           "button_title": "Ajouter",
           "start_reorder": "Réorganiser",
-          "end_reorder": "Terminer la réapprovisionnement",
-          "modal_heading": "Ajouter une nouvelle leçon",
-          "modal_heading_section": "Ajouter une nouvelle section",
-          "lesson_title": "Titre de la leçon",
-          "course_section_title": "Titre de la section",
+          "end_reorder": "Terminer la réorganisation",
+          "modal_heading": "Ajouter un nouveau cours",
+          "modal_heading_section": "Ajouter un nouveau module",
+          "lesson_title": "Titre du cours",
+          "course_section_title": "Titre du module",
           "click_to": "Cliquez pour",
           "lock": "Verrouiller",
           "unlock": "Déverrouiller",
@@ -2173,13 +2173,13 @@
           "edit": "Modifier",
           "delete": "Supprimer",
           "cancel": "Annuler",
-          "delete_tooltip": "Supprimer cette leçon"
+          "delete_tooltip": "Supprimer ce cours"
         },
         "section_prompt": {
-          "cta": "Activer les sections",
-          "header": "Activer les sections",
-          "title": "Nous avons lancé des sections de cours",
-          "description": "Vous pouvez désormais regrouper les leçons en sections pour organiser votre contenu et rendre l'apprentissage plus fluide pour vos élèves.",
+          "cta": "Activer les modules",
+          "header": "Activer les modules",
+          "title": "Organisez votre formation en modules",
+          "description": "Vous pouvez regrouper les cours en modules pour structurer le parcours et faciliter l'apprentissage des employés.",
           "activate": "Activer",
           "cancel": "Annuler"
         },
@@ -2427,7 +2427,7 @@
     "sidebar": {
       "back_to_course": "Retour au cours",
       "content_count": {
-        "lessons": "{count} leçons",
+        "lessons": "{count} cours",
         "exercises": "{count} exercices"
       },
       "compliance": {
@@ -2438,7 +2438,7 @@
       "progress": {
         "title": "Votre progression",
         "completed": "{completed} sur {total} terminés",
-        "lessons": "{completed} sur {total} leçons",
+        "lessons": "{completed} sur {total} cours",
         "exercises": "{completed} sur {total} exercices"
       },
       "footer_nav": {
@@ -2454,7 +2454,7 @@
       "nav_submissions": "Soumissions",
       "nav_marks": "Marques",
       "nav_compliance": "Conformité",
-      "nav_people": "Les gens",
+      "nav_people": "Employés",
       "nav_analytics": "Analytique",
       "nav_certificates": "Certificats",
       "nav_landing_page": "Page de destination",
@@ -2567,9 +2567,9 @@
     }
   },
   "courses": {
-    "heading": "Cours",
-    "heading_button": "Créer un cours",
-    "search_placeholder": "Trouver un cours",
+    "heading": "Formations",
+    "heading_button": "Créer une formation",
+    "search_placeholder": "Trouver une formation",
     "copy_course": {
       "title": "Créer un cours",
       "course_name_label": "Nom du cours",
@@ -2582,26 +2582,26 @@
       }
     },
     "new_course_modal": {
-      "heading": "Créer un cours",
-      "course_name": "Nom du cours",
-      "type": "Type de cours",
-      "course_name_placeholder": "Le nom de votre cours",
-      "short_description": "Brève description",
-      "short_description_placeholder": "Une petite description de ce cours",
-      "type_selector_title": "Quel type de cours envisagez-vous ?",
-      "button": "Terminer",
+      "heading": "Nouvelle formation",
+      "course_name": "Nom de la formation",
+      "type": "Type de formation",
+      "course_name_placeholder": "ex. Sensibilisation cybersécurité",
+      "short_description": "Description",
+      "short_description_placeholder": "Une brève description de cette formation",
+      "type_selector_title": "Quel type de formation créez-vous ?",
+      "button": "Créer la formation",
       "back": "Retour",
       "next": "Suivant"
     },
     "course_card": {
-      "empty_title": "Aucun cours créé",
-      "empty_description": "Partagez vos connaissances avec le monde en créant des cours attrayants pour vos étudiants.",
+      "empty_title": "Aucune formation pour le moment",
+      "empty_description": "Créez une formation, ajoutez des modules et des cours, puis assignez-la aux employés.",
       "error_message": "Une erreur s'est produite.",
-      "lessons_number": "leçons",
-      "exercise": "exercice",
-      "students": "étudiants",
-      "published": "Publié",
-      "unpublished": "Inédit",
+      "lessons_number": "cours",
+      "exercise": "quiz",
+      "students": "employés",
+      "published": "Publiée",
+      "unpublished": "Brouillon",
       "continue_course": "Continuer",
       "learn_more": "En savoir plus",
       "public_badge": "Public",
@@ -3525,7 +3525,7 @@
         "accepted": "Accepté :",
         "validation_error": "La taille du fichier dépasse la limite maximale :"
       },
-      "page_subtitle": "Votre nom, votre e-mail et votre apparence partout où vous travaillez dans ClassroomIO."
+      "page_subtitle": "Votre nom, votre e-mail et votre apparence partout où vous travaillez dans Celluloplast Academy."
     },
     "tabs": {
       "profile_tab": "Profil",
@@ -3786,7 +3786,7 @@
           "description": "Inscriptions, soumissions, leçons, annonces et complétions dans vos cours."
         }
       },
-      "personal_page_subtitle": "Choisissez les notifications par e-mail que vous recevez de ClassroomIO."
+      "personal_page_subtitle": "Choisissez les notifications par e-mail que vous recevez de Celluloplast Academy."
     }
   },
   "profileMenu": {
@@ -5030,6 +5030,162 @@
         "save": "Enregistrer",
         "cancel": "Annuler"
       }
+    }
+  },
+  "celluloplast_navigation": {
+    "home": "Accueil",
+    "trainings": "Formations",
+    "my_trainings": "Mes formations",
+    "employees": "Employés",
+    "learners": "Apprenants",
+    "progress": "Progression",
+    "certifications": "Certifications",
+    "my_certificates": "Mes certificats",
+    "administration": "Administration"
+  },
+  "celluloplast_certifications": {
+    "title": "Certifications",
+    "subtitle": "Certificats obtenus dans l'academy",
+    "search_placeholder": "Rechercher un employé…",
+    "empty": "Aucun certificat obtenu pour le moment.",
+    "download_error": "Impossible de télécharger ce certificat.",
+    "filter": {
+      "training": "Formation",
+      "all_trainings": "Toutes les formations"
+    },
+    "table": {
+      "heading": "Certificats",
+      "subtitle": "{count} certificat(s)",
+      "employee": "Employé",
+      "training": "Formation",
+      "earned_at": "Obtenu le",
+      "action": "Action",
+      "view": "Voir"
+    },
+    "pagination": {
+      "label": "Page {page} sur {total} ({count} lignes)",
+      "prev": "Précédent",
+      "next": "Suivant"
+    }
+  },
+  "celluloplast_authoring": {
+    "new_training_title": "Nouvelle formation",
+    "new_training_subtitle": "Donnez un nom et une courte description pour commencer.",
+    "name_label": "Nom de la formation",
+    "name_placeholder": "ex. Sensibilisation cybersécurité",
+    "description_label": "Description",
+    "description_placeholder": "Que vont apprendre les employés ?",
+    "create_button": "Créer la formation",
+    "created": "Formation créée",
+    "assign_employees": "Assigner des employés",
+    "publish_training": "Publier la formation",
+    "certificate_toggle": "Délivrer un certificat à la fin"
+  },
+  "celluloplast_settings": {
+    "cover_heading": "Image de couverture",
+    "cover_description": "Image facultative affichée sur la carte et la page d’accueil de la formation.",
+    "remove_cover": "Retirer l’image",
+    "details_heading": "Formation",
+    "name_label": "Nom",
+    "name_placeholder": "ex. Sensibilisation cybersécurité",
+    "description_label": "Description",
+    "description_placeholder": "Que vont apprendre les employés ?",
+    "certificate_heading": "Certificat",
+    "certificate_description": "Les apprenants reçoivent un certificat lorsque la formation est terminée à 100 %.",
+    "publication_heading": "Publication",
+    "publication_description": "Contrôlez si cette formation peut être assignée aux employés.",
+    "status_label": "Statut",
+    "published": "Publiée",
+    "unpublished": "Brouillon",
+    "publish_button": "Publier la formation",
+    "unpublish_button": "Retirer de la publication",
+    "publication_help": "Les formations publiées peuvent être assignées aux employés.",
+    "assignment_heading": "Assignation",
+    "assignment_description": "Après publication, utilisez le parcours d’assignation existant pour les employés.",
+    "delete_heading": "Supprimer la formation",
+    "delete_description": "Supprimer cette formation. Cette action est irréversible.",
+    "delete_button": "Supprimer la formation"
+  },
+  "celluloplast_people": {
+    "page_title": "Employés inscrits",
+    "assign_title": "Assigner des employés",
+    "assign_button": "Assigner des employés",
+    "cancel": "Annuler",
+    "search_placeholder": "Rechercher un employé…",
+    "search_list_placeholder": "Rechercher par nom ou e-mail…",
+    "available_employees": "Employés disponibles",
+    "no_available_employees": "Aucun employé disponible à assigner.",
+    "no_matching_employees": "Aucun employé ne correspond à votre recherche.",
+    "notify_employees": "Notifier les employés par e-mail",
+    "select_at_least_one": "Sélectionnez au moins un employé",
+    "empty_list": "Aucun employé assigné à cette formation pour le moment.",
+    "column_employee": "Employé",
+    "column_email": "E-mail",
+    "column_assigned_at": "Date d’assignation",
+    "column_action": "Action"
+  },
+  "celluloplast_lms": {
+    "home_progress_subtitle": "Progression globale : {progress} %",
+    "home_empty_subtitle": "Vos formations assignées apparaîtront ici.",
+    "my_trainings": "Mes formations",
+    "view_all_trainings": "Voir tout",
+    "my_certificates": "Mes certificats",
+    "certificates_count": "{count} certificat(s) obtenu(s)",
+    "view_certificates": "Voir mes certificats",
+    "view_certificate": "Voir mon certificat",
+    "start": "Commencer",
+    "continue": "Continuer",
+    "review": "Revoir",
+    "items_done": "{completed} / {total} éléments terminés",
+    "module_progress": "{completed} / {total} cours",
+    "empty_trainings_title": "Aucune formation assignée",
+    "empty_trainings_description": "Lorsqu’une formation vous sera assignée, elle apparaîtra ici.",
+    "tab_in_progress": "En cours ({count})",
+    "tab_not_started": "Non commencées ({count})",
+    "tab_completed": "Terminées ({count})",
+    "empty_in_progress_title": "Aucune formation en cours",
+    "empty_in_progress_description": "Commencez une formation pour la voir ici.",
+    "empty_not_started_title": "Aucune formation à commencer",
+    "empty_not_started_description": "Toutes vos formations assignées ont déjà été commencées.",
+    "empty_completed_title": "Aucune formation terminée",
+    "empty_completed_description": "Les formations terminées apparaîtront ici.",
+    "certificates_page_subtitle": "Certificats obtenus en terminant vos formations.",
+    "status": {
+      "NOT_STARTED": "Non commencée",
+      "IN_PROGRESS": "En cours",
+      "COMPLETED": "Terminée"
+    }
+  },
+  "celluloplast_progress": {
+    "title": "Progression",
+    "subtitle": "Suivi de la progression des apprenants sur toutes les formations",
+    "search_placeholder": "Rechercher un employé…",
+    "filter": {
+      "all": "Tous",
+      "training": "Formation",
+      "all_trainings": "Toutes les formations"
+    },
+    "status": {
+      "NOT_STARTED": "Non commencée",
+      "IN_PROGRESS": "En cours",
+      "COMPLETED": "Terminée"
+    },
+    "table": {
+      "heading": "Progression des apprenants",
+      "subtitle": "{count} inscription(s)",
+      "empty": "Aucune inscription à afficher",
+      "employee": "Employé",
+      "training": "Formation",
+      "progress": "Progression",
+      "lessons_done": "Cours terminés",
+      "lessons_total": "Total cours",
+      "status": "Statut",
+      "last_activity": "Dernière activité"
+    },
+    "pagination": {
+      "label": "Page {page} sur {total} ({count} lignes)",
+      "prev": "Précédent",
+      "next": "Suivant"
     }
   }
 }

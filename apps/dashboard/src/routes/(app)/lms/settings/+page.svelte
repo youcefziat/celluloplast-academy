@@ -22,7 +22,7 @@
 </script>
 
 <svelte:head>
-  <title>Settings - ClassroomIO</title>
+  <title>Settings - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Header>

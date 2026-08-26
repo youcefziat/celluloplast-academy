@@ -37,7 +37,7 @@
     courseSlug = null,
     orgSlug = null,
     poweredByLabel = 'Powered by',
-    poweredByBrand = 'ClassroomIO'
+    poweredByBrand = 'Celluloplast Academy'
   }: Props = $props();
 
   let scrollContainer = $state<HTMLDivElement | null>(null);

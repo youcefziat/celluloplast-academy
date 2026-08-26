@@ -5,8 +5,9 @@
 
   import { currentOrgPath } from '$lib/utils/store/org';
   import { t } from '$lib/utils/functions/translations';
+  import { isOrgSettingsTabVisible } from '$lib/celluloplast/navigation';
 
-  const orgSettingsTabs = [
+  const upstreamOrgSettingsTabs = [
     { value: 'general', href: '/settings/org', label: 'settings.auth.tabs.general' },
     {
       value: 'domains',
@@ -16,6 +17,9 @@
     { value: 'teams', href: '/settings/teams', label: 'settings.organization.organization_profile.team.heading' },
     { value: 'customize-lms', href: '/settings/customize-lms', label: 'settings.tabs.customize_lms_tab' }
   ] as const;
+
+  // Celluloplast V1 keeps general / teams / customize-lms; custom domains stay hidden.
+  const orgSettingsTabs = upstreamOrgSettingsTabs.filter((tab) => isOrgSettingsTabVisible(tab.href));
 
   function getCurrentTab(pathname: string) {
     if (pathname.endsWith('/settings/org')) return 'general';

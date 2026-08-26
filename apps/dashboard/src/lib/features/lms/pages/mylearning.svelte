@@ -1,21 +1,18 @@
 <script lang="ts">
   import * as UnderlineTabs from '@cio/ui/custom/underline-tabs';
-  import { Button } from '@cio/ui/base/button';
   import { CoursesPage } from '$features/course/pages';
   import { profile } from '$lib/utils/store/user';
   import { currentOrg } from '$lib/utils/store/org';
   import { t } from '$lib/utils/functions/translations';
   import { coursesApi } from '$features/course/api';
-  import { isStudentCourseComplete } from '$features/course/utils/compliance-utils';
+  import { filterCelluloplastLmsByStatus } from '$lib/celluloplast/lms';
 
   let searchValue = $state('');
+  let currentTab = $state('in_progress');
 
-  function isCourseComplete(course: (typeof coursesApi.enrolledCourses)[number]): boolean {
-    return isStudentCourseComplete(course);
-  }
-
-  const coursesInProgress = $derived(coursesApi.enrolledCourses.filter((course) => !isCourseComplete(course)));
-  const coursesComplete = $derived(coursesApi.enrolledCourses.filter((course) => isCourseComplete(course)));
+  const coursesNotStarted = $derived(filterCelluloplastLmsByStatus(coursesApi.enrolledCourses, 'NOT_STARTED'));
+  const coursesInProgress = $derived(filterCelluloplastLmsByStatus(coursesApi.enrolledCourses, 'IN_PROGRESS'));
+  const coursesComplete = $derived(filterCelluloplastLmsByStatus(coursesApi.enrolledCourses, 'COMPLETED'));
 
   $effect(() => {
     if (!$profile.id || !$currentOrg.id) return;
@@ -23,49 +20,51 @@
     coursesApi.getEnrolledCourses();
   });
 
-  let tabs = $derived([
+  const tabs = $derived([
     {
-      label: `${$t('my_learning.progress')} (${coursesInProgress.length})`,
-      value: '1'
+      label: $t('celluloplast_lms.tab_in_progress', { count: coursesInProgress.length }),
+      value: 'in_progress',
+      courses: coursesInProgress,
+      emptyTitle: $t('celluloplast_lms.empty_in_progress_title'),
+      emptyDescription: $t('celluloplast_lms.empty_in_progress_description')
     },
     {
-      label: `${$t('my_learning.complete')} (${coursesComplete.length})`,
-      value: '2'
+      label: $t('celluloplast_lms.tab_not_started', { count: coursesNotStarted.length }),
+      value: 'not_started',
+      courses: coursesNotStarted,
+      emptyTitle: $t('celluloplast_lms.empty_not_started_title'),
+      emptyDescription: $t('celluloplast_lms.empty_not_started_description')
+    },
+    {
+      label: $t('celluloplast_lms.tab_completed', { count: coursesComplete.length }),
+      value: 'completed',
+      courses: coursesComplete,
+      emptyTitle: $t('celluloplast_lms.empty_completed_title'),
+      emptyDescription: $t('celluloplast_lms.empty_completed_description')
     }
   ]);
-  let currentTab = $state('1');
 </script>
 
 <UnderlineTabs.Root bind:value={currentTab}>
-  <UnderlineTabs.List>
+  <UnderlineTabs.List class="flex flex-wrap">
     {#each tabs as tab (tab.value)}
       <UnderlineTabs.Trigger value={tab.value}>
-        {$t(tab.label)}
+        {tab.label}
       </UnderlineTabs.Trigger>
     {/each}
   </UnderlineTabs.List>
-  <UnderlineTabs.Content value={tabs[0].value}>
-    <CoursesPage
-      bind:searchValue
-      courses={coursesInProgress}
-      emptyDescription={$t('my_learning.any_progress')}
-      emptyTitle={$t('my_learning.not_in_progress')}
-      isLMS={true}
-      isLoading={coursesApi.isLoading}
-    >
-      {#snippet emptyAction()}
-        <Button href="/lms/explore">{$t('my_learning.find_courses')}</Button>
-      {/snippet}
-    </CoursesPage>
-  </UnderlineTabs.Content>
-  <UnderlineTabs.Content value={tabs[1].value}>
-    <CoursesPage
-      bind:searchValue
-      courses={coursesComplete}
-      emptyDescription={$t('my_learning.any_course')}
-      emptyTitle={$t('my_learning.not_completed')}
-      isLMS={true}
-      isLoading={coursesApi.isLoading}
-    />
-  </UnderlineTabs.Content>
+
+  {#each tabs as tab (tab.value)}
+    <UnderlineTabs.Content value={tab.value}>
+      <CoursesPage
+        bind:searchValue
+        courses={tab.courses}
+        emptyDescription={tab.emptyDescription}
+        emptyTitle={tab.emptyTitle}
+        isLMS={true}
+        isLoading={coursesApi.isLoading}
+        showSortSelect={false}
+      />
+    </UnderlineTabs.Content>
+  {/each}
 </UnderlineTabs.Root>

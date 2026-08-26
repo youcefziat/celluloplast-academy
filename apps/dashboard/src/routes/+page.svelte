@@ -18,9 +18,7 @@
   const hasSetupError = $derived(!appInitApi.loading && !!appInitApi.error);
 
   const pageTitle = $derived(
-    data.isOrgSite && data.org
-      ? data.org.name
-      : 'ClassroomIO - One Platform for Customer, Partner, and Employee Training'
+    data.isOrgSite && data.org ? data.org.name : 'Celluloplast Academy | Plateforme de formation interne'
   );
 
   const authAction = $derived(

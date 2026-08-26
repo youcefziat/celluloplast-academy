@@ -5,14 +5,14 @@
 </script>
 
 <svelte:head>
-  <title>Certificates - ClassroomIO</title>
+  <title>Certificates - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Root class="w-full">
   <Page.Header>
     <Page.HeaderContent>
-      <Page.Title>{$t('certificates.heading')}</Page.Title>
-      <Page.Subtitle>{$t('certificates.description')}</Page.Subtitle>
+      <Page.Title>{$t('celluloplast_navigation.my_certificates')}</Page.Title>
+      <Page.Subtitle>{$t('celluloplast_lms.certificates_page_subtitle')}</Page.Subtitle>
     </Page.HeaderContent>
   </Page.Header>
   <Page.Body>

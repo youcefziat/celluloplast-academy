@@ -26,6 +26,7 @@
     getStudentCourseComplianceStatusVariant,
     shouldShowStudentCourseComplianceStatusBadge
   } from '$features/course/utils/compliance-utils';
+  import { getCelluloplastLmsActionKey, isCelluloplastLmsSimplified } from '$lib/celluloplast/lms';
   import CardDropdown from './card-dropdown.svelte';
   import CoursePublishBadge from './course-publish-badge.svelte';
   import CourseTagsOverflow from './course-tags-overflow.svelte';
@@ -215,6 +216,22 @@
     isCertificateView && 'certificateEarnedAt' in course ? course.certificateEarnedAt : null
   );
 
+  const lmsActionLabel = $derived.by(() => {
+    if (isCertificateView) {
+      return $t('celluloplast_lms.view_certificate');
+    }
+
+    if (isExplore) {
+      return $t('courses.course_card.learn_more');
+    }
+
+    if (isLMS && isCelluloplastLmsSimplified() && 'progressRate' in course) {
+      return $t(getCelluloplastLmsActionKey(course as UserEnrolledCourses[number]));
+    }
+
+    return $t('courses.course_card.continue_course');
+  });
+
   function formatDate(value: string | null | undefined) {
     if (!value) {
       return '';
@@ -336,11 +353,7 @@
             }
           }}
         >
-          {isCertificateView
-            ? $t('certificates.view_certificate')
-            : isExplore
-              ? $t('courses.course_card.learn_more')
-              : $t('courses.course_card.continue_course')}
+          {lmsActionLabel}
 
           <ArrowRightIcon class="custom" />
         </Button>

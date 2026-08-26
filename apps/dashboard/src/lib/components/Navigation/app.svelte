@@ -38,7 +38,7 @@
         id="logo"
         class="line-clamp-1 text-lg"
       >
-        {isCoursePage ? title : 'ClassroomIO'}
+        {isCoursePage ? title : 'Celluloplast Academy'}
       </a>
     </div>
 

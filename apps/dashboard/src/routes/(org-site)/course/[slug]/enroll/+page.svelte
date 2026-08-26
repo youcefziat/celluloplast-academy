@@ -229,7 +229,7 @@
 </script>
 
 <svelte:head>
-  <title>Join {data.course?.title ?? 'Course'} on ClassroomIO</title>
+  <title>Join {data.course?.title ?? 'Course'} on Celluloplast Academy</title>
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 

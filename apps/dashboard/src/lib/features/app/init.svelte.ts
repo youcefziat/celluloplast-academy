@@ -31,6 +31,7 @@ import { setTheme } from '$lib/utils/functions/theme';
 import { setupAnalyticsBasedOnLicense } from '$lib/utils/functions/appSetup';
 import shouldRedirectOnAuth from '$lib/utils/functions/routes/shouldRedirectOnAuth';
 import { ROLE } from '@cio/utils/constants';
+import { resolveCelluloplastPostAuthLanding, isCelluloplastPublicLandingPath } from '$lib/celluloplast/landing';
 
 type AppSetupParams = AppOrgParams;
 
@@ -213,10 +214,7 @@ class AppInitApi extends BaseApi {
 
   private async autoJoinOnTenantSite(orgId: string): Promise<boolean> {
     try {
-      const response = await classroomio.organization['auto-join'].$post(
-        {},
-        { headers: { 'cio-org-id': orgId } }
-      );
+      const response = await classroomio.organization['auto-join'].$post({}, { headers: { 'cio-org-id': orgId } });
 
       if (!response.ok) {
         // 403 is expected for invite-only / disabled-signup orgs — the user
@@ -384,6 +382,10 @@ class AppInitApi extends BaseApi {
       return;
     }
 
+    if (this.tryCelluloplastLandingRedirect()) {
+      return;
+    }
+
     // This allows you to be on the landing page of an organization site and not be redirected
     const path = window.location.pathname;
     if (isPublicRoute(path) && (path !== '/' || isOrgSite)) {
@@ -451,6 +453,40 @@ class AppInitApi extends BaseApi {
     const selectedOrg = get(currentOrg);
 
     goto(resolve(`/org/${selectedOrg.siteName}`, {}));
+  }
+
+  /** Celluloplast V1: redirect authenticated users off public catalog/marketing entry pages. */
+  ensureCelluloplastLanding(): void {
+    if (!isCelluloplastPublicLandingPath(window.location.pathname)) {
+      return;
+    }
+
+    this.tryCelluloplastLandingRedirect();
+  }
+
+  private tryCelluloplastLandingRedirect(): boolean {
+    if (!this.data?.success) {
+      return false;
+    }
+
+    const org = get(currentOrg);
+    const membership = this.data.organizations.find((entry) => entry.siteName === org.siteName);
+    const roleId = org.roleId || membership?.roleId || this.data.organizations[0]?.roleId || 0;
+    const orgSiteName = org.siteName || this.data.organizations[0]?.siteName || '';
+
+    const landing = resolveCelluloplastPostAuthLanding({
+      pathname: window.location.pathname,
+      roleId,
+      orgSiteName,
+      hasOrganizations: this.data.organizations.length > 0
+    });
+
+    if (!landing) {
+      return false;
+    }
+
+    goto(landing);
+    return true;
   }
 
   setUserAnalytics() {

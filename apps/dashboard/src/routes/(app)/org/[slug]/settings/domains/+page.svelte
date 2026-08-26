@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>Custom domain - ClassroomIO</title>
+  <title>Custom domain - Celluloplast Academy</title>
 </svelte:head>
 
 <DomainsPage />

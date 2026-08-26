@@ -5031,5 +5031,161 @@
         "cancel": "रद्द करें"
       }
     }
+  },
+  "celluloplast_navigation": {
+    "home": "होम",
+    "trainings": "प्रशिक्षण",
+    "my_trainings": "मेरे प्रशिक्षण",
+    "employees": "कर्मचारी",
+    "learners": "शिक्षार्थी",
+    "progress": "प्रगति",
+    "certifications": "प्रमाणन",
+    "my_certificates": "मेरे प्रमाणपत्र",
+    "administration": "प्रशासन"
+  },
+  "celluloplast_certifications": {
+    "title": "Certifications",
+    "subtitle": "Certificates earned across the academy",
+    "search_placeholder": "Search employee…",
+    "empty": "No certificates earned yet.",
+    "download_error": "Could not download this certificate.",
+    "filter": {
+      "training": "Training",
+      "all_trainings": "All trainings"
+    },
+    "table": {
+      "heading": "Certificates",
+      "subtitle": "{count} certificate(s)",
+      "employee": "Employee",
+      "training": "Training",
+      "earned_at": "Earned on",
+      "action": "Action",
+      "view": "View"
+    },
+    "pagination": {
+      "label": "Page {page} of {total} ({count} rows)",
+      "prev": "Previous",
+      "next": "Next"
+    }
+  },
+  "celluloplast_authoring": {
+    "new_training_title": "New training",
+    "new_training_subtitle": "Give it a name and a short description to get started.",
+    "name_label": "Training name",
+    "name_placeholder": "e.g. Cybersecurity awareness",
+    "description_label": "Description",
+    "description_placeholder": "What will employees learn?",
+    "create_button": "Create training",
+    "created": "Training created",
+    "assign_employees": "Assign employees",
+    "publish_training": "Publish training",
+    "certificate_toggle": "Issue a certificate at the end"
+  },
+  "celluloplast_settings": {
+    "cover_heading": "Cover image",
+    "cover_description": "Optional image shown on the training card and welcome surface.",
+    "remove_cover": "Remove image",
+    "details_heading": "Training",
+    "name_label": "Name",
+    "name_placeholder": "e.g. Cybersecurity awareness",
+    "description_label": "Description",
+    "description_placeholder": "What will employees learn?",
+    "certificate_heading": "Certificate",
+    "certificate_description": "Learners receive a certificate when the training is fully completed.",
+    "publication_heading": "Publication",
+    "publication_description": "Control whether this training can be assigned to employees.",
+    "status_label": "Status",
+    "published": "Published",
+    "unpublished": "Draft",
+    "publish_button": "Publish training",
+    "unpublish_button": "Remove from publication",
+    "publication_help": "Published trainings can be assigned to employees.",
+    "assignment_heading": "Assignment",
+    "assignment_description": "After publication, use the existing employee assignment flow.",
+    "delete_heading": "Delete training",
+    "delete_description": "Delete this training. This action cannot be undone.",
+    "delete_button": "Delete training"
+  },
+  "celluloplast_people": {
+    "page_title": "Assigned employees",
+    "assign_title": "Assign employees",
+    "assign_button": "Assign employees",
+    "cancel": "Cancel",
+    "search_placeholder": "Search an employee…",
+    "search_list_placeholder": "Search by name or email…",
+    "available_employees": "Available employees",
+    "no_available_employees": "No employees available to assign.",
+    "no_matching_employees": "No employees match your search.",
+    "notify_employees": "Notify employees by email",
+    "select_at_least_one": "Select at least one employee",
+    "empty_list": "No employees assigned to this training yet.",
+    "column_employee": "Employee",
+    "column_email": "Email",
+    "column_assigned_at": "Assigned on",
+    "column_action": "Action"
+  },
+  "celluloplast_lms": {
+    "home_progress_subtitle": "Overall progress: {progress}%",
+    "home_empty_subtitle": "Your assigned trainings will appear here.",
+    "my_trainings": "My trainings",
+    "view_all_trainings": "View all",
+    "my_certificates": "My certificates",
+    "certificates_count": "{count} certificate(s) earned",
+    "view_certificates": "View my certificates",
+    "view_certificate": "View my certificate",
+    "start": "Start",
+    "continue": "Continue",
+    "review": "Review",
+    "items_done": "{completed} / {total} items completed",
+    "module_progress": "{completed} / {total} courses",
+    "empty_trainings_title": "No training assigned",
+    "empty_trainings_description": "When a training is assigned to you, it will show up here.",
+    "tab_in_progress": "In progress ({count})",
+    "tab_not_started": "Not started ({count})",
+    "tab_completed": "Completed ({count})",
+    "empty_in_progress_title": "No training in progress",
+    "empty_in_progress_description": "Start a training to see it here.",
+    "empty_not_started_title": "No training left to start",
+    "empty_not_started_description": "All your assigned trainings have already been started.",
+    "empty_completed_title": "No completed training yet",
+    "empty_completed_description": "Finished trainings will appear here.",
+    "certificates_page_subtitle": "Certificates earned by completing your trainings.",
+    "status": {
+      "NOT_STARTED": "Not started",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed"
+    }
+  },
+  "celluloplast_progress": {
+    "title": "Progress",
+    "subtitle": "Track learner progress across all trainings",
+    "search_placeholder": "Search employee…",
+    "filter": {
+      "all": "All",
+      "training": "Training",
+      "all_trainings": "All trainings"
+    },
+    "status": {
+      "NOT_STARTED": "Not started",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed"
+    },
+    "table": {
+      "heading": "Learner progress",
+      "subtitle": "{count} enrollment(s)",
+      "empty": "No enrollments to display",
+      "employee": "Employee",
+      "training": "Training",
+      "progress": "Progress",
+      "lessons_done": "Lessons completed",
+      "lessons_total": "Total lessons",
+      "status": "Status",
+      "last_activity": "Last activity"
+    },
+    "pagination": {
+      "label": "Page {page} of {total} ({count} rows)",
+      "prev": "Previous",
+      "next": "Next"
+    }
   }
 }

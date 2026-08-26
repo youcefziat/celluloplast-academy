@@ -18,14 +18,16 @@
   import type { OrgStudent, Tutor } from '$features/people/utils/types';
   import { TutorSelectSection, ExistingStudentsSection, BulkEmailSection } from '$features/people/components';
   import { UpgradeBanner } from '$features/ui';
+  import { CELLULOPLAST_PEOPLE, isCelluloplastPeopleSimplified } from '$lib/celluloplast/people';
 
   let tutors = $state<Tutor[]>([]);
   let selectedIds = $state<string[]>([]);
   let courseId = $derived(courseApi.course?.id ?? '');
   const addPeopleParm = $derived(new URLSearchParams(page.url.search).get('add'));
   const isOpen = $derived(addPeopleParm === 'true');
+  const isSimplified = isCelluloplastPeopleSimplified();
 
-  const selectedTutors = $derived(tutors.filter((t) => selectedIds.includes(t.id.toString())));
+  const selectedTutors = $derived(tutors.filter((tutor) => selectedIds.includes(tutor.id.toString())));
   const INVITE_MODAL = 'course.navItem.people.invite_modal';
 
   let isLoadingStudents = $state(false);
@@ -36,7 +38,7 @@
     const existingTutors = courseApi?.group?.tutors || [];
     return team
       .filter((teamMember) => teamMember.verified)
-      .filter((teamMember) => !existingTutors.some((t) => t.id === teamMember.profileId))
+      .filter((teamMember) => !existingTutors.some((existing) => existing.id === teamMember.profileId))
       .map((teamMember) => ({
         id: teamMember.id,
         text: teamMember.fullname,
@@ -57,12 +59,14 @@
       if (!student.profileId) {
         return false;
       }
+
       return !enrolledStudentIds.has(student.profileId);
     });
   }
 
   function setTutors(orgId: string | undefined) {
-    if (!orgId) return;
+    if (!orgId || (isSimplified && !CELLULOPLAST_PEOPLE.showTutorInviteTab)) return;
+
     untrack(async () => {
       await orgApi.getOrgTeam();
       if (orgApi.error) {
@@ -120,6 +124,10 @@
     }
 
     await courseApi.refreshCourse(courseId, $profile.id);
+
+    if (isSimplified) {
+      closeModal();
+    }
   }
 
   async function inviteNewStudents(recipientCsv: string, sendEmail: boolean) {
@@ -178,52 +186,86 @@
 >
   <Dialog.Content class="max-h-[80vh] w-[96vw] max-w-3xl! overflow-y-auto">
     <Dialog.Header>
-      <Dialog.Title>{$t('course.navItem.people.invite_modal.title')}</Dialog.Title>
+      <Dialog.Title>
+        {#if isSimplified}
+          {$t('celluloplast_people.assign_title')}
+        {:else}
+          {$t('course.navItem.people.invite_modal.title')}
+        {/if}
+      </Dialog.Title>
     </Dialog.Header>
 
-    <UnderlineTabs.Root bind:value={activeTab}>
-      <UnderlineTabs.List class="flex flex-wrap">
-        <UnderlineTabs.Trigger value="tutors">
-          {$t(`${INVITE_MODAL}.invite`)}
-        </UnderlineTabs.Trigger>
-        <UnderlineTabs.Trigger value="students">
-          {$t(`${INVITE_MODAL}.invite_students`)}
-        </UnderlineTabs.Trigger>
-      </UnderlineTabs.List>
+    {#if isSimplified}
+      <div class="space-y-4">
+        <ExistingStudentsSection
+          students={availableStudents}
+          isLoading={isLoadingStudents}
+          onSearchValueChange={handleStudentSearch}
+          onAssign={assignExistingStudents}
+          headingKey="celluloplast_people.available_employees"
+          emptyMatchingKey="celluloplast_people.no_matching_employees"
+          emptyDefaultKey="celluloplast_people.no_available_employees"
+          searchPlaceholderKey="celluloplast_people.search_placeholder"
+          notifyLabelKey="celluloplast_people.notify_employees"
+          submitKey="celluloplast_people.assign_button"
+          selectAtLeastOneKey="celluloplast_people.select_at_least_one"
+        />
 
-      <UnderlineTabs.Content value="tutors">
-        <div class="space-y-3">
-          <TutorSelectSection
-            {tutors}
-            bind:selectedIds
-            isLoading={orgApi.isLoading}
-            helperHref={`/org/${$currentOrg.siteName}/settings/teams`}
-          />
+        {#if $isStudentLimitReached}
+          <UpgradeBanner removeParams={['add']}>{$t(`${INVITE_MODAL}.student_limit_reached`)}</UpgradeBanner>
+        {/if}
 
-          <div class="mt-5 flex flex-row-reverse items-center gap-2">
-            <Button variant="secondary" type="button" onclick={onSubmit} loading={peopleApi.isLoading}>
-              {$t(`${INVITE_MODAL}.finish`)}
-            </Button>
+        <div class="flex justify-end gap-2">
+          <Button variant="outline" onclick={closeModal}>
+            {$t('celluloplast_people.cancel')}
+          </Button>
+        </div>
+      </div>
+    {:else}
+      <UnderlineTabs.Root bind:value={activeTab}>
+        <UnderlineTabs.List class="flex flex-wrap">
+          <UnderlineTabs.Trigger value="tutors">
+            {$t(`${INVITE_MODAL}.invite`)}
+          </UnderlineTabs.Trigger>
+          <UnderlineTabs.Trigger value="students">
+            {$t(`${INVITE_MODAL}.invite_students`)}
+          </UnderlineTabs.Trigger>
+        </UnderlineTabs.List>
+
+        <UnderlineTabs.Content value="tutors">
+          <div class="space-y-3">
+            <TutorSelectSection
+              {tutors}
+              bind:selectedIds
+              isLoading={orgApi.isLoading}
+              helperHref={`/org/${$currentOrg.siteName}/settings/teams`}
+            />
+
+            <div class="mt-5 flex flex-row-reverse items-center gap-2">
+              <Button variant="secondary" type="button" onclick={onSubmit} loading={peopleApi.isLoading}>
+                {$t(`${INVITE_MODAL}.finish`)}
+              </Button>
+            </div>
           </div>
-        </div>
-      </UnderlineTabs.Content>
+        </UnderlineTabs.Content>
 
-      <UnderlineTabs.Content value="students">
-        <div class="space-y-6">
-          <ExistingStudentsSection
-            students={availableStudents}
-            isLoading={isLoadingStudents}
-            onSearchValueChange={handleStudentSearch}
-            onAssign={assignExistingStudents}
-          />
+        <UnderlineTabs.Content value="students">
+          <div class="space-y-6">
+            <ExistingStudentsSection
+              students={availableStudents}
+              isLoading={isLoadingStudents}
+              onSearchValueChange={handleStudentSearch}
+              onAssign={assignExistingStudents}
+            />
 
-          {#if $isStudentLimitReached}
-            <UpgradeBanner removeParams={['add']}>{$t(`${INVITE_MODAL}.student_limit_reached`)}</UpgradeBanner>
-          {/if}
+            {#if $isStudentLimitReached}
+              <UpgradeBanner removeParams={['add']}>{$t(`${INVITE_MODAL}.student_limit_reached`)}</UpgradeBanner>
+            {/if}
 
-          <BulkEmailSection onInvite={inviteNewStudents} disabled={$isStudentLimitReached} />
-        </div>
-      </UnderlineTabs.Content>
-    </UnderlineTabs.Root>
+            <BulkEmailSection onInvite={inviteNewStudents} disabled={$isStudentLimitReached} />
+          </div>
+        </UnderlineTabs.Content>
+      </UnderlineTabs.Root>
+    {/if}
   </Dialog.Content>
 </Dialog.Root>

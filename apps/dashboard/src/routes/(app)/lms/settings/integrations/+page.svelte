@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Integrations - ClassroomIO</title>
+  <title>Integrations - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Header>

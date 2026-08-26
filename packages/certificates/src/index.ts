@@ -17,4 +17,6 @@ export {
   type AccentColor
 } from './constants';
 
+export { CERTIFICATE_DEFAULT_ACCENT, CERTIFICATE_DEFAULT_ORG_LABEL } from './celluloplast-brand';
+
 export { renderCertificate, renderCertificateDocument, resolveTemplateId } from './render';

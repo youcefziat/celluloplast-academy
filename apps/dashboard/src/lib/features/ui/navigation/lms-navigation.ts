@@ -14,6 +14,7 @@ import type { Component } from 'svelte';
 import { isActive } from '$lib/utils/functions/app';
 import { isOrgOnFreePlan } from '@cio/utils/plans';
 import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
+import { applyLmsNavPolicy } from '$lib/celluloplast/navigation';
 
 export interface NavItem {
   title: string;
@@ -47,7 +48,7 @@ export interface NavItemConfig {
 }
 
 // Base navigation configuration structure
-export const baseNavConfig: NavItemConfig[] = [
+const upstreamNavConfig: NavItemConfig[] = [
   {
     titleKey: 'lms_navigation.home',
     path: '',
@@ -137,6 +138,12 @@ export const baseNavConfig: NavItemConfig[] = [
     ]
   }
 ];
+
+/**
+ * Learner navigation reduced to the Celluloplast Academy V1 scope
+ * (see `$lib/celluloplast/navigation`). Sidebar, breadcrumbs and command palette read this.
+ */
+export const baseNavConfig: NavItemConfig[] = applyLmsNavPolicy(upstreamNavConfig);
 
 /**
  * Get LMS navigation items based on organization context

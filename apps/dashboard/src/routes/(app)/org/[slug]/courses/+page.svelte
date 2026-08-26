@@ -17,6 +17,8 @@
   import { onMount } from 'svelte';
   import * as Page from '@cio/ui/base/page';
   import { coursesApi } from '$features/course/api/courses.svelte';
+  import { pageTitle } from '$lib/celluloplast/brand';
+  import { CELLULOPLAST_COURSE_TYPES } from '$lib/celluloplast/course-authoring';
 
   let { data } = $props();
   const getInitialSelectedTags = () => data.activeTags ?? [];
@@ -28,12 +30,20 @@
   let selectedTags = $state<string[]>(getInitialSelectedTags());
   let courseType = $state<string>('all');
 
-  const courseTypeOptions = $derived([
-    { value: 'SELF_PACED', label: $t('new_course_modal.self_paced_label') },
-    { value: 'LIVE_CLASS', label: $t('new_course_modal.live_class_label') },
-    { value: 'COMPLIANCE', label: $t('new_course_modal.compliance_label') },
-    { value: 'PUBLIC', label: $t('new_course_modal.public_label') }
-  ]);
+  const courseTypeLabelKeys: Record<string, string> = {
+    SELF_PACED: 'new_course_modal.self_paced_label',
+    LIVE_CLASS: 'new_course_modal.live_class_label',
+    COMPLIANCE: 'new_course_modal.compliance_label',
+    PUBLIC: 'new_course_modal.public_label'
+  };
+
+  /** V1 only creates SELF_PACED — filter options match that allowlist. */
+  const courseTypeOptions = $derived(
+    CELLULOPLAST_COURSE_TYPES.map((value) => ({
+      value,
+      label: $t(courseTypeLabelKeys[value] ?? 'new_course_modal.self_paced_label')
+    }))
+  );
 
   let hasInitializedFilters = $state(false);
   let hasCompletedInitialUrlSync = false;
@@ -210,7 +220,7 @@
 </script>
 
 <svelte:head>
-  <title>Courses - ClassroomIO</title>
+  <title>{pageTitle($t('courses.heading'))}</title>
 </svelte:head>
 
 <Page.Root class="w-full">

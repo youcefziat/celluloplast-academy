@@ -22,7 +22,7 @@
 </script>
 
 <svelte:head>
-  <title>{t.get('settings.notifications.page_title')} - ClassroomIO</title>
+  <title>{t.get('settings.notifications.page_title')} - Celluloplast Academy</title>
 </svelte:head>
 
 <Page.Header>

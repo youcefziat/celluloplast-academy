@@ -1,6 +1,14 @@
 import type { CertificateDesign, CertificateTemplateId, CertificateTemplateMeta } from './types';
+import { CERTIFICATE_DEFAULT_ACCENT } from './celluloplast-brand';
 
-export const ACCENT_COLORS = ['#7a1f1f', '#1e3a8a', '#ff4500', '#d4af37', '#0a0a0a', '#065f46'] as const;
+export const ACCENT_COLORS = [
+  CERTIFICATE_DEFAULT_ACCENT,
+  '#1e3a8a',
+  '#ff4500',
+  '#d4af37',
+  '#0a0a0a',
+  '#065f46'
+] as const;
 
 export type AccentColor = (typeof ACCENT_COLORS)[number];
 

@@ -20,6 +20,7 @@ import BotIcon from '@lucide/svelte/icons/bot';
 import type { Component } from 'svelte';
 import { isActive } from '$lib/utils/functions/app';
 import type { PlanLimitResource } from '@cio/utils/plans';
+import { applyOrgNavPolicy } from '$lib/celluloplast/navigation';
 
 export interface NavItem {
   title: string;
@@ -69,7 +70,7 @@ export interface NestedRouteConfig {
 }
 
 // Base navigation configuration structure
-export const baseNavConfig: NavItemConfig[] = [
+const upstreamNavConfig: NavItemConfig[] = [
   {
     group: 'home',
     titleKey: 'org_navigation.home',
@@ -303,6 +304,18 @@ export const baseNavConfig: NavItemConfig[] = [
 ];
 
 /**
+ * Navigation entries for the current role, reduced to the Celluloplast Academy V1 scope
+ * (see `$lib/celluloplast/navigation`). Sidebar, breadcrumbs and command palette all read
+ * this, so a hidden surface stays hidden everywhere.
+ */
+export function getOrgNavConfig(isOrgAdmin: boolean | null): NavItemConfig[] {
+  return applyOrgNavPolicy(upstreamNavConfig, isOrgAdmin);
+}
+
+/** Admin superset of {@link getOrgNavConfig}, kept for consumers without a role in hand. */
+export const baseNavConfig: NavItemConfig[] = getOrgNavConfig(true);
+
+/**
  * Get navigation items based on organization context and permissions
  */
 export function getOrgNavigationItems(
@@ -314,7 +327,7 @@ export function getOrgNavigationItems(
 ): NavItem[] {
   const items: NavItem[] = [];
 
-  for (const config of baseNavConfig) {
+  for (const config of getOrgNavConfig(isOrgAdmin)) {
     // Skip admin-only items if user is not admin
     if (config.requiresAdmin && !isOrgAdmin && !config.disableWhenNotAdmin) {
       continue;
@@ -401,7 +414,7 @@ export function getOrgNavigationGroups(
     groupedMap.set(groupDef.key, []);
   }
 
-  for (const config of baseNavConfig) {
+  for (const config of getOrgNavConfig(isOrgAdmin)) {
     if (config.requiresAdmin && !isOrgAdmin && !config.disableWhenNotAdmin) {
       continue;
     }

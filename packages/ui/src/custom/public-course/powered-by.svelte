@@ -8,7 +8,7 @@
     orgSlug?: string | null;
     /** Localized label. */
     label?: string;
-    /** Localized "ClassroomIO" brand label. */
+    /** Localized "Celluloplast Academy" brand label. */
     brand?: string;
     /** Logo-only footer (narrow sidebars). */
     compact?: boolean;
@@ -23,7 +23,7 @@
     courseSlug = null,
     orgSlug = null,
     label = 'Powered by',
-    brand = 'ClassroomIO',
+    brand = 'Celluloplast Academy',
     compact = false,
     align = 'center',
     utmSource = 'public-course',
@@ -65,7 +65,7 @@
       className
     )}
   >
-    <img src="/logo-192.png" class="ui:size-6" alt="ClassroomIO" />
+    <img src="/logo-192.png" class="ui:size-6" alt="Celluloplast Academy" />
     {label}
     <a
       {href}

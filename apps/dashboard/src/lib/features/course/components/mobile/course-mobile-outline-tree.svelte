@@ -8,7 +8,6 @@
   import { courseApi } from '$features/course/api';
   import { getContentItemsProgress, getContentRoute, getCourseContent } from '$features/course/utils/content';
   import {
-    formatSectionCompletionLabel,
     getActiveSectionId,
     getSectionIdForContentItem,
     isContentItemInPath
@@ -180,7 +179,10 @@
                   ? 'ui:text-green-600'
                   : 'ui:text-muted-foreground'}"
               >
-                {formatSectionCompletionLabel(sectionProgress.completed, sectionProgress.total)}
+                {$t('celluloplast_lms.module_progress', {
+                  completed: sectionProgress.completed,
+                  total: sectionProgress.total
+                })}
               </span>
             {/if}
             <ChevronRightIcon

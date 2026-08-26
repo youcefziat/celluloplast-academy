@@ -17,6 +17,7 @@
   import { DEFAULT_STEPPER_STATE, CONTENT_OPTIONS } from './constants';
   import { t } from '$lib/utils/functions/translations';
   import { untrack } from 'svelte';
+  import { filterCelluloplastContentOptions } from '$lib/celluloplast/course-authoring';
 
   let step = $state(0);
   let selectedType = $state<ContentType>(ContentType.Lesson);
@@ -61,11 +62,13 @@
     (courseApi.course?.content?.sections || []).filter((section) => section.id !== 'ungrouped')
   );
   const visibleContentOptions = $derived(
-    $contentCreateStore.sectionId
-      ? CONTENT_OPTIONS.filter((option) => option.type !== ContentType.Section)
-      : contentGroupingEnabled
-        ? CONTENT_OPTIONS
-        : CONTENT_OPTIONS.filter((option) => option.type !== ContentType.Section)
+    filterCelluloplastContentOptions(
+      $contentCreateStore.sectionId
+        ? CONTENT_OPTIONS.filter((option) => option.type !== ContentType.Section)
+        : contentGroupingEnabled
+          ? CONTENT_OPTIONS
+          : CONTENT_OPTIONS.filter((option) => option.type !== ContentType.Section)
+    )
   );
   const contentOptionsForGroup = $derived(
     visibleContentOptions.map((o) => ({

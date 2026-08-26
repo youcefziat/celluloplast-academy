@@ -3,6 +3,7 @@ import { env } from '@cio/core/config/env';
 import {
   getCourseStats,
   getDashOrgStats,
+  getOrgLearningOverviewRows,
   getOrgStudentLoginsByDayOfWeek,
   getUserLoginStreak,
   getRecentCertifications,
@@ -15,6 +16,8 @@ import {
   readOrgStatsVersionAndCache,
   writeOrgStatsCache
 } from '@cio/core/utils/redis/org-stats-cache';
+import { calcCourseProgressPercent } from '@api/utils/course-completion';
+import { ROLE } from '@cio/utils/constants';
 
 import type { OrganisationAnalytics } from '@api/types';
 import { getOrgIdBySiteName } from '@cio/db/queries';
@@ -188,6 +191,121 @@ export async function getCurrentUserLoginStreak(userId: string) {
   } catch (error) {
     console.error('getCurrentUserLoginStreak error:', error);
     throw new AppError('Failed to load login streak', ErrorCodes.ORG_ANALYTICS_FETCH_FAILED, 500);
+  }
+}
+
+export type LearningProgressStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';
+
+export type OrgLearningOverviewLearner = {
+  groupMemberId: string;
+  profileId: string;
+  fullname: string | null;
+  email: string | null;
+  avatarUrl: string | null;
+  courseId: string;
+  courseTitle: string;
+  courseType: string | null;
+  progressPercent: number;
+  lessonsCompleted: number;
+  lessonsTotal: number;
+  exercisesCompleted: number;
+  exercisesTotal: number;
+  status: LearningProgressStatus;
+  lastActivityAt: string | null;
+  certificateEarnedAt: string | null;
+};
+
+export type OrgLearningOverviewCourse = {
+  courseId: string;
+  courseTitle: string;
+  courseType: string | null;
+  learnerCount: number;
+};
+
+export type OrgLearningOverview = {
+  learners: OrgLearningOverviewLearner[];
+  courses: OrgLearningOverviewCourse[];
+};
+
+function deriveLearningProgressStatus(progressPercent: number): LearningProgressStatus {
+  if (progressPercent >= 100) {
+    return 'COMPLETED';
+  }
+
+  if (progressPercent > 0) {
+    return 'IN_PROGRESS';
+  }
+
+  return 'NOT_STARTED';
+}
+
+/**
+ * Org-wide learner × course progress for ACTIVE courses of any type.
+ * Tutors only see courses where they are a group member.
+ */
+export async function getOrgLearningOverview(
+  orgId: string,
+  viewer: { userId: string; roleId: number }
+): Promise<OrgLearningOverview> {
+  try {
+    const tutorProfileId = viewer.roleId === ROLE.TUTOR ? viewer.userId : undefined;
+    const rows = await getOrgLearningOverviewRows(orgId, { tutorProfileId });
+
+    const courseMap = new Map<string, OrgLearningOverviewCourse>();
+    const learners: OrgLearningOverviewLearner[] = [];
+
+    for (const row of rows) {
+      const progressPercent = calcCourseProgressPercent({
+        lessonsCompleted: row.lessonsCompleted,
+        totalLessons: row.lessonsTotal,
+        exercisesCompleted: row.exercisesCompleted,
+        exercisesCount: row.exercisesTotal
+      });
+
+      learners.push({
+        groupMemberId: row.groupMemberId,
+        profileId: row.profileId,
+        fullname: row.fullname,
+        email: row.email,
+        avatarUrl: row.avatarUrl,
+        courseId: row.courseId,
+        courseTitle: row.courseTitle,
+        courseType: row.courseType,
+        progressPercent,
+        lessonsCompleted: row.lessonsCompleted,
+        lessonsTotal: row.lessonsTotal,
+        exercisesCompleted: row.exercisesCompleted,
+        exercisesTotal: row.exercisesTotal,
+        status: deriveLearningProgressStatus(progressPercent),
+        lastActivityAt: row.lastActivityAt,
+        certificateEarnedAt: row.certificateEarnedAt
+      });
+
+      const existingCourse = courseMap.get(row.courseId);
+
+      if (existingCourse) {
+        existingCourse.learnerCount += 1;
+      } else {
+        courseMap.set(row.courseId, {
+          courseId: row.courseId,
+          courseTitle: row.courseTitle,
+          courseType: row.courseType,
+          learnerCount: 1
+        });
+      }
+    }
+
+    return {
+      learners,
+      courses: Array.from(courseMap.values()).sort((a, b) => a.courseTitle.localeCompare(b.courseTitle))
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
+    console.error('getOrgLearningOverview error:', error);
+    throw new AppError('Failed to load learning overview', ErrorCodes.ORG_ANALYTICS_FETCH_FAILED, 500);
   }
 }
 

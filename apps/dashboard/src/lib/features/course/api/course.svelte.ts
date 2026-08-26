@@ -373,7 +373,7 @@ export class CourseApi extends BaseApiWithErrors {
    */
   async create(
     fields: { title: string; description: string; type: TCourseType },
-    onCreated?: (courseId: string) => void
+    onCreated?: (courseId: string) => void | Promise<void>
   ) {
     const org = get(currentOrg);
     const userProfile = get(profile);
@@ -400,7 +400,7 @@ export class CourseApi extends BaseApiWithErrors {
           json: result.data
         }),
       logContext: 'creating course',
-      onSuccess: (response) => {
+      onSuccess: async (response) => {
         if (response.data?.course) {
           const newCourse = response.data.course;
 
@@ -416,7 +416,7 @@ export class CourseApi extends BaseApiWithErrors {
           });
 
           if (onCreated) {
-            onCreated(newCourse.id);
+            await onCreated(newCourse.id);
           } else {
             goto(resolve(`/courses/${newCourse.id}`, {}));
             snackbar.success('Course created successfully');

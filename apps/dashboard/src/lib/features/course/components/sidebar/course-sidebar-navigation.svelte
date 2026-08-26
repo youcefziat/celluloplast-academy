@@ -31,6 +31,7 @@
   import ContentCountBadges from '../content-count-badges.svelte';
 
   import { NAV_IDS } from './constants';
+  import { isCourseNavItemVisible } from '$lib/celluloplast/navigation';
   import { complianceApi, courseApi } from '$features/course/api';
   import { t } from '$lib/utils/functions/translations';
   import { currentOrg, isFreePlan, isStudentLimitReached, currentOrgPath } from '$lib/utils/store/org';
@@ -200,7 +201,8 @@
         },
         icon: getNavIcon(NAV_IDS.SETTINGS)
       }
-    ].filter((item) => !item.show || item.show())
+      // Celluloplast V1 hides the AI tutor and the public landing page editor.
+    ].filter((item) => isCourseNavItemVisible(item.id) && (!item.show || item.show()))
   );
 
   $effect(() => {

@@ -39,8 +39,11 @@
     COURSE_SIDEBAR_MIN_WIDTH,
     COURSE_SIDEBAR_STORAGE_KEY
   } from '$features/course/components/sidebar/constants';
+  import { isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
 
-  sidePanel.register(aiAssistantPanelDefinition);
+  if (isCelluloplastAiUiEnabled()) {
+    sidePanel.register(aiAssistantPanelDefinition);
+  }
   sidePanel.register(transcriptPanelDefinition);
 
   interface Props {
@@ -106,7 +109,8 @@
   );
 
   const showContentAskAiBar = $derived(
-    isCourseReady &&
+    isCelluloplastAiUiEnabled() &&
+      isCourseReady &&
       isLessonOrExercisePage &&
       !($isCourseLearnerView && isContentLockedForStudent) &&
       sidePanel.activePanelId !== AI_ASSISTANT_PANEL_ID
@@ -174,7 +178,7 @@
 </script>
 
 <svelte:head>
-  <title>{courseApi.course?.title || 'ClassroomIO Course'}</title>
+  <title>{courseApi.course?.title || 'Celluloplast Academy Course'}</title>
 </svelte:head>
 
 {#if isCourseReady}

@@ -182,7 +182,7 @@
 </script>
 
 <svelte:head>
-  <title>Home - ClassroomIO</title>
+  <title>Home - Celluloplast Academy</title>
 </svelte:head>
 
 {#if creatingState === 'creating'}

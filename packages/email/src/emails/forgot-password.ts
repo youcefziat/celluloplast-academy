@@ -2,10 +2,11 @@ import * as z from 'zod';
 
 import { defineEmail } from '../send';
 import { getDefaultTemplate } from '../templates';
+import { EMAIL_APP_NAME } from '../celluloplast-brand';
 
 export const forgotPasswordEmail = defineEmail({
   id: 'forgotPassword',
-  subject: 'Password reset notification - ClassroomIO',
+  subject: 'Password reset notification - Celluloplast Academy',
   schema: z.object({
     email: z.email(),
     name: z.string().min(1),
@@ -13,7 +14,7 @@ export const forgotPasswordEmail = defineEmail({
   }),
   render: (fields) => {
     const content = `Hello ${fields.name},
-    <p>You are receiving this email because you have requested a password reset for your ClassroomIO account.</p>
+    <p>You are receiving this email because you have requested a password reset for your ${EMAIL_APP_NAME} account.</p>
     <p>Please click the button below to reset your password:</p>
     
     <div>

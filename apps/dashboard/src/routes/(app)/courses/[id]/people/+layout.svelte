@@ -12,10 +12,16 @@
   import { profile } from '$lib/utils/store/user';
   import ResetProgressButton from '$features/course/components/people/reset-progress-button.svelte';
   import type { UserCourseAnalytics } from '$features/course/utils/types';
+  import { isCelluloplastPeopleSimplified } from '$lib/celluloplast/people';
 
   let { data = $bindable(), children } = $props();
 
   let userCourseAnalytics = $derived(page.data.userCourseAnalytics as UserCourseAnalytics | null | undefined);
+  const isSimplified = isCelluloplastPeopleSimplified();
+  const pageTitle = $derived(isSimplified ? $t('celluloplast_people.page_title') : $t('course.navItem.people.title'));
+  const addButtonLabel = $derived(
+    isSimplified ? $t('celluloplast_people.assign_button') : $t('course.navItem.people.add')
+  );
 
   // Get back URL from query parameters
   let backUrl = $derived(page.url.searchParams.get('back'));
@@ -52,7 +58,7 @@
             </IconButton>
           </RoleBasedSecurity>
         {/if}
-        {$t('course.navItem.people.title')}
+        {pageTitle}
       </Page.Title>
     </Page.HeaderContent>
     <Page.Action>
@@ -70,7 +76,7 @@
         {#if !data.personId}
           <RoleBasedSecurity allowedRoles={[1, 2]}>
             <Button onclick={handleClick}>
-              {$t('course.navItem.people.add')}
+              {addButtonLabel}
             </Button>
           </RoleBasedSecurity>
         {/if}

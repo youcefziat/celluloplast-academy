@@ -157,11 +157,11 @@ export function getCursorSnippet(secret: string | null) {
 export function getDefaultAutomationKeyLabel(type: AutomationKeyType) {
   switch (type) {
     case 'mcp':
-      return 'ClassroomIO MCP';
+      return 'Celluloplast Academy MCP';
     case 'api':
-      return 'ClassroomIO API';
+      return 'Celluloplast Academy API';
     case 'zapier':
-      return 'ClassroomIO Zapier';
+      return 'Celluloplast Academy Zapier';
   }
 }
 

@@ -4,6 +4,7 @@
   import { Button } from '@cio/ui/base/button';
   import * as Card from '@cio/ui/base/card';
   import { currentOrg } from '$lib/utils/store/org';
+  import { DEFAULT_LOGO_PATH, appBrandFallback } from '$lib/celluloplast/brand';
   import * as Avatar from '@cio/ui/base/avatar';
 
   const errorCode = $derived(new URLSearchParams(page.url.search).get('error'));
@@ -14,17 +15,17 @@
 </script>
 
 <svelte:head>
-  <title>Reset Password - ClassroomIO</title>
+  <title>Reset Password - Celluloplast Academy</title>
 </svelte:head>
 
 <AuthUI isLogin={false} showOnlyContent={true}>
   <div class="flex flex-col items-center gap-4">
     <Avatar.Root>
       <Avatar.Image
-        src={$currentOrg.avatarUrl ? $currentOrg.avatarUrl : '/logo-192.png'}
-        alt={$currentOrg.name ? $currentOrg.name : 'ClassroomIO'}
+        src={$currentOrg.avatarUrl ? $currentOrg.avatarUrl : DEFAULT_LOGO_PATH}
+        alt={appBrandFallback($currentOrg.name)}
       />
-      <Avatar.Fallback>{$currentOrg.name ? $currentOrg.name : 'ClassroomIO'}</Avatar.Fallback>
+      <Avatar.Fallback>{appBrandFallback($currentOrg.name)}</Avatar.Fallback>
     </Avatar.Root>
 
     <p class="text-xl font-semibold">Something went wrong</p>

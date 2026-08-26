@@ -17,6 +17,7 @@
   import ShieldIcon from '@lucide/svelte/icons/shield';
   import { buildSsoRedirectUrl, createSsoEmailChecker, type SsoAuthState } from '$features/auth/utils/auth-sso';
   import { authSsoStore, ensureSsoInfoLoaded } from '$features/auth/utils/auth-sso-store';
+  import { pageTitle } from '$lib/celluloplast/brand';
 
   const emailFromUrl = page.url.searchParams.get('email') ?? '';
   const isEmailPrefilled = !!emailFromUrl;
@@ -124,7 +125,7 @@
 </script>
 
 <svelte:head>
-  <title>Welcome back to {$currentOrg.name || 'ClassroomIO'}</title>
+  <title>{pageTitle($t('login.welcome'))}</title>
 </svelte:head>
 
 {#snippet getPasswordAuthAlternative()}

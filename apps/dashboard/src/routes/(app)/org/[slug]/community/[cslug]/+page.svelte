@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-  <title>Question - ClassroomIO</title>
+  <title>Question - Celluloplast Academy</title>
 </svelte:head>
 
 <CommunityQuestionPage slug={data.slug} question={data.question} backHref={resolve(communityPath, {})} />

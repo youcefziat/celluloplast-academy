@@ -130,11 +130,11 @@ class OpenAPISpecGenerator {
       const spec = await generateSpecs(app, {
         documentation: {
           info: {
-            title: 'ClassroomIO API',
+            title: 'Celluloplast Academy API',
             version: '1.0.0',
             description: 'Manage your organization on classroomio via the API',
             contact: {
-              name: 'ClassroomIO',
+              name: 'Celluloplast Academy',
               url: 'https://classroomio.com'
             }
           },
