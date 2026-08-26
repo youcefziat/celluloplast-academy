@@ -706,7 +706,14 @@
       "no_cohorts": "Без назначения когорты",
       "all_cohorts": "Все когорты",
       "select_cohorts": "Выберите конкретные когорты",
-      "select_cohorts_placeholder": "Выберите когорты..."
+      "select_cohorts_placeholder": "Выберите когорты...",
+      "csv_label": "CSV content",
+      "csv_placeholder": "email,firstName,lastName,jobTitle,department,managerEmail\nalice@example.com,Alice,Martin,Technician,Production,",
+      "download_template": "Download CSV template",
+      "upload_file": "Upload CSV file",
+      "preview_label": "Preview ({count} rows)",
+      "preview_more": "…and {count} more rows",
+      "parse_errors": "{count} row(s) could not be parsed"
     },
     "page_subtitle": "Узнайте, кто входит в вашу организацию, кто учится, кто приглашён и как с ними связаться.",
     "user_analytics": {
@@ -722,7 +729,25 @@
       "confirm": "Удалить",
       "snackbar_success": "Участник удален"
     },
-    "import_limit_reached": "Вы достигли лимита учащихся, предусмотренного вашим планом. Обновите, чтобы импортировать больше студентов."
+    "import_limit_reached": "Вы достигли лимита учащихся, предусмотренного вашим планом. Обновите, чтобы импортировать больше студентов.",
+    "job_title": "Job title",
+    "department": "Department",
+    "manager": "Manager",
+    "create": {
+      "open": "Add employee",
+      "title": "Add an employee",
+      "description": "Create the employee record and send an invitation so they can set their password.",
+      "email_label": "Email",
+      "first_name_label": "First name",
+      "last_name_label": "Last name",
+      "job_title_label": "Job title",
+      "department_label": "Department",
+      "manager_label": "Manager",
+      "manager_placeholder": "No manager",
+      "cancel": "Cancel",
+      "submit": "Invite employee",
+      "snackbar_success": "Employee invited"
+    }
   },
   "community": {
     "title": "Сообщество",

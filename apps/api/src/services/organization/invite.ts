@@ -32,7 +32,7 @@ import { db, type DbOrTxClient } from '@cio/db/drizzle';
 import { assertStudentCapacityOrThrow } from './student-limit';
 import { getAppBaseUrl } from '@cio/core/config/dashboard-url';
 import { parseCourseIdsFromInviteMetadata, parseCohortIdsFromInviteMetadata } from '@api/utils/org';
-import { getProfileById, markUserAndProfileEmailVerified } from '@cio/db/queries/auth/profile';
+import { getProfileById, markUserAndProfileEmailVerified, updateProfile } from '@cio/db/queries/auth/profile';
 import { enqueueTransactionalEmail } from '@api/services/jobs';
 import { buildEmailBranding, buildEmailFromName, sanitizeEmailSubject } from '@cio/email';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
@@ -102,6 +102,36 @@ function getExpiryLabel(expiresAtIso: string): string {
   });
 }
 
+async function syncProfileFullnameFromMemberHrFields(
+  _tx: DbOrTxClient,
+  userId: string,
+  member: {
+    firstName?: string | null;
+    lastName?: string | null;
+  }
+): Promise<void> {
+  const composedName = [member.firstName, member.lastName].filter(Boolean).join(' ').trim();
+  if (!composedName) {
+    return;
+  }
+
+  const profile = await getProfileById(userId);
+  if (!profile) {
+    return;
+  }
+
+  const currentName = profile.fullname?.trim() ?? '';
+  const emailLocalPart = profile.email?.includes('@') ? profile.email.split('@')[0] : '';
+  const shouldReplace =
+    !currentName || currentName === emailLocalPart || currentName.toLowerCase() === profile.email?.toLowerCase();
+
+  if (!shouldReplace) {
+    return;
+  }
+
+  await updateProfile(userId, { fullname: composedName });
+}
+
 async function syncOrgMemberForOrgInvite(
   tx: DbOrTxClient,
   params: { organizationId: string; roleId: number; normalizedEmail: string; userId: string }
@@ -123,6 +153,8 @@ async function syncOrgMemberForOrgInvite(
       email: params.normalizedEmail,
       verified: true
     });
+
+    await syncProfileFullnameFromMemberHrFields(tx, params.userId, orgMemberByEmail);
 
     return;
   }

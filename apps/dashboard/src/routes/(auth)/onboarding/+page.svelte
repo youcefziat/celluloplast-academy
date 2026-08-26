@@ -5,6 +5,7 @@
   import * as Field from '@cio/ui/base/field';
   import { Button } from '@cio/ui/base/button';
   import { UserProfileIcon } from '$features/ui/icons';
+  import { DEFAULT_LOCALE } from '$lib/celluloplast/brand';
   import { profile } from '$lib/utils/store/user';
   import { onboardingApi } from '$features/onboarding/api/onboarding.svelte';
   import { generateSitename } from '$lib/utils/functions/org';
@@ -17,7 +18,7 @@
     fullname: '',
     orgName: '',
     siteName: '',
-    locale: 'en'
+    locale: DEFAULT_LOCALE
   });
   let isSiteNameTouched = $state(false);
 

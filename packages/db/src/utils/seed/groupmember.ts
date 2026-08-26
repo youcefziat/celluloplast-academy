@@ -16,13 +16,12 @@ export async function seedGroupmembers({
   reactGroupId,
   pandasGroupId,
   adminUserId,
-  studentUserId,
-  earlyAdopterGroupId,
-  earlyAdopterAdminUserId,
-  earlyAdopterStudentUserId
+  studentUserId
 }: SeedGroupmember) {
   const existingGroupMembers = await db.select().from(groupmember);
-  const existingGroupMemberKeys = existingGroupMembers.map((gm) => `${gm.groupId}-${gm.profileId || gm.email}`);
+  const existingGroupMemberKeys = existingGroupMembers.map(
+    (member) => `${member.groupId}-${member.profileId || member.email}`
+  );
 
   const groupMembersToInsert = [
     {
@@ -47,19 +46,8 @@ export async function seedGroupmembers({
       groupId: pandasGroupId,
       roleId: 3, // STUDENT
       profileId: studentUserId
-    },
-    {
-      groupId: earlyAdopterGroupId,
-      roleId: 2, // TUTOR
-      profileId: earlyAdopterAdminUserId,
-      email: 'early-adopter@test.com'
-    },
-    {
-      groupId: earlyAdopterGroupId,
-      roleId: 3, // STUDENT
-      profileId: earlyAdopterStudentUserId
     }
-  ].filter((gm) => !existingGroupMemberKeys.includes(`${gm.groupId}-${gm.profileId || gm.email}`));
+  ].filter((member) => !existingGroupMemberKeys.includes(`${member.groupId}-${member.profileId || member.email}`));
 
   if (groupMembersToInsert.length > 0) {
     await db.insert(groupmember).values(groupMembersToInsert);

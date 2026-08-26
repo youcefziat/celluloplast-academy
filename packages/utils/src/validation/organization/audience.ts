@@ -15,14 +15,65 @@ export type TAudienceSortBy = z.infer<typeof AudienceSortBy>;
 export type TAudienceSortOrder = z.infer<typeof AudienceSortOrder>;
 export type TGetAudienceQuery = z.infer<typeof ZGetAudienceQuery>;
 
-export const ZImportAudienceMembers = z.object({
-  recipientCsv: z.string().max(25000),
-  courseIds: z.array(z.string().uuid()).optional(),
-  cohortIds: z.array(z.string().uuid()).optional(),
-  allCourses: z.boolean().optional().default(false),
-  allCohorts: z.boolean().optional().default(false),
-  sendEmail: z.boolean().default(true)
+const optionalTrimmedString = z
+  .string()
+  .trim()
+  .max(200)
+  .optional()
+  .transform((value) => (value && value.length > 0 ? value : undefined));
+
+export const ZAudienceMemberHrFields = z.object({
+  firstName: optionalTrimmedString,
+  lastName: optionalTrimmedString,
+  jobTitle: optionalTrimmedString,
+  department: optionalTrimmedString
 });
+
+export const ZCreateAudienceMember = z
+  .object({
+    email: z.email(),
+    firstName: optionalTrimmedString,
+    lastName: optionalTrimmedString,
+    jobTitle: optionalTrimmedString,
+    department: optionalTrimmedString,
+    managerMemberId: z.coerce.number().int().positive().optional(),
+    managerEmail: z.email().optional(),
+    courseIds: z.array(z.string().uuid()).optional(),
+    cohortIds: z.array(z.string().uuid()).optional(),
+    sendEmail: z.boolean().default(true)
+  })
+  .refine((data) => !(data.managerMemberId && data.managerEmail), {
+    message: 'Provide either managerMemberId or managerEmail, not both',
+    path: ['managerEmail']
+  });
+
+export type TCreateAudienceMember = z.infer<typeof ZCreateAudienceMember>;
+
+export const ZAudienceImportRow = z.object({
+  email: z.email(),
+  firstName: optionalTrimmedString,
+  lastName: optionalTrimmedString,
+  jobTitle: optionalTrimmedString,
+  department: optionalTrimmedString,
+  managerEmail: optionalTrimmedString
+});
+
+export type TAudienceImportRow = z.infer<typeof ZAudienceImportRow>;
+
+export const ZImportAudienceMembers = z
+  .object({
+    recipientCsv: z.string().max(25000).optional(),
+    rows: z.array(ZAudienceImportRow).max(500).optional(),
+    courseIds: z.array(z.string().uuid()).optional(),
+    cohortIds: z.array(z.string().uuid()).optional(),
+    allCourses: z.boolean().optional().default(false),
+    allCohorts: z.boolean().optional().default(false),
+    sendEmail: z.boolean().default(true)
+  })
+  .refine((data) => Boolean(data.recipientCsv?.trim()) || (data.rows?.length ?? 0) > 0, {
+    message: 'Provide recipientCsv or rows',
+    path: ['rows']
+  });
 
 export type TImportAudienceMembers = z.infer<typeof ZImportAudienceMembers>;
 

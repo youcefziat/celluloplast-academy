@@ -61,8 +61,16 @@
             aria-label={$t('audience.select_all')}
           />
         </Table.Head>
-        {#each headers as header (header)}
-          <Table.Head>{header.value}</Table.Head>
+        {#each headers as header (header.key)}
+          <Table.Head
+            class={header.key === 'job_title' || header.key === 'department'
+              ? 'hidden md:table-cell'
+              : header.key === 'manager'
+                ? 'hidden lg:table-cell'
+                : undefined}
+          >
+            {header.value}
+          </Table.Head>
         {/each}
         <Table.Head class="w-12 text-right">
           <span class="sr-only">{$t('audience.invite.row_actions_aria')}</span>

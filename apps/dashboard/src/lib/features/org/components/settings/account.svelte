@@ -3,6 +3,7 @@
   import * as Select from '@cio/ui/base/select';
 
   import type { TLocale } from '@cio/db/types';
+  import { DEFAULT_LOCALE } from '$lib/celluloplast/brand';
   import { LANGUAGES } from '$lib/utils/constants/translation';
   import { t } from '$lib/utils/functions/translations';
 
@@ -13,7 +14,12 @@
     change?: () => void;
   }
 
-  let { className = '', value = $bindable('en'), hasLangChanged = $bindable(false), change }: Props = $props();
+  let {
+    className = '',
+    value = $bindable(DEFAULT_LOCALE),
+    hasLangChanged = $bindable(false),
+    change
+  }: Props = $props();
 
   function handleSelect(selectedValue: string) {
     value = selectedValue as TLocale;

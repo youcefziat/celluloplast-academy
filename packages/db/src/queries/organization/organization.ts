@@ -28,6 +28,8 @@ import {
 
 import { PLAN } from '@cio/utils/plans';
 import { ROLE } from '@cio/utils/constants';
+import { alias } from 'drizzle-orm/pg-core';
+import { CELLULOPLAST_PRIMARY_ORG, CELLULOPLAST_PRIMARY_ORG_ID } from '@db/utils/seed/celluloplast-organization';
 import { db, type DbOrTxClient } from '@db/drizzle';
 import type { TAudienceSortBy, TAudienceSortOrder } from '@cio/utils/validation/organization';
 
@@ -403,11 +405,23 @@ export const deleteOrganizationAudienceMember = async (orgId: string, memberId: 
 };
 
 export const getOrganizationAudienceMember = async (orgId: string, memberId: number) => {
+  const managerMember = alias(schema.organizationmember, 'manager_member');
+  const managerProfile = alias(schema.profile, 'manager_profile');
+
   const [row] = await db
     .select({
       memberId: schema.organizationmember.id,
       profileId: schema.organizationmember.profileId,
       fullname: schema.profile.fullname,
+      firstName: schema.organizationmember.firstName,
+      lastName: schema.organizationmember.lastName,
+      jobTitle: schema.organizationmember.jobTitle,
+      department: schema.organizationmember.department,
+      managerMemberId: schema.organizationmember.managerMemberId,
+      managerEmail: sql<string | null>`coalesce(${managerProfile.email}, ${managerMember.email})`.as('managerEmail'),
+      managerFullname: managerProfile.fullname,
+      managerFirstName: managerMember.firstName,
+      managerLastName: managerMember.lastName,
       email: sql<string>`coalesce(${schema.profile.email}, ${schema.organizationmember.email})`.as('email'),
       avatarUrl: schema.profile.avatarUrl,
       profileCreatedAt: schema.profile.createdAt,
@@ -415,6 +429,8 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
     })
     .from(schema.organizationmember)
     .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+    .leftJoin(managerMember, eq(schema.organizationmember.managerMemberId, managerMember.id))
+    .leftJoin(managerProfile, eq(managerMember.profileId, managerProfile.id))
     .where(
       and(
         eq(schema.organizationmember.organizationId, orgId),
@@ -429,9 +445,15 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
   }
 
   const email = row.email?.trim() ?? '';
-  const name = row.fullname?.trim() || (email.includes('@') ? email.split('@')[0] : email) || '';
+  const composedName = [row.firstName, row.lastName].filter(Boolean).join(' ').trim();
+  const name = row.fullname?.trim() || composedName || (email.includes('@') ? email.split('@')[0] : email) || '';
   const createdAtRaw = row.profileId ? row.profileCreatedAt : row.memberCreatedAt;
   const createdAt = createdAtRaw ? new Date(createdAtRaw).toDateString() : '';
+  const managerName =
+    row.managerFullname?.trim() ||
+    [row.managerFirstName, row.managerLastName].filter(Boolean).join(' ').trim() ||
+    row.managerEmail?.trim() ||
+    '';
 
   return {
     id: row.memberId,
@@ -439,14 +461,30 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
     name,
     email,
     avatarUrl: row.avatarUrl || '',
-    createdAt
+    createdAt,
+    firstName: row.firstName ?? null,
+    lastName: row.lastName ?? null,
+    jobTitle: row.jobTitle ?? null,
+    department: row.department ?? null,
+    manager: row.managerMemberId
+      ? {
+          id: row.managerMemberId,
+          email: row.managerEmail?.trim() ?? '',
+          name: managerName
+        }
+      : null
   };
 };
 
 export const updateOrganizationAudienceMember = async (
   orgId: string,
   memberId: number,
-  data: Partial<Pick<TNewOrganizationmember, 'email' | 'verified'>>
+  data: Partial<
+    Pick<
+      TNewOrganizationmember,
+      'email' | 'verified' | 'firstName' | 'lastName' | 'jobTitle' | 'department' | 'managerMemberId'
+    >
+  >
 ) => {
   const [updated] = await db
     .update(schema.organizationmember)
@@ -661,7 +699,15 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
   const sortBy = options.sortBy ?? 'createdAt';
   const sortOrder = options.sortOrder ?? 'desc';
 
-  const audienceNameSql = sql<string>`COALESCE(NULLIF(${schema.profile.fullname}, ''), ${schema.profile.email}, ${schema.organizationmember.email})`;
+  const managerMember = alias(schema.organizationmember, 'manager_member');
+  const managerProfile = alias(schema.profile, 'manager_profile');
+
+  const audienceNameSql = sql<string>`COALESCE(
+    NULLIF(${schema.profile.fullname}, ''),
+    NULLIF(trim(concat_ws(' ', ${schema.organizationmember.firstName}, ${schema.organizationmember.lastName})), ''),
+    ${schema.profile.email},
+    ${schema.organizationmember.email}
+  )`;
   const audienceEmailSql = sql<string>`COALESCE(${schema.profile.email}, ${schema.organizationmember.email})`;
   const audienceCreatedAtSql = sql<string>`COALESCE(${schema.profile.createdAt}, ${schema.organizationmember.createdAt})`;
 
@@ -676,7 +722,11 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
       or(
         ilike(schema.profile.fullname, searchValue),
         ilike(schema.profile.email, searchValue),
-        ilike(schema.organizationmember.email, searchValue)
+        ilike(schema.organizationmember.email, searchValue),
+        ilike(schema.organizationmember.firstName, searchValue),
+        ilike(schema.organizationmember.lastName, searchValue),
+        ilike(schema.organizationmember.jobTitle, searchValue),
+        ilike(schema.organizationmember.department, searchValue)
       )!
     );
   }
@@ -699,6 +749,15 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
       memberId: schema.organizationmember.id,
       profileId: schema.profile.id,
       fullname: schema.profile.fullname,
+      firstName: schema.organizationmember.firstName,
+      lastName: schema.organizationmember.lastName,
+      jobTitle: schema.organizationmember.jobTitle,
+      department: schema.organizationmember.department,
+      managerMemberId: schema.organizationmember.managerMemberId,
+      managerEmail: sql<string | null>`coalesce(${managerProfile.email}, ${managerMember.email})`.as('managerEmail'),
+      managerFullname: managerProfile.fullname,
+      managerFirstName: managerMember.firstName,
+      managerLastName: managerMember.lastName,
       email: audienceEmailSql.as('email'),
       avatarUrl: schema.profile.avatarUrl,
       profileCreatedAt: schema.profile.createdAt,
@@ -706,6 +765,8 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
     })
     .from(schema.organizationmember)
     .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+    .leftJoin(managerMember, eq(schema.organizationmember.managerMemberId, managerMember.id))
+    .leftJoin(managerProfile, eq(managerMember.profileId, managerProfile.id))
     .where(whereClause)
     .orderBy(orderedExpression, desc(schema.organizationmember.id))
     .limit(limit)
@@ -714,9 +775,15 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
   return {
     items: result.map((row) => {
       const email = row.email?.trim() ?? '';
-      const name = row.fullname?.trim() || (email.includes('@') ? email.split('@')[0] : email) || '';
+      const composedName = [row.firstName, row.lastName].filter(Boolean).join(' ').trim();
+      const name = row.fullname?.trim() || composedName || (email.includes('@') ? email.split('@')[0] : email) || '';
       const createdAtRaw = row.profileId ? row.profileCreatedAt : row.memberCreatedAt;
       const createdAt = createdAtRaw ? new Date(createdAtRaw).toDateString() : '';
+      const managerName =
+        row.managerFullname?.trim() ||
+        [row.managerFirstName, row.managerLastName].filter(Boolean).join(' ').trim() ||
+        row.managerEmail?.trim() ||
+        '';
 
       return {
         id: row.memberId,
@@ -724,7 +791,18 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
         name,
         email,
         avatarUrl: row.avatarUrl || '',
-        createdAt
+        createdAt,
+        firstName: row.firstName ?? null,
+        lastName: row.lastName ?? null,
+        jobTitle: row.jobTitle ?? null,
+        department: row.department ?? null,
+        manager: row.managerMemberId
+          ? {
+              id: row.managerMemberId,
+              email: row.managerEmail?.trim() ?? '',
+              name: managerName
+            }
+          : null
       };
     }),
     page,
@@ -909,31 +987,65 @@ export const getFreePlanOrganizationsOverStudentLimit = async (
 };
 
 /**
- * Gets the first (and typically only) organization - used for self-hosted single-org mode
- * @returns First organization by createdAt, or null if none exist
+ * Resolves the self-hosted primary organization id.
+ * Celluloplast V1 prefers the celluloplast tenant over upstream demo orgs that may share createdAt.
  */
-export const getFirstOrganization = async (): Promise<TOrganization | null> => {
-  const [organization] = await db.select().from(schema.organization).orderBy(schema.organization.createdAt).limit(1);
+const resolveSelfHostedPrimaryOrgId = async (): Promise<string | null> => {
+  const [bySiteName] = await db
+    .select({ id: schema.organization.id })
+    .from(schema.organization)
+    .where(eq(schema.organization.siteName, CELLULOPLAST_PRIMARY_ORG.siteName))
+    .limit(1);
 
-  return organization || null;
-};
+  if (bySiteName) {
+    return bySiteName.id;
+  }
 
-/**
- * Gets the first organization with plans - for self-hosted single-org mode
- * @returns First organization with plans (by createdAt), or null if none exist
- */
-export const getFirstOrganizationWithPlans = async (): Promise<
-  (TOrganization & { plans: Array<OrganizationPlan> }) | null
-> => {
-  // Get the first organization ID (by createdAt) - avoid limit(1) on joined result
-  // which would discard plan rows when an org has multiple plans
+  const [byId] = await db
+    .select({ id: schema.organization.id })
+    .from(schema.organization)
+    .where(eq(schema.organization.id, CELLULOPLAST_PRIMARY_ORG_ID))
+    .limit(1);
+
+  if (byId) {
+    return byId.id;
+  }
+
   const [firstOrg] = await db
     .select({ id: schema.organization.id })
     .from(schema.organization)
     .orderBy(schema.organization.createdAt)
     .limit(1);
 
-  if (!firstOrg) return null;
+  return firstOrg?.id ?? null;
+};
+
+/**
+ * Gets the first (and typically only) organization - used for self-hosted single-org mode
+ * @returns Primary Celluloplast organization when present, otherwise first by createdAt
+ */
+export const getFirstOrganization = async (): Promise<TOrganization | null> => {
+  const orgId = await resolveSelfHostedPrimaryOrgId();
+  if (!orgId) {
+    return null;
+  }
+
+  const [organization] = await db.select().from(schema.organization).where(eq(schema.organization.id, orgId)).limit(1);
+
+  return organization || null;
+};
+
+/**
+ * Gets the first organization with plans - for self-hosted single-org mode
+ * @returns Primary organization with plans (Celluloplast when present), or null if none exist
+ */
+export const getFirstOrganizationWithPlans = async (): Promise<
+  (TOrganization & { plans: Array<OrganizationPlan> }) | null
+> => {
+  const orgId = await resolveSelfHostedPrimaryOrgId();
+  if (!orgId) {
+    return null;
+  }
 
   const result = await db
     .select({
@@ -948,7 +1060,7 @@ export const getFirstOrganizationWithPlans = async (): Promise<
     })
     .from(schema.organization)
     .leftJoin(schema.organizationPlan, eq(schema.organization.id, schema.organizationPlan.orgId))
-    .where(eq(schema.organization.id, firstOrg.id));
+    .where(eq(schema.organization.id, orgId));
 
   const organizationMap = new Map<
     string,
@@ -1229,6 +1341,7 @@ export async function getOrgMembersByProfileIds(orgId: string, profileIds: strin
 }
 
 export type TOrganizationMemberByEmail = {
+  id: number;
   normalizedEmail: string;
   profileId: string | null;
   roleId: number;
@@ -1248,6 +1361,7 @@ export async function getOrganizationMembersByNormalizedEmails(
 
     const rows = await db
       .select({
+        id: schema.organizationmember.id,
         roleId: schema.organizationmember.roleId,
         profileId: schema.organizationmember.profileId,
         matchEmail: sql<string>`lower(trim(coalesce(${schema.profile.email}, ${schema.organizationmember.email})))`.as(
@@ -1264,6 +1378,7 @@ export async function getOrganizationMembersByNormalizedEmails(
       );
 
     return rows.map((row) => ({
+      id: row.id,
       normalizedEmail: row.matchEmail,
       profileId: row.profileId,
       roleId: row.roleId

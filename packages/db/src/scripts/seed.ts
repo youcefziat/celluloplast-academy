@@ -12,7 +12,11 @@ import { type LessonTemplate, seedLessons } from '@db/utils/seed/lesson';
 import { seedNewsfeedThreads } from '@db/utils/seed/newsfeedThreads';
 import { seedOrganization } from '@db/utils/seed/organization';
 import { seedOrganizationMember } from '@db/utils/seed/organizationmember';
-import { seedEarlyAdopterOrganizationPlan, seedEnterpriseOrganizationPlan } from '@db/utils/seed/organizationPlan';
+import {
+  seedEarlyAdopterOrganizationPlan,
+  seedEnterpriseOrganizationPlan,
+  seedPrimaryOrganizationPlan
+} from '@db/utils/seed/organizationPlan';
 import { seedProfile } from '@db/utils/seed/profile';
 import { seedQuestionTypes } from '@db/utils/seed/questionType';
 import { seedQuestions } from '@db/utils/seed/question';
@@ -142,10 +146,8 @@ const seedFunctions = {
     });
   },
   'organization-plan': async () => {
-    console.log('📝 Seeding enterprise organization plan...');
-    await seedEnterpriseOrganizationPlan({ enterpriseOrgId: ENTERPRISE_ORG_ID });
-    console.log('📝 Seeding early adopter organization plan...');
-    await seedEarlyAdopterOrganizationPlan({ earlyAdopterOrgId: EARLY_ADOPTER_ORG_ID });
+    console.log('📝 Seeding primary organization plan...');
+    await seedPrimaryOrganizationPlan({ orgId: TEST_ORG_ID });
   },
   groups: async () => {
     console.log('📝 Seeding groups...');
@@ -265,8 +267,6 @@ async function seed() {
       await seedFunctions.exercises();
       await seedFunctions.questions();
       await seedFunctions.templates();
-      await seedFunctions.compliance();
-      await seedFunctions['newsfeed-threads']();
     } else {
       // Run only specified seed functions
       // Order matters for dependencies, so we maintain the original order

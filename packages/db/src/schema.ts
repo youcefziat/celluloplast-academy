@@ -408,7 +408,7 @@ export const profile = pgTable(
     telegramChatId: bigint('telegram_chat_id', { mode: 'number' }),
     isEmailVerified: boolean('is_email_verified').default(false),
     verifiedAt: timestamp('verified_at', { withTimezone: true, mode: 'string' }),
-    locale: locale().default('en'),
+    locale: locale().default('fr'),
     isRestricted: boolean('is_restricted').default(false).notNull(),
     settings: jsonb().default({}).$type<Record<string, unknown>>()
   },
@@ -1831,6 +1831,11 @@ export const organizationmember = pgTable(
     profileId: uuid('profile_id'),
     email: text(),
     verified: boolean().default(false),
+    firstName: text('first_name'),
+    lastName: text('last_name'),
+    jobTitle: text('job_title'),
+    department: text(),
+    managerMemberId: bigint('manager_member_id', { mode: 'number' }),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
       .default(sql`timezone('utc'::text, now())`)
       .notNull()
@@ -1851,9 +1856,15 @@ export const organizationmember = pgTable(
       foreignColumns: [role.id],
       name: 'organizationmember_role_id_fkey'
     }),
+    foreignKey({
+      columns: [table.managerMemberId],
+      foreignColumns: [table.id],
+      name: 'organizationmember_manager_member_id_fkey'
+    }).onDelete('set null'),
     index('idx_organizationmember_profile_id').on(table.profileId),
     index('idx_organizationmember_organization_id').on(table.organizationId),
     index('idx_organizationmember_profile_org').on(table.profileId, table.organizationId),
+    index('idx_organizationmember_manager_member_id').on(table.managerMemberId),
     uniqueIndex('organizationmember_org_profile_unique')
       .on(table.organizationId, table.profileId)
       .where(sql`${table.profileId} IS NOT NULL`),

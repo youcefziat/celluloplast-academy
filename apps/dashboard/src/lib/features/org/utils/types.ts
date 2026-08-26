@@ -119,6 +119,11 @@ export type ImportAudienceRequest = (typeof classroomio.organization)['audience'
 export type ImportAudienceSuccess = Extract<InferResponseType<ImportAudienceRequest>, { success: true }>;
 export type ImportAudienceData = ImportAudienceSuccess['data'];
 
+// Audience create types
+export type CreateAudienceMemberRequest = (typeof classroomio.organization)['audience']['$post'];
+export type CreateAudienceMemberSuccess = Extract<InferResponseType<CreateAudienceMemberRequest>, { success: true }>;
+export type CreateAudienceMemberData = CreateAudienceMemberSuccess['data'];
+
 // Audience assign courses types
 export type AssignAudienceCoursesRequest = (typeof classroomio.organization)['audience']['assign-courses']['$post'];
 export type AssignAudienceCoursesSuccess = Extract<InferResponseType<AssignAudienceCoursesRequest>, { success: true }>;

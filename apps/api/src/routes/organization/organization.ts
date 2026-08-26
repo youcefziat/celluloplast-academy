@@ -1,7 +1,15 @@
 import {
+  assignAudienceToCourses,
+  createAudienceMember,
+  importAudienceMembers,
+  resendAudienceInvite,
+  revokeAudiencePendingInvite
+} from '@api/services/organization/audience';
+import {
   ZAssignAudienceCourses,
   ZAudienceInviteByEmail,
   ZCancelOrgPlan,
+  ZCreateAudienceMember,
   ZCreateLinkInvite,
   ZCreateOrgPlan,
   ZCreateOrganization,
@@ -20,12 +28,6 @@ import {
   ZUpdateOrganization
 } from '@cio/utils/validation/organization';
 import { assertMcpAutomationUsageAllowed, recordMcpAutomationUsage } from '@api/services/organization/automation-usage';
-import {
-  assignAudienceToCourses,
-  importAudienceMembers,
-  resendAudienceInvite,
-  revokeAudiencePendingInvite
-} from '@api/services/organization/audience';
 import {
   cancelOrgPlan,
   createOrg,
@@ -275,6 +277,29 @@ export const organizationRouter = new Hono()
       );
     } catch (error) {
       return handleError(c, error, 'Failed to fetch organization audience');
+    }
+  })
+  /**
+   * POST /organization/audience
+   * Creates a student audience member and sends an invite email
+   */
+  .post('/audience', authMiddleware, orgAdminMiddleware, zValidator('json', ZCreateAudienceMember), async (c) => {
+    try {
+      const orgId = c.req.header('cio-org-id')!;
+      const user = c.get('user')!;
+      const data = c.req.valid('json');
+
+      const result = await createAudienceMember(orgId, data, user.id);
+
+      return c.json(
+        {
+          success: true,
+          data: result
+        },
+        201
+      );
+    } catch (error) {
+      return handleError(c, error, 'Failed to create audience member');
     }
   })
   /**

@@ -1,6 +1,7 @@
 import type { TProfile, TUser } from '@cio/db/types';
 
 import { writable } from 'svelte/store';
+import { DEFAULT_LOCALE } from '$lib/celluloplast/brand';
 
 interface UserStore {
   openAuthModal: boolean;
@@ -33,7 +34,7 @@ export const defaultProfileState: TProfile = {
   goal: null,
   source: null,
   telegramChatId: null,
-  locale: 'en',
+  locale: DEFAULT_LOCALE,
   isEmailVerified: false,
   verifiedAt: null,
   canAddCourse: true,

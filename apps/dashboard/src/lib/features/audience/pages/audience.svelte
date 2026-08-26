@@ -44,6 +44,9 @@
   const headers = $derived([
     { key: 'name', value: t.get('audience.name') },
     { key: 'email', value: t.get('audience.email') },
+    { key: 'job_title', value: t.get('audience.job_title') },
+    { key: 'department', value: t.get('audience.department') },
+    { key: 'manager', value: t.get('audience.manager') },
     { key: 'status', value: t.get('audience.status') },
     { key: 'date_joined', value: t.get('audience.date_joined') }
   ]);

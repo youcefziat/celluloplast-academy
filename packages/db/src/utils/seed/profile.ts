@@ -1,4 +1,7 @@
 import { db, profile } from '@db/drizzle';
+import type { TLocale } from '@db/types';
+
+const DEFAULT_PROFILE_LOCALE: TLocale = 'fr';
 
 type TUserSeedData = {
   id: string;
@@ -30,7 +33,8 @@ export async function seedProfile({ usersData }: { usersData: TUserSeedData[] })
       username: `${user.email.split('@')[0]}${Date.now()}`,
       email: user.email,
       canAddCourse: true,
-      isEmailVerified: true
+      isEmailVerified: true,
+      locale: DEFAULT_PROFILE_LOCALE
     }))
     .filter((p) => !existingProfileIds.includes(p.id));
 

@@ -5,6 +5,7 @@ import { ONBOARDING_STEPS } from '../utils/constants';
 import { BaseApiWithErrors, classroomio } from '$lib/utils/services/api';
 import { goto } from '$app/navigation';
 import { handleLocaleChange } from '$lib/utils/functions/translations';
+import { DEFAULT_LOCALE } from '$lib/celluloplast/brand';
 import { onboardingValidation } from '../utils/validations';
 import { profile } from '$lib/utils/store/user';
 import { resolve } from '$app/paths';
@@ -86,7 +87,7 @@ export class OnboardingApi extends BaseApiWithErrors {
       logContext: 'submitting organization setup',
       onSuccess: (result) => {
         profile.set(result.data);
-        handleLocaleChange(result.data.locale ?? 'en');
+        handleLocaleChange(result.data.locale ?? DEFAULT_LOCALE);
 
         const welcomePopup = `${result.data.isEmailVerified}`;
 

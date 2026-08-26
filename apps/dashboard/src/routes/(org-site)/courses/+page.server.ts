@@ -1,6 +1,8 @@
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import { classroomio, type InferResponseType } from '$lib/utils/services/api';
 import { safeServerApi } from '$lib/utils/services/api/server';
+import { CELLULOPLAST_V1 } from '$lib/celluloplast/features';
+import { getCelluloplastPublicLandingRedirect } from '$lib/celluloplast/landing.server';
 import { redirect } from '@sveltejs/kit';
 
 type GetPublicCoursesRequest = typeof classroomio.organization.courses.public.$get;
@@ -17,7 +19,7 @@ function normalizeTagsParam(rawTags: string | null): string[] {
   return normalized ?? [];
 }
 
-export const load = async ({ parent, url }) => {
+export const load = async ({ parent, url, locals }) => {
   const { isOrgSite, orgSiteName, org } = await parent();
 
   if (!isOrgSite || !org) {
@@ -27,6 +29,21 @@ export const load = async ({ parent, url }) => {
   const siteName = orgSiteName || org.siteName;
   if (!siteName) {
     throw redirect(307, '/');
+  }
+
+  const celluloplastRedirect = getCelluloplastPublicLandingRedirect({
+    pathname: url.pathname,
+    locals,
+    orgSiteName: siteName,
+    orgId: org.id
+  });
+
+  if (celluloplastRedirect) {
+    throw redirect(307, celluloplastRedirect);
+  }
+
+  if (!CELLULOPLAST_V1.exploreCatalog) {
+    throw redirect(307, '/login');
   }
 
   const normalizedTags = normalizeTagsParam(url.searchParams.get('tags'));

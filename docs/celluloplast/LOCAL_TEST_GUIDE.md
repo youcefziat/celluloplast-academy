@@ -94,6 +94,24 @@ pnpm dashboard:dev
 | Administration | `/org/{slug}/settings` (ADMIN) |
 | LMS étudiant | `/lms`, `/lms/mylearning`, `/lms/certificates` |
 
+> **Organisation principale (localhost)** : après seed upstream, la demo org s’appelle **Celluloplast** (`siteName` = `celluloplast`). Si la base existait déjà avec `Udemy Test` / `udemy-test`, exécuter une fois :
+>
+> ```powershell
+> .\scripts\celluloplast\patch-primary-org.ps1
+> ```
+>
+> ou `pnpm --filter @cio/db db:celluloplast:patch-org` (avec `packages/db/.env` pointant sur Postgres). Idempotent.
+
+> **Migration RH employés** (colonnes `first_name`, `last_name`, `job_title`, `department`, `manager_member_id` sur `organizationmember`) :
+>
+> ```powershell
+> docker exec celluloplast-api sh -c "cd /app/packages/db && pnpm db:migrate"
+> ```
+>
+> Puis reconstruire l’API si besoin : `docker compose -f docker-compose.celluloplast.yaml up -d --build api dashboard`
+
+> **Route `/courses`** (catalogue public upstream) : en self-hosted Celluloplast, les utilisateurs **connectés** sont redirigés vers `/org/celluloplast/dash` (ADMIN/TUTOR) ou `/lms` (STUDENT). Les visiteurs non connectés voient encore la page publique (login / marketing).
+
 ---
 
 ## Comptes
@@ -102,7 +120,7 @@ Ne pas stocker de mots de passe réels dans ce dépôt.
 
 1. Au premier démarrage : créer l’organisation + compte **ADMIN** (onboarding / signup self-host).
 2. Inviter un **TUTOR** via Administration → Équipes (rôle tuteur) et l’ajouter comme membre d’au moins une formation.
-3. Inviter / ajouter un **STUDENT** via Employés (audience) ou People d’une formation (`?add=true`).
+3. Inviter / ajouter un **STUDENT** via **Employés** (`/org/{slug}/audience`) — bouton **Ajouter un employé** (formulaire) ou **Importer CSV** (colonnes email, prénom, nom, poste, département, manager) — ou People d’une formation (`?add=true`).
 
 Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 
@@ -125,6 +143,8 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] page progression (recherche, filtre formation, filtre statut)
 [ ] page certifications (liste + Voir PDF)
 [ ] Administration (profil / org / équipes) — pas de billing / AI / landing
+[ ] Paramètres org : modifier nom + logo → Enregistrer (persiste après reload)
+[ ] Employés : Ajouter un employé (formulaire) ou Importer CSV
 ```
 
 ### STUDENT
@@ -157,7 +177,6 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 ```text
 [ ] pas d’AI Tutor / chat IA / génération IA dans l’UI
 [ ] pas de community / news feed / explore / marketplace / billing
-[ ] pas d’import CSV Employés (masqué)
 [ ] filtre Formations : SELF_PACED seulement
 ```
 
@@ -195,3 +214,9 @@ pnpm --filter @cio/dashboard exec vite build --sourcemap false
 ## Après validation manuelle
 
 Le prochain sprint est **S12** (déploiement VPS) **uniquement** après OK localhost.
+
+---
+
+## Documentation complémentaire
+
+- **Journal d’implémentation (août 2026)** : [`IMPLEMENTATION_2026-08-26.md`](./IMPLEMENTATION_2026-08-26.md) — employés, org settings, tenant unique, migration, recette.

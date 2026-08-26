@@ -4,6 +4,7 @@
   import { PublicCourse } from '@cio/ui';
   import { toPublicSidebarSections } from '$features/course/utils/public-course-mappers';
   import type { PublicCourseSidebarItem, PublicCourseSidebarSection } from '@cio/ui/custom/public-course';
+  import { getCelluloplastPublicExploreHref } from '$lib/celluloplast/landing-page';
   import { t } from '$lib/utils/functions/translations';
   import type { Snippet } from 'svelte';
 
@@ -44,7 +45,7 @@
     {prevItem}
     {nextItem}
     {hrefFor}
-    exploreHref="/courses"
+    exploreHref={getCelluloplastPublicExploreHref()}
     signInHref="/login"
     exploreLabel={$t('public_course.header.explore_courses')}
     signInLabel={$t('public_course.header.sign_in')}

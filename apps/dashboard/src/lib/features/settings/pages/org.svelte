@@ -11,16 +11,14 @@
   import { Input } from '@cio/ui/base/input';
   import { UploadImage, UnsavedChanges } from '$features/ui';
   import * as Field from '@cio/ui/base/field';
-
-  interface Props {
-    hasUnsavedChanges?: boolean;
-  }
-
-  let { hasUnsavedChanges = $bindable(false) }: Props = $props();
+  import * as Page from '@cio/ui/base/page';
 
   let avatar = $state<string | File | undefined>();
+  let draftName = $state('');
   let savedName = $state('');
   let capturedOrgId = $state<string | null>(null);
+  let hasUnsavedChanges = $state(false);
+  let isSaving = $state(false);
 
   const themes = {
     rose: 'rose',
@@ -31,7 +29,6 @@
   };
 
   const updateThemeApi = debounce(async (theme: string) => {
-    console.log('saving theme', theme);
     await orgApi.update(
       $currentOrg.id,
       {
@@ -55,21 +52,32 @@
     };
   }
 
-  export async function handleUpdate() {
-    await orgApi.update($currentOrg.id, {
-      name: $currentOrg.name,
-      avatar
-    });
+  async function handleUpdate() {
+    if (!$currentOrg.id) {
+      return;
+    }
 
-    if (orgApi.success) {
-      hasUnsavedChanges = false;
-      avatar = undefined;
-      savedName = $currentOrg.name;
+    isSaving = true;
+
+    try {
+      await orgApi.update($currentOrg.id, {
+        name: draftName.trim(),
+        avatar
+      });
+
+      if (orgApi.success) {
+        hasUnsavedChanges = false;
+        avatar = undefined;
+        captureSavedFields();
+      }
+    } finally {
+      isSaving = false;
     }
   }
 
   function captureSavedFields() {
     savedName = $currentOrg.name;
+    draftName = $currentOrg.name;
   }
 
   $effect(() => {
@@ -81,11 +89,15 @@
     }
   });
 
-  export function handleDiscard() {
-    $currentOrg.name = savedName;
+  function handleDiscard() {
+    draftName = savedName;
     avatar = undefined;
     hasUnsavedChanges = false;
     orgApi.errors = {};
+  }
+
+  function markDirty() {
+    hasUnsavedChanges = true;
   }
 
   let isCustomTheme = $derived($currentOrg?.theme?.includes('#'));
@@ -99,9 +111,9 @@
     <Field.Group>
       <Field.Field>
         <Field.Label>{$t('settings.organization.organization_profile.organization_name')}</Field.Label>
-        <Input bind:value={$currentOrg.name} oninput={() => (hasUnsavedChanges = true)} class="w-full lg:w-60" />
+        <Input bind:value={draftName} oninput={markDirty} class="w-full lg:w-60" />
         {#if orgApi.errors.name}
-          <Field.Error>{$t(orgApi.errors.name)}</Field.Error>
+          <Field.Error>{orgApi.errors.name}</Field.Error>
         {/if}
       </Field.Field>
       <Field.Field>
@@ -110,8 +122,11 @@
           src={$currentOrg.avatarUrl}
           shape="rounded-md"
           widthHeight="w-24 h-24"
-          change={() => (hasUnsavedChanges = true)}
+          change={markDirty}
         />
+        {#if orgApi.errors.avatar}
+          <Field.Error>{orgApi.errors.avatar}</Field.Error>
+        {/if}
       </Field.Field>
     </Field.Group>
   </Field.Set>
@@ -174,7 +189,6 @@
             ? 'custom-theme-picker--empty'
             : ''}"
         >
-          <!-- plus icon positioned over the color picker -->
           <div
             class="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-200"
           >
@@ -185,7 +199,6 @@
             label=""
             {hex}
             on:input={(e) => {
-              console.log('hex changed', e.detail.hex);
               handleChangeTheme(e.detail.hex)();
             }}
           />
@@ -194,6 +207,16 @@
     </Field.Field>
   </Field.Set>
 </Field.Group>
+
+<Page.SettingsActions
+  hasChanges={hasUnsavedChanges}
+  loading={isSaving}
+  statusLabel={$t('common.unsaved_changes.label')}
+  discardLabel={$t('common.discard')}
+  saveLabel={$t('common.save_changes')}
+  onSave={handleUpdate}
+  onDiscard={handleDiscard}
+/>
 
 <style>
   :global(.dark) {

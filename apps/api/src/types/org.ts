@@ -9,6 +9,15 @@ export type OrgAudienceMember = {
   avatarUrl: string;
   createdAt: string;
   status: AudienceMemberStatus;
+  firstName: string | null;
+  lastName: string | null;
+  jobTitle: string | null;
+  department: string | null;
+  manager: {
+    id: number;
+    email: string;
+    name: string;
+  } | null;
 };
 
 export type OrgAudiencePagination = {

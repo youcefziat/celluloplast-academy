@@ -1,5 +1,6 @@
 import type {
   AssignAudienceCoursesRequest,
+  CreateAudienceMemberRequest,
   CreateLinkInviteRequest,
   DeleteAudienceMemberRequest,
   DeleteTeamRequest,
@@ -23,12 +24,13 @@ import { BaseApiWithErrors, classroomio } from '$lib/utils/services/api';
 import type {
   TAssignAudienceCourses,
   TAudienceInviteByEmail,
+  TCreateAudienceMember,
   TCreateOrganization,
   TGetOrganizations,
   TImportAudienceMembers,
   TUpdateOrganization
 } from '@cio/utils/validation/organization';
-import { ZCreateOrganization, ZUpdateOrganization } from '@cio/utils/validation/organization';
+import { ZCreateAudienceMember, ZCreateOrganization, ZUpdateOrganization } from '@cio/utils/validation/organization';
 import { currentOrg, mergeAccountOrgFromServer, orgs } from '$lib/utils/store/org';
 
 import type { AccountOrg } from '$features/app/types';
@@ -338,34 +340,39 @@ class OrgApi extends BaseApiWithErrors {
 
     if (!result.success) {
       this.errors = mapZodErrorsToTranslations(result.error, 'organization');
-      // Show the first validation error to the user
       const firstError = Object.values(this.errors)[0];
       if (firstError) {
         snackbar.error(firstError);
       }
+      this.success = false;
       return;
     }
 
-    this.isLoading = true;
-
-    // Handle avatar upload if provided
     let avatarUrl: string | undefined;
-    if (avatar instanceof File) {
-      avatarUrl = await uploadImage(avatar);
-    } else if (typeof avatar === 'string') {
-      avatarUrl = avatar;
-    }
-
     let resolvedFavicon: string | null | undefined;
-    if (favicon instanceof File) {
-      resolvedFavicon = await uploadImage(favicon);
-    } else if (typeof favicon === 'string') {
-      resolvedFavicon = favicon;
-    } else if (favicon === null) {
-      resolvedFavicon = null;
+
+    try {
+      if (avatar instanceof File) {
+        avatarUrl = await uploadImage(avatar);
+      } else if (typeof avatar === 'string') {
+        avatarUrl = avatar;
+      }
+
+      if (favicon instanceof File) {
+        resolvedFavicon = await uploadImage(favicon);
+      } else if (typeof favicon === 'string') {
+        resolvedFavicon = favicon;
+      } else if (favicon === null) {
+        resolvedFavicon = null;
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : t.get('snackbar.landing_page_settings.error.try_again');
+      this.errors = { ...this.errors, avatar: message };
+      snackbar.error(message);
+      this.success = false;
+      return;
     }
 
-    // Build update payload
     fields.avatar = undefined;
     fields.favicon = undefined;
     const updates: TUpdateOrganization = {
@@ -546,6 +553,47 @@ class OrgApi extends BaseApiWithErrors {
   }
 
   /**
+   * Creates a single audience member and sends an invite
+   */
+  async createAudienceMember(data: TCreateAudienceMember) {
+    const parsed = ZCreateAudienceMember.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<CreateAudienceMemberRequest>({
+      requestFn: () =>
+        classroomio.organization.audience.$post({
+          json: parsed.data
+        }),
+      logContext: 'creating audience member',
+      onSuccess: (response) => {
+        snackbar.success('audience.create.snackbar_success');
+        if (response.data.warnings?.length) {
+          for (const warning of response.data.warnings) {
+            snackbar.error(warning);
+          }
+        }
+        this.success = true;
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  /**
    * Imports users into the organization as students
    */
   async importAudienceMembers(data: TImportAudienceMembers) {
@@ -565,6 +613,11 @@ class OrgApi extends BaseApiWithErrors {
             emailsSent: d.emailsSent
           })
         );
+        if (d.warnings?.length) {
+          for (const warning of d.warnings.slice(0, 5)) {
+            snackbar.error(warning);
+          }
+        }
         this.success = true;
       },
       onError: (result) => {

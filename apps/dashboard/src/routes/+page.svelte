@@ -9,6 +9,7 @@
   import { Empty } from '@cio/ui/custom/empty';
   import { SimpleLogoNav } from '@cio/ui/custom/simple-logo-nav';
   import { buildOrgLandingPageProps, normalizeLandingPageSettings } from '$features/org/utils/landing-page';
+  import { applyCelluloplastLandingPagePolicy } from '$lib/celluloplast/landing-page';
   import { basePath } from '$lib/utils/store/app';
   import { t } from '$lib/utils/functions/translations';
   import { user } from '$lib/utils/store/user';
@@ -38,7 +39,7 @@
 
     return buildOrgLandingPageProps(
       data.org,
-      normalizeLandingPageSettings(data.org.landingpage),
+      applyCelluloplastLandingPagePolicy(normalizeLandingPageSettings(data.org.landingpage)),
       data.courses,
       data.hasMoreCourses,
       authAction

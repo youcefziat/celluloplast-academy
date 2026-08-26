@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, resolveProfileLocale } from '$lib/celluloplast/brand';
 import { config, getPersistedLocale, loadTranslations } from '$lib/utils/functions/translations';
 
 const SUPPORTED_LANGUAGES = config?.loaders?.map((loader) => loader.locale) || [];
@@ -5,10 +6,11 @@ const SUPPORTED_LANGUAGES = config?.loaders?.map((loader) => loader.locale) || [
 export const load = async ({ url, data }) => {
   const { pathname } = url;
 
-  const serverLang = data?.serverLang?.split?.('-')?.[0] || 'en';
+  const serverLang = data?.serverLang?.split?.('-')?.[0] || DEFAULT_LOCALE;
   const persistedLocale = data?.localeCookie || getPersistedLocale();
 
-  const userLocale = persistedLocale || data?.locals?.profile?.locale || getInitialLocale(serverLang);
+  const userLocale =
+    persistedLocale || resolveProfileLocale(data?.locals?.profile?.locale) || getInitialLocale(serverLang);
 
   const initLocale = getInitialLocale(userLocale);
   await loadTranslations(initLocale, pathname); // keep this just before the `return`
@@ -21,5 +23,5 @@ function getInitialLocale(lang: string): string {
 
   if (SUPPORTED_LANGUAGES.includes(locale)) return locale;
 
-  return 'en';
+  return DEFAULT_LOCALE;
 }

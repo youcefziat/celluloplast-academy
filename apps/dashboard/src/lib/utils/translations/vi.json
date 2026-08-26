@@ -706,7 +706,14 @@
       "no_cohorts": "Không gán nhóm học tập",
       "all_cohorts": "Tất cả nhóm học tập",
       "select_cohorts": "Chọn nhóm học tập cụ thể",
-      "select_cohorts_placeholder": "Chọn nhóm học tập..."
+      "select_cohorts_placeholder": "Chọn nhóm học tập...",
+      "csv_label": "CSV content",
+      "csv_placeholder": "email,firstName,lastName,jobTitle,department,managerEmail\nalice@example.com,Alice,Martin,Technician,Production,",
+      "download_template": "Download CSV template",
+      "upload_file": "Upload CSV file",
+      "preview_label": "Preview ({count} rows)",
+      "preview_more": "…and {count} more rows",
+      "parse_errors": "{count} row(s) could not be parsed"
     },
     "page_subtitle": "Xem ai thuộc tổ chức của bạn, ai đang học, ai được mời và cách liên hệ với họ.",
     "user_analytics": {
@@ -722,7 +729,25 @@
       "confirm": "Xóa",
       "snackbar_success": "Thành viên đã bị xóa"
     },
-    "import_limit_reached": "Bạn đã đạt đến giới hạn sinh viên trong kế hoạch của mình. Nâng cấp để nhập thêm sinh viên."
+    "import_limit_reached": "Bạn đã đạt đến giới hạn sinh viên trong kế hoạch của mình. Nâng cấp để nhập thêm sinh viên.",
+    "job_title": "Job title",
+    "department": "Department",
+    "manager": "Manager",
+    "create": {
+      "open": "Add employee",
+      "title": "Add an employee",
+      "description": "Create the employee record and send an invitation so they can set their password.",
+      "email_label": "Email",
+      "first_name_label": "First name",
+      "last_name_label": "Last name",
+      "job_title_label": "Job title",
+      "department_label": "Department",
+      "manager_label": "Manager",
+      "manager_placeholder": "No manager",
+      "cancel": "Cancel",
+      "submit": "Invite employee",
+      "snackbar_success": "Employee invited"
+    }
   },
   "community": {
     "title": "cộng đồng",

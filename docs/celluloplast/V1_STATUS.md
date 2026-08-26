@@ -33,7 +33,10 @@ Principe : masquer > configurer > modifier > supprimer (rebaseable sur upstream)
 | LMS étudiant simplifié | Oui (S10) |
 | Flags SaaS off (AI, billing, community…) | Oui (`features.ts`) |
 | Vocabulaire FR parcours V1 (Employés, Formations…) | Oui (S07–S11) |
-| Migration DB dédiée Celluloplast | **Aucune** |
+| Migration DB dédiée Celluloplast | **Oui** — `0007_organizationmember_hr_fields` (champs RH employés) |
+| Création employés (formulaire + CSV + invite) | Oui (août 2026) |
+| Paramètres org (nom + logo) — save fix | Oui (août 2026) |
+| Tenant unique Celluloplast (seed + org-context) | Oui (août 2026) |
 
 ---
 
@@ -66,8 +69,9 @@ Permissions = upstream (`requiresAdmin`, membership cours). Pas de nouveau syst�
 
 # Database Changes
 
-**Aucune migration Celluloplast.**  
-Réutilise les tables ClassroomIO (`course`, `lesson`, `groupmember`, `certificate_earned_at`, etc.).
+**Migration Celluloplast `0007_organizationmember_hr_fields`** — champs RH sur `organizationmember` (prénom, nom, poste, département, manager).
+
+Voir `docs/celluloplast/IMPLEMENTATION_2026-08-26.md` §1 pour appliquer la migration et la recette.
 
 ---
 
@@ -78,6 +82,8 @@ Réutilise les tables ClassroomIO (`course`, `lesson`, `groupmember`, `certifica
 | `GET /dash/learning-overview` | S05 |
 | Certifications org (réutilise certificats existants) | S06 |
 | Assignation audience → courses (upstream) | S09 |
+| `POST /organization/audience` — créer employé + invite | août 2026 |
+| `POST /organization/audience/import` — import CSV multi-colonnes | août 2026 |
 
 Pas de nouveau moteur d’enrollment ni d’archivage PDF.
 

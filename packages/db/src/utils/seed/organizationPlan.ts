@@ -1,5 +1,32 @@
 import { and, db, eq, organizationPlan } from '@db/drizzle';
 
+export async function seedPrimaryOrganizationPlan({ orgId }: { orgId: string }) {
+  const existing = await db
+    .select()
+    .from(organizationPlan)
+    .where(
+      and(
+        eq(organizationPlan.orgId, orgId),
+        eq(organizationPlan.planName, 'ENTERPRISE'),
+        eq(organizationPlan.isActive, true)
+      )
+    );
+
+  if (existing.length > 0) {
+    console.log('   ✓ Primary organization plan already exists, skipping');
+    return;
+  }
+
+  await db.insert(organizationPlan).values({
+    orgId,
+    planName: 'ENTERPRISE',
+    isActive: true,
+    subscriptionId: 'seed-celluloplast-enterprise',
+    provider: 'seed'
+  });
+  console.log('   ✓ Inserted primary organization plan');
+}
+
 export async function seedEnterpriseOrganizationPlan({ enterpriseOrgId }: { enterpriseOrgId: string }) {
   const existing = await db
     .select()

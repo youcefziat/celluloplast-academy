@@ -17,7 +17,8 @@ import type { TUser } from '@cio/db/types';
 import { authClient } from '$lib/utils/services/auth/client';
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
-import { handleLocaleChange } from '$lib/utils/functions/translations';
+import { getPersistedLocale, handleLocaleChange } from '$lib/utils/functions/translations';
+import { resolveProfileLocale } from '$lib/celluloplast/brand';
 import { identifyPosthogUser } from '$lib/utils/services/posthog';
 import { identifyUserJotUser } from '$lib/utils/services/userjot';
 import { isOrgStudent, globalStore } from '$lib/utils/store/app';
@@ -31,7 +32,13 @@ import { setTheme } from '$lib/utils/functions/theme';
 import { setupAnalyticsBasedOnLicense } from '$lib/utils/functions/appSetup';
 import shouldRedirectOnAuth from '$lib/utils/functions/routes/shouldRedirectOnAuth';
 import { ROLE } from '@cio/utils/constants';
-import { resolveCelluloplastPostAuthLanding, isCelluloplastPublicLandingPath } from '$lib/celluloplast/landing';
+import {
+  isCelluloplastPublicCatalogPath,
+  isCelluloplastPublicLandingPath,
+  resolveCelluloplastPostAuthLanding,
+  resolveCelluloplastPublicCatalogRedirect
+} from '$lib/celluloplast/landing';
+import { filterCelluloplastOrganizations, resolveCelluloplastRoleId } from '$lib/celluloplast/org-context';
 
 type AppSetupParams = AppOrgParams;
 
@@ -296,7 +303,7 @@ class AppInitApi extends BaseApi {
     }));
 
     profile.set(this.data.profile);
-    handleLocaleChange(this.data.profile.locale ?? 'en');
+    handleLocaleChange(getPersistedLocale() || resolveProfileLocale(this.data.profile.locale));
 
     this.setOrgStore(params);
   }
@@ -306,7 +313,7 @@ class AppInitApi extends BaseApi {
       return;
     }
 
-    orgs.set(this.data.organizations.map((org) => mergeAccountOrgFromServer(org)));
+    orgs.set(filterCelluloplastOrganizations(this.data.organizations).map((org) => mergeAccountOrgFromServer(org)));
 
     const nextOrg = this.pickCurrentOrg(params);
     if (!nextOrg) {
@@ -330,7 +337,7 @@ class AppInitApi extends BaseApi {
    * localStorage / the first account org on the admin host (`app.*`).
    */
   private pickCurrentOrg(params?: AppSetupParams) {
-    const organizations = this.data?.success ? this.data.organizations : [];
+    const organizations = filterCelluloplastOrganizations(this.data?.success ? this.data.organizations : []);
     const urlResolvedOrg = get(currentOrg);
 
     if (params?.orgSiteName) {
@@ -455,9 +462,12 @@ class AppInitApi extends BaseApi {
     goto(resolve(`/org/${selectedOrg.siteName}`, {}));
   }
 
-  /** Celluloplast V1: redirect authenticated users off public catalog/marketing entry pages. */
+  /** Celluloplast V1: redirect users off disabled public catalog and marketing entry pages. */
   ensureCelluloplastLanding(): void {
-    if (!isCelluloplastPublicLandingPath(window.location.pathname)) {
+    if (
+      !isCelluloplastPublicLandingPath(window.location.pathname) &&
+      !isCelluloplastPublicCatalogPath(window.location.pathname)
+    ) {
       return;
     }
 
@@ -465,20 +475,37 @@ class AppInitApi extends BaseApi {
   }
 
   private tryCelluloplastLandingRedirect(): boolean {
+    const pathname = window.location.pathname;
+    const org = get(currentOrg);
+    const orgRoles = (this.session as { orgRoles?: Record<string, number> } | undefined)?.orgRoles ?? {};
+    const orgSiteName = org.siteName || this.data?.organizations[0]?.siteName || '';
+    const roleId = this.data?.success
+      ? resolveCelluloplastRoleId(this.data.organizations, orgSiteName, orgRoles, org.id || undefined)
+      : 0;
+    const hasOrganizations = (this.data?.organizations.length ?? 0) > 0;
+
+    const catalogRedirect = resolveCelluloplastPublicCatalogRedirect({
+      pathname,
+      isAuthenticated: this.data?.success ?? false,
+      roleId,
+      orgSiteName,
+      hasOrganizations
+    });
+
+    if (catalogRedirect) {
+      goto(catalogRedirect);
+      return true;
+    }
+
     if (!this.data?.success) {
       return false;
     }
 
-    const org = get(currentOrg);
-    const membership = this.data.organizations.find((entry) => entry.siteName === org.siteName);
-    const roleId = org.roleId || membership?.roleId || this.data.organizations[0]?.roleId || 0;
-    const orgSiteName = org.siteName || this.data.organizations[0]?.siteName || '';
-
     const landing = resolveCelluloplastPostAuthLanding({
-      pathname: window.location.pathname,
+      pathname,
       roleId,
       orgSiteName,
-      hasOrganizations: this.data.organizations.length > 0
+      hasOrganizations
     });
 
     if (!landing) {

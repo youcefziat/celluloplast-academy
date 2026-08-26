@@ -1,8 +1,10 @@
 import { lstatSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { join } from 'node:path';
 
 const prettierMode = process.argv.includes('--check') ? '--check' : '--write';
 const stagedOnly = process.argv.includes('--staged');
+const prettierBin = join(process.cwd(), 'node_modules', 'prettier', 'bin', 'prettier.cjs');
 
 function runGitCommand(args) {
   const result = spawnSync('git', args, {
@@ -52,7 +54,7 @@ function runPrettier(filePaths) {
 
   for (let index = 0; index < filePaths.length; index += chunkSize) {
     const chunk = filePaths.slice(index, index + chunkSize);
-    const result = spawnSync('prettier', [prettierMode, '--ignore-unknown', ...chunk], {
+    const result = spawnSync(process.execPath, [prettierBin, prettierMode, '--ignore-unknown', ...chunk], {
       cwd: process.cwd(),
       stdio: 'inherit'
     });

@@ -4,10 +4,10 @@ export const ONBOARDING_STEPS = {
 } as const;
 
 export const DROPDOWN_ITEMS = [
+  { id: 'fr', text: 'Français' },
   { id: 'de', text: 'German' },
   { id: 'en', text: 'English' },
   { id: 'es', text: 'Spanish' },
-  { id: 'fr', text: 'French' },
   { id: 'hi', text: 'Hindi' },
   { id: 'pl', text: 'Polish' },
   { id: 'pt', text: 'Portuguese' },

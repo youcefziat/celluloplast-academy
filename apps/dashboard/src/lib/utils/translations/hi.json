@@ -706,7 +706,14 @@
       "no_cohorts": "कोई कोहोर्ट असाइनमेंट नहीं",
       "all_cohorts": "सभी कोहोर्ट",
       "select_cohorts": "विशिष्ट कोहोर्ट चुनें",
-      "select_cohorts_placeholder": "कोहोर्ट चुनें..."
+      "select_cohorts_placeholder": "कोहोर्ट चुनें...",
+      "csv_label": "CSV content",
+      "csv_placeholder": "email,firstName,lastName,jobTitle,department,managerEmail\nalice@example.com,Alice,Martin,Technician,Production,",
+      "download_template": "Download CSV template",
+      "upload_file": "Upload CSV file",
+      "preview_label": "Preview ({count} rows)",
+      "preview_more": "…and {count} more rows",
+      "parse_errors": "{count} row(s) could not be parsed"
     },
     "page_subtitle": "देखें कि आपके संगठन में कौन शामिल है, कौन सीख रहा है, किसे आमंत्रित किया गया है, और उन तक कैसे पहुँचें।",
     "user_analytics": {
@@ -722,7 +729,25 @@
       "confirm": "हटाएँ",
       "snackbar_success": "सदस्य हटा दिया गया"
     },
-    "import_limit_reached": "आप अपनी योजना की छात्र सीमा तक पहुँच गए हैं। अधिक छात्रों को आयात करने के लिए अपग्रेड करें।"
+    "import_limit_reached": "आप अपनी योजना की छात्र सीमा तक पहुँच गए हैं। अधिक छात्रों को आयात करने के लिए अपग्रेड करें।",
+    "job_title": "Job title",
+    "department": "Department",
+    "manager": "Manager",
+    "create": {
+      "open": "Add employee",
+      "title": "Add an employee",
+      "description": "Create the employee record and send an invitation so they can set their password.",
+      "email_label": "Email",
+      "first_name_label": "First name",
+      "last_name_label": "Last name",
+      "job_title_label": "Job title",
+      "department_label": "Department",
+      "manager_label": "Manager",
+      "manager_placeholder": "No manager",
+      "cancel": "Cancel",
+      "submit": "Invite employee",
+      "snackbar_success": "Employee invited"
+    }
   },
   "community": {
     "title": "समुदाय",

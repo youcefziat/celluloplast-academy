@@ -1,7 +1,9 @@
 import { AppError, ErrorCodes } from '@api/utils/errors';
 import type {
   TAssignAudienceCourses,
+  TAudienceImportRow,
   TAudienceInviteByEmail,
+  TCreateAudienceMember,
   TImportAudienceMembers
 } from '@cio/utils/validation/organization';
 import { addGroupMembers, enrollUsersInCourseGroups, getExistingGroupMembers } from '@cio/db/queries/group';
@@ -117,6 +119,212 @@ function getNormalizedRecipients(recipientCsv: string): {
   }
 
   return { valid, invalid, duplicates };
+}
+
+function normalizeImportRows(data: TImportAudienceMembers): {
+  rows: TAudienceImportRow[];
+  duplicates: string[];
+  invalid: string[];
+} {
+  if (data.rows && data.rows.length > 0) {
+    const seen = new Set<string>();
+    const rows: TAudienceImportRow[] = [];
+    const duplicates: string[] = [];
+    const invalid: string[] = [];
+
+    for (const row of data.rows) {
+      const email = row.email.toLowerCase().trim();
+      if (!EMAIL_REGEX.test(email)) {
+        invalid.push(email);
+        continue;
+      }
+
+      if (seen.has(email)) {
+        duplicates.push(email);
+        continue;
+      }
+
+      seen.add(email);
+
+      const managerEmail = row.managerEmail?.toLowerCase().trim();
+      if (managerEmail && !EMAIL_REGEX.test(managerEmail)) {
+        invalid.push(managerEmail);
+      }
+
+      rows.push({
+        ...row,
+        email,
+        managerEmail: managerEmail && EMAIL_REGEX.test(managerEmail) ? managerEmail : undefined
+      });
+    }
+
+    return { rows, duplicates, invalid };
+  }
+
+  const recipients = getNormalizedRecipients(data.recipientCsv ?? '');
+  return {
+    rows: recipients.valid.map(
+      (email): TAudienceImportRow => ({
+        email,
+        firstName: undefined,
+        lastName: undefined,
+        jobTitle: undefined,
+        department: undefined,
+        managerEmail: undefined
+      })
+    ),
+    duplicates: recipients.duplicates,
+    invalid: recipients.invalid
+  };
+}
+
+async function resolveManagerMemberId(
+  orgId: string,
+  options: { managerMemberId?: number; managerEmail?: string }
+): Promise<{ managerMemberId: number | undefined; warning?: string }> {
+  if (options.managerMemberId) {
+    const manager = await getOrganizationAudienceMember(orgId, options.managerMemberId);
+    if (!manager) {
+      return { managerMemberId: undefined, warning: `Manager member ${options.managerMemberId} not found` };
+    }
+
+    return { managerMemberId: options.managerMemberId };
+  }
+
+  if (!options.managerEmail) {
+    return { managerMemberId: undefined };
+  }
+
+  const normalizedManagerEmail = options.managerEmail.toLowerCase().trim();
+  const managers = await getOrganizationMembersByNormalizedEmails(orgId, [normalizedManagerEmail]);
+  const manager = managers[0];
+
+  if (!manager) {
+    return {
+      managerMemberId: undefined,
+      warning: `Manager email not found: ${normalizedManagerEmail}`
+    };
+  }
+
+  return { managerMemberId: manager.id };
+}
+
+async function linkManagerMembersByEmail(
+  orgId: string,
+  pairs: Array<{ memberEmail: string; managerEmail?: string }>
+): Promise<string[]> {
+  const warnings: string[] = [];
+  const managerEmails = [
+    ...new Set(pairs.map((pair) => pair.managerEmail?.toLowerCase().trim()).filter(Boolean) as string[])
+  ];
+
+  if (managerEmails.length === 0) {
+    return warnings;
+  }
+
+  const memberEmails = [...new Set(pairs.map((pair) => pair.memberEmail.toLowerCase().trim()))];
+  const allEmails = [...new Set([...memberEmails, ...managerEmails])];
+  const members = await getOrganizationMembersByNormalizedEmails(orgId, allEmails);
+  const idByEmail = new Map(members.map((member) => [member.normalizedEmail, member.id]));
+
+  for (const pair of pairs) {
+    const managerEmail = pair.managerEmail?.toLowerCase().trim();
+    if (!managerEmail) continue;
+
+    const memberId = idByEmail.get(pair.memberEmail.toLowerCase().trim());
+    const managerId = idByEmail.get(managerEmail);
+
+    if (!memberId) continue;
+
+    if (!managerId) {
+      warnings.push(`Manager email not found: ${managerEmail}`);
+      continue;
+    }
+
+    if (managerId === memberId) {
+      warnings.push(`Manager cannot be self: ${pair.memberEmail}`);
+      continue;
+    }
+
+    await updateOrganizationAudienceMember(orgId, memberId, { managerMemberId: managerId });
+  }
+
+  return warnings;
+}
+
+export async function createAudienceMember(orgId: string, data: TCreateAudienceMember, invitedByProfileId: string) {
+  const organization = await getOrganizationById(orgId);
+  if (!organization || !organization.siteName) {
+    throw new AppError('Organization not found', ErrorCodes.ORGANIZATION_NOT_FOUND, 404);
+  }
+
+  const email = data.email.toLowerCase().trim();
+  const existing = await getOrganizationMembersByNormalizedEmails(orgId, [email]);
+  if (existing.length > 0) {
+    throw new AppError('This email is already in the organization', ErrorCodes.VALIDATION_ERROR, 409, 'email');
+  }
+
+  await assertStudentCapacityOrThrow(orgId, 1);
+
+  const managerResolution = await resolveManagerMemberId(orgId, {
+    managerMemberId: data.managerMemberId,
+    managerEmail: data.managerEmail
+  });
+
+  const [created] = await createOrganizationMembers([
+    {
+      organizationId: orgId,
+      email,
+      roleId: ROLE.STUDENT,
+      verified: false,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      jobTitle: data.jobTitle,
+      department: data.department,
+      managerMemberId: managerResolution.managerMemberId
+    }
+  ]);
+
+  if (!created) {
+    throw new AppError('Failed to create audience member', ErrorCodes.INTERNAL_ERROR, 500);
+  }
+
+  const courseIds = data.courseIds ?? [];
+  const cohortIds = data.cohortIds ?? [];
+  let accessNamesLabel: string | undefined;
+
+  if (courseIds.length > 0) {
+    const courses = await getOrgCourses({ orgId, courseIds });
+    const courseNames = courses.items.map((c) => c.title).filter(Boolean);
+    accessNamesLabel = courseNames.length > 0 ? courseNames.join(', ') : undefined;
+  }
+
+  if (cohortIds.length > 0) {
+    const cohorts = await getCohortsByOrg(orgId, cohortIds);
+    const cohortNames = cohorts.map((cohort) => cohort.name).filter(Boolean);
+    const labelParts = [accessNamesLabel, ...cohortNames].filter(Boolean) as string[];
+    accessNamesLabel = labelParts.length > 0 ? labelParts.join(', ') : undefined;
+  }
+
+  const inviteOutcome = await createStudentOrgInvitesAndSendEmails({
+    orgId,
+    organization,
+    emails: [email],
+    courseIds,
+    cohortIds,
+    accessNamesLabel,
+    invitedByProfileId,
+    shouldSendEmail: data.sendEmail
+  });
+
+  const member = await getOrganizationAudienceMember(orgId, created.id);
+
+  return {
+    member,
+    emailsSent: inviteOutcome.emailsSent,
+    emailsFailed: inviteOutcome.emailsFailed,
+    warnings: managerResolution.warning ? [managerResolution.warning] : []
+  };
 }
 
 async function resolveCourseIdsAndNamesForImport(orgId: string, data: TImportAudienceMembers) {
@@ -460,41 +668,45 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
     throw new AppError('Organization not found', ErrorCodes.ORGANIZATION_NOT_FOUND, 404);
   }
 
-  const recipients = getNormalizedRecipients(data.recipientCsv);
+  const normalized = normalizeImportRows(data);
+  const warnings: string[] = [...normalized.invalid.map((email) => `Invalid email: ${email}`)];
 
-  if (recipients.invalid.length > 0) {
+  if (normalized.invalid.length > 0 && normalized.rows.length === 0) {
     throw new AppError(
-      `Invalid emails found: ${recipients.invalid.slice(0, 5).join(', ')}`,
+      `Invalid emails found: ${normalized.invalid.slice(0, 5).join(', ')}`,
       ErrorCodes.VALIDATION_ERROR,
       400,
-      'recipientCsv'
+      'rows'
     );
   }
 
-  if (recipients.valid.length === 0) {
-    throw new AppError('No valid emails provided', ErrorCodes.VALIDATION_ERROR, 400, 'recipientCsv');
+  if (normalized.rows.length === 0) {
+    throw new AppError('No valid emails provided', ErrorCodes.VALIDATION_ERROR, 400, 'rows');
   }
 
-  const memberRows = await getOrganizationMembersByNormalizedEmails(orgId, recipients.valid);
+  const emails = normalized.rows.map((row) => row.email);
+  const rowByEmail = new Map(normalized.rows.map((row) => [row.email, row]));
+
+  const memberRows = await getOrganizationMembersByNormalizedEmails(orgId, emails);
   const memberByEmail = new Map(memberRows.map((m) => [m.normalizedEmail, m]));
 
-  const newEmails: string[] = [];
+  const newRows: TAudienceImportRow[] = [];
   const existingStudentProfileIds: string[] = [];
   const pendingStudentEmails: string[] = [];
   const teamEmails: string[] = [];
 
-  for (const email of recipients.valid) {
-    const m = memberByEmail.get(email);
+  for (const row of normalized.rows) {
+    const m = memberByEmail.get(row.email);
     if (!m) {
-      newEmails.push(email);
+      newRows.push(row);
       continue;
     }
     if (m.roleId !== ROLE.STUDENT) {
-      teamEmails.push(email);
+      teamEmails.push(row.email);
       continue;
     }
     if (!m.profileId) {
-      pendingStudentEmails.push(email);
+      pendingStudentEmails.push(row.email);
       continue;
     }
     existingStudentProfileIds.push(m.profileId);
@@ -505,7 +717,7 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
       `These emails belong to organization staff, not students: ${teamEmails.slice(0, 8).join(', ')}${teamEmails.length > 8 ? '…' : ''}`,
       ErrorCodes.VALIDATION_ERROR,
       400,
-      'recipientCsv'
+      'rows'
     );
   }
 
@@ -533,17 +745,31 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
   let importEmailsSent = 0;
   let importEmailsFailed = 0;
 
-  if (newEmails.length > 0) {
-    await assertStudentCapacityOrThrow(orgId, newEmails.length);
+  if (newRows.length > 0) {
+    await assertStudentCapacityOrThrow(orgId, newRows.length);
+    const newEmails = newRows.map((row) => row.email);
 
     await createOrganizationMembers(
-      newEmails.map((email) => ({
+      newRows.map((row) => ({
         organizationId: orgId,
-        email,
+        email: row.email,
         roleId: ROLE.STUDENT,
-        verified: false
+        verified: false,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        jobTitle: row.jobTitle,
+        department: row.department
       }))
     );
+
+    const managerWarnings = await linkManagerMembersByEmail(
+      orgId,
+      newRows.map((row) => ({
+        memberEmail: row.email,
+        managerEmail: row.managerEmail
+      }))
+    );
+    warnings.push(...managerWarnings);
 
     if (courseIds.length > 0) {
       const courseGroupMappings = await getCourseGroupIds(courseIds);
@@ -586,9 +812,34 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
       invitedByProfileId,
       shouldSendEmail: data.sendEmail
     });
-    imported = newEmails.length;
+    imported = newRows.length;
     importEmailsSent = inviteOutcome.emailsSent;
     importEmailsFailed = inviteOutcome.emailsFailed;
+  }
+
+  // Update HR fields for pending students already in the org (re-import with richer CSV).
+  for (const email of pendingStudentEmails) {
+    const row = rowByEmail.get(email);
+    const existing = memberByEmail.get(email);
+    if (!row || !existing) continue;
+
+    await updateOrganizationAudienceMember(orgId, existing.id, {
+      firstName: row.firstName,
+      lastName: row.lastName,
+      jobTitle: row.jobTitle,
+      department: row.department
+    });
+  }
+
+  if (pendingStudentEmails.length > 0) {
+    const pendingManagerWarnings = await linkManagerMembersByEmail(
+      orgId,
+      pendingStudentEmails.map((email) => ({
+        memberEmail: email,
+        managerEmail: rowByEmail.get(email)?.managerEmail
+      }))
+    );
+    warnings.push(...pendingManagerWarnings);
   }
 
   let pendingEmailsSent = 0;
@@ -614,9 +865,11 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
     alreadyEnrolledInCourses: assignedToCourses.alreadyEnrolled,
     alreadyEnrolledInCohorts: assignedToCohorts.alreadyEnrolled,
     pendingInvitesRenewed: pendingStudentEmails.length,
-    duplicates: recipients.duplicates.length,
+    duplicates: normalized.duplicates.length,
+    skipped: normalized.duplicates.length + teamEmails.length,
     emailsSent: assignedToCourses.emailsSent + assignedToCohorts.emailsSent + importEmailsSent + pendingEmailsSent,
-    emailsFailed: importEmailsFailed + pendingEmailsFailed
+    emailsFailed: importEmailsFailed + pendingEmailsFailed,
+    warnings
   };
 }
 
