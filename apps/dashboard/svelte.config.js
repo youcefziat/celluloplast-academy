@@ -11,12 +11,39 @@ const adapterCloudflare = IS_CLOUDFLARE ? (await import('@sveltejs/adapter-cloud
 const isSelfHosted = process.env.PUBLIC_IS_SELFHOSTED === 'true';
 const csp = getCspDomains(isSelfHosted, process.env.PUBLIC_SERVER_URL);
 
+/**
+ * SvelteKit CSRF runs before hooks.server.ts, so multipart uploads to `/proxy/*`
+ * (e.g. org logo → POST /proxy/media/image) are blocked when the browser Origin
+ * differs from `ORIGIN` — classic local case: visit 127.0.0.1 while ORIGIN is
+ * localhost. Trust the same hosts as API TRUSTED_ORIGINS (+ local Docker defaults).
+ */
+const csrfTrustedOrigins = [
+  ...new Set(
+    [
+      ...(process.env.TRUSTED_ORIGINS
+        ? process.env.TRUSTED_ORIGINS.split(',')
+            .map((origin) => origin.trim().replace(/\/$/, ''))
+            .filter(Boolean)
+        : []),
+      process.env.ORIGIN?.trim().replace(/\/$/, ''),
+      process.env.DASHBOARD_ORIGIN?.trim().replace(/\/$/, ''),
+      'http://localhost:3082',
+      'http://127.0.0.1:3082',
+      'http://localhost:5173',
+      'http://127.0.0.1:5173'
+    ].filter(Boolean)
+  )
+];
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: [vitePreprocess({})],
   kit: {
     // Default: Node server (Render, Docker). Opt into Cloudflare Pages only when CI_ENVIRONMENT=cloudflare.
     adapter: IS_CLOUDFLARE ? adapterCloudflare() : adapterNode(),
+    csrf: {
+      trustedOrigins: csrfTrustedOrigins
+    },
     alias: {
       $lib: path.resolve('./src/lib'),
       $features: path.resolve('./src/lib/features'),
