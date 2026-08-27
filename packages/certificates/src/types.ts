@@ -13,6 +13,8 @@ export interface CertificateDesign {
   accentColor: string;
   subtitle?: string;
   descriptionOverride?: string;
+  /** Optional certificate logo; render falls back to organization avatar when absent. */
+  logoUrl?: string;
   signatories: [CertificateSignatory, CertificateSignatory];
   idFormat?: string;
 }

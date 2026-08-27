@@ -734,6 +734,7 @@ export const course = pgTable(
         accentColor: string;
         subtitle?: string;
         descriptionOverride?: string;
+        logoUrl?: string;
         signatories: [
           { name: string; role: string; enabled?: boolean; signatureUrl?: string },
           { name: string; role: string; enabled?: boolean; signatureUrl?: string }
@@ -1814,6 +1815,58 @@ export const lessonLanguageHistory = pgTable(
   ]
 );
 
+export const organizationPosition = pgTable(
+  'organization_position',
+  {
+    id: bigint({ mode: 'number' }).primaryKey().generatedByDefaultAsIdentity({
+      name: 'organization_position_id_seq',
+      startWith: 1,
+      increment: 1,
+      minValue: 1,
+      cache: 1
+    }),
+    organizationId: uuid('organization_id').notNull(),
+    name: text().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull()
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [organization.id],
+      name: 'organization_position_organization_id_fkey'
+    }).onDelete('cascade'),
+    index('idx_organization_position_organization_id').on(table.organizationId),
+    uniqueIndex('organization_position_org_name_unique').on(table.organizationId, sql`lower(trim(${table.name}))`)
+  ]
+);
+
+export const organizationDepartment = pgTable(
+  'organization_department',
+  {
+    id: bigint({ mode: 'number' }).primaryKey().generatedByDefaultAsIdentity({
+      name: 'organization_department_id_seq',
+      startWith: 1,
+      increment: 1,
+      minValue: 1,
+      cache: 1
+    }),
+    organizationId: uuid('organization_id').notNull(),
+    name: text().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull()
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [organization.id],
+      name: 'organization_department_organization_id_fkey'
+    }).onDelete('cascade'),
+    index('idx_organization_department_organization_id').on(table.organizationId),
+    uniqueIndex('organization_department_org_name_unique').on(table.organizationId, sql`lower(trim(${table.name}))`)
+  ]
+);
+
 export const organizationmember = pgTable(
   'organizationmember',
   {
@@ -1833,8 +1886,8 @@ export const organizationmember = pgTable(
     verified: boolean().default(false),
     firstName: text('first_name'),
     lastName: text('last_name'),
-    jobTitle: text('job_title'),
-    department: text(),
+    positionId: bigint('position_id', { mode: 'number' }),
+    departmentId: bigint('department_id', { mode: 'number' }),
     managerMemberId: bigint('manager_member_id', { mode: 'number' }),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
       .default(sql`timezone('utc'::text, now())`)
@@ -1861,10 +1914,22 @@ export const organizationmember = pgTable(
       foreignColumns: [table.id],
       name: 'organizationmember_manager_member_id_fkey'
     }).onDelete('set null'),
+    foreignKey({
+      columns: [table.positionId],
+      foreignColumns: [organizationPosition.id],
+      name: 'organizationmember_position_id_fkey'
+    }).onDelete('restrict'),
+    foreignKey({
+      columns: [table.departmentId],
+      foreignColumns: [organizationDepartment.id],
+      name: 'organizationmember_department_id_fkey'
+    }).onDelete('restrict'),
     index('idx_organizationmember_profile_id').on(table.profileId),
     index('idx_organizationmember_organization_id').on(table.organizationId),
     index('idx_organizationmember_profile_org').on(table.profileId, table.organizationId),
     index('idx_organizationmember_manager_member_id').on(table.managerMemberId),
+    index('idx_organizationmember_position_id').on(table.positionId),
+    index('idx_organizationmember_department_id').on(table.departmentId),
     uniqueIndex('organizationmember_org_profile_unique')
       .on(table.organizationId, table.profileId)
       .where(sql`${table.profileId} IS NOT NULL`),

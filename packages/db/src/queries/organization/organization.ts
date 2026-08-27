@@ -416,8 +416,10 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
       fullname: schema.profile.fullname,
       firstName: schema.organizationmember.firstName,
       lastName: schema.organizationmember.lastName,
-      jobTitle: schema.organizationmember.jobTitle,
-      department: schema.organizationmember.department,
+      positionId: schema.organizationmember.positionId,
+      positionName: schema.organizationPosition.name,
+      departmentId: schema.organizationmember.departmentId,
+      departmentName: schema.organizationDepartment.name,
       managerMemberId: schema.organizationmember.managerMemberId,
       managerEmail: sql<string | null>`coalesce(${managerProfile.email}, ${managerMember.email})`.as('managerEmail'),
       managerFullname: managerProfile.fullname,
@@ -430,6 +432,11 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
     })
     .from(schema.organizationmember)
     .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+    .leftJoin(schema.organizationPosition, eq(schema.organizationmember.positionId, schema.organizationPosition.id))
+    .leftJoin(
+      schema.organizationDepartment,
+      eq(schema.organizationmember.departmentId, schema.organizationDepartment.id)
+    )
     .leftJoin(managerMember, eq(schema.organizationmember.managerMemberId, managerMember.id))
     .leftJoin(managerProfile, eq(managerMember.profileId, managerProfile.id))
     .where(
@@ -465,8 +472,19 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
     createdAt,
     firstName: row.firstName ?? null,
     lastName: row.lastName ?? null,
-    jobTitle: row.jobTitle ?? null,
-    department: row.department ?? null,
+    jobTitle: row.positionName ?? null,
+    position: row.positionId
+      ? {
+          id: row.positionId,
+          name: row.positionName ?? ''
+        }
+      : null,
+    department: row.departmentId
+      ? {
+          id: row.departmentId,
+          name: row.departmentName ?? ''
+        }
+      : null,
     manager: row.managerMemberId
       ? {
           id: row.managerMemberId,
@@ -483,7 +501,7 @@ export const updateOrganizationAudienceMember = async (
   data: Partial<
     Pick<
       TNewOrganizationmember,
-      'email' | 'verified' | 'firstName' | 'lastName' | 'jobTitle' | 'department' | 'managerMemberId'
+      'email' | 'verified' | 'firstName' | 'lastName' | 'positionId' | 'departmentId' | 'managerMemberId'
     >
   >
 ) => {
@@ -726,8 +744,8 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
         ilike(schema.organizationmember.email, searchValue),
         ilike(schema.organizationmember.firstName, searchValue),
         ilike(schema.organizationmember.lastName, searchValue),
-        ilike(schema.organizationmember.jobTitle, searchValue),
-        ilike(schema.organizationmember.department, searchValue)
+        ilike(schema.organizationPosition.name, searchValue),
+        ilike(schema.organizationDepartment.name, searchValue)
       )!
     );
   }
@@ -737,6 +755,11 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
     .select({ count: count(schema.organizationmember.id) })
     .from(schema.organizationmember)
     .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+    .leftJoin(schema.organizationPosition, eq(schema.organizationmember.positionId, schema.organizationPosition.id))
+    .leftJoin(
+      schema.organizationDepartment,
+      eq(schema.organizationmember.departmentId, schema.organizationDepartment.id)
+    )
     .where(whereClause);
 
   const total = Number(totalRow?.count ?? 0);
@@ -752,8 +775,10 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
       fullname: schema.profile.fullname,
       firstName: schema.organizationmember.firstName,
       lastName: schema.organizationmember.lastName,
-      jobTitle: schema.organizationmember.jobTitle,
-      department: schema.organizationmember.department,
+      positionId: schema.organizationmember.positionId,
+      positionName: schema.organizationPosition.name,
+      departmentId: schema.organizationmember.departmentId,
+      departmentName: schema.organizationDepartment.name,
       managerMemberId: schema.organizationmember.managerMemberId,
       managerEmail: sql<string | null>`coalesce(${managerProfile.email}, ${managerMember.email})`.as('managerEmail'),
       managerFullname: managerProfile.fullname,
@@ -766,6 +791,11 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
     })
     .from(schema.organizationmember)
     .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+    .leftJoin(schema.organizationPosition, eq(schema.organizationmember.positionId, schema.organizationPosition.id))
+    .leftJoin(
+      schema.organizationDepartment,
+      eq(schema.organizationmember.departmentId, schema.organizationDepartment.id)
+    )
     .leftJoin(managerMember, eq(schema.organizationmember.managerMemberId, managerMember.id))
     .leftJoin(managerProfile, eq(managerMember.profileId, managerProfile.id))
     .where(whereClause)
@@ -795,8 +825,19 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
         createdAt,
         firstName: row.firstName ?? null,
         lastName: row.lastName ?? null,
-        jobTitle: row.jobTitle ?? null,
-        department: row.department ?? null,
+        jobTitle: row.positionName ?? null,
+        position: row.positionId
+          ? {
+              id: row.positionId,
+              name: row.positionName ?? ''
+            }
+          : null,
+        department: row.departmentId
+          ? {
+              id: row.departmentId,
+              name: row.departmentName ?? ''
+            }
+          : null,
         manager: row.managerMemberId
           ? {
               id: row.managerMemberId,
@@ -1240,7 +1281,11 @@ export const updateOrganization = async (id: string, data: Partial<TOrganization
       const existingVal = existingSettings[key];
       const newVal = newSettings[key];
       if (newVal !== undefined) {
-        if (
+        // Certificate design is a complete document — replace rather than shallow-merge
+        // so nested signatories / optional fields cannot leave stale values behind.
+        if (key === 'certificateDesign') {
+          mergedSettings[key] = newVal;
+        } else if (
           existingVal &&
           typeof existingVal === 'object' &&
           !Array.isArray(existingVal) &&
@@ -1405,34 +1450,22 @@ export async function getOrganizationAudienceFilterOptions(orgId: string): Promi
   departments: string[];
 }> {
   try {
-    const baseConditions = and(
-      eq(schema.organizationmember.organizationId, orgId),
-      eq(schema.organizationmember.roleId, ROLE.STUDENT)
-    );
-
-    const jobTitleRows = await db
-      .selectDistinct({ value: schema.organizationmember.jobTitle })
-      .from(schema.organizationmember)
-      .where(
-        and(baseConditions, isNotNull(schema.organizationmember.jobTitle), ne(schema.organizationmember.jobTitle, ''))
-      )
-      .orderBy(asc(schema.organizationmember.jobTitle));
-
-    const departmentRows = await db
-      .selectDistinct({ value: schema.organizationmember.department })
-      .from(schema.organizationmember)
-      .where(
-        and(
-          baseConditions,
-          isNotNull(schema.organizationmember.department),
-          ne(schema.organizationmember.department, '')
-        )
-      )
-      .orderBy(asc(schema.organizationmember.department));
+    const [jobTitleRows, departmentRows] = await Promise.all([
+      db
+        .select({ value: schema.organizationPosition.name })
+        .from(schema.organizationPosition)
+        .where(eq(schema.organizationPosition.organizationId, orgId))
+        .orderBy(asc(schema.organizationPosition.name)),
+      db
+        .select({ value: schema.organizationDepartment.name })
+        .from(schema.organizationDepartment)
+        .where(eq(schema.organizationDepartment.organizationId, orgId))
+        .orderBy(asc(schema.organizationDepartment.name))
+    ]);
 
     return {
-      jobTitles: jobTitleRows.map((row) => row.value!.trim()).filter(Boolean),
-      departments: departmentRows.map((row) => row.value!.trim()).filter(Boolean)
+      jobTitles: jobTitleRows.map((row) => row.value.trim()).filter(Boolean),
+      departments: departmentRows.map((row) => row.value.trim()).filter(Boolean)
     };
   } catch (error) {
     console.error('getOrganizationAudienceFilterOptions error:', error);
@@ -1470,7 +1503,7 @@ export async function getOrganizationMembersForAudienceAssignment(
       if (normalizedTitles.length === 0) {
         return [];
       }
-      conditions.push(inArray(sql`lower(trim(${schema.organizationmember.jobTitle}))`, normalizedTitles));
+      conditions.push(inArray(sql`lower(trim(${schema.organizationPosition.name}))`, normalizedTitles));
     }
 
     if (filters.mode === 'departments') {
@@ -1480,7 +1513,7 @@ export async function getOrganizationMembersForAudienceAssignment(
       if (normalizedDepartments.length === 0) {
         return [];
       }
-      conditions.push(inArray(sql`lower(trim(${schema.organizationmember.department}))`, normalizedDepartments));
+      conditions.push(inArray(sql`lower(trim(${schema.organizationDepartment.name}))`, normalizedDepartments));
     }
 
     const rows = await db
@@ -1488,11 +1521,16 @@ export async function getOrganizationMembersForAudienceAssignment(
         memberId: schema.organizationmember.id,
         profileId: schema.organizationmember.profileId,
         email: sql<string>`coalesce(${schema.profile.email}, ${schema.organizationmember.email})`.as('email'),
-        jobTitle: schema.organizationmember.jobTitle,
-        department: schema.organizationmember.department
+        jobTitle: schema.organizationPosition.name,
+        department: schema.organizationDepartment.name
       })
       .from(schema.organizationmember)
       .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+      .leftJoin(schema.organizationPosition, eq(schema.organizationmember.positionId, schema.organizationPosition.id))
+      .leftJoin(
+        schema.organizationDepartment,
+        eq(schema.organizationmember.departmentId, schema.organizationDepartment.id)
+      )
       .where(and(...conditions));
 
     return rows.map((row) => ({

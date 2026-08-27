@@ -6,62 +6,95 @@ import { getStorageConfig } from '@cio/core/config/storage';
 import { generateFileKey } from '@cio/core/utils/upload';
 import { uploadToS3 } from '@cio/core/utils/s3';
 
+const EXTENSION_CONTENT_TYPES: Record<string, (typeof ALLOWED_IMAGE_TYPES)[number]> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  gif: 'image/gif'
+};
+
+function resolveImageContentType(file: File): string | null {
+  if (ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+    return file.type;
+  }
+
+  const extension = file.name.split('.').pop()?.toLowerCase();
+  if (!extension) {
+    return null;
+  }
+
+  return EXTENSION_CONTENT_TYPES[extension] ?? null;
+}
+
 /**
  * Uploads an image file to object storage and returns the public URL
  * @param file - The image file to upload
  * @returns Object containing the public URL and file key
  */
 export async function uploadImage(file: File) {
-  const config = getStorageConfig();
+  let config;
+  try {
+    config = getStorageConfig();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Object storage not configured';
+    console.error('[uploadImage] storage config error:', message);
+    throw new AppError(message, ErrorCodes.INTERNAL_ERROR, 500);
+  }
+
   if (!config.mediaPublicBaseUrl) {
     throw new AppError(
-      new Error(
-        'Media public URL not configured. Set OBJECT_STORAGE_MEDIA_PUBLIC_BASE_URL or CLOUDFLARE_IMAGE_BUCKET_DOMAIN.'
-      ),
+      'Media public URL not configured. Set OBJECT_STORAGE_MEDIA_PUBLIC_BASE_URL or CLOUDFLARE_IMAGE_BUCKET_DOMAIN.',
       ErrorCodes.INTERNAL_ERROR,
       500
     );
   }
 
-  // Validate file type
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type as any)) {
+  const contentType = resolveImageContentType(file);
+  if (!contentType) {
     throw new AppError(
-      new Error(`Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(', ')}`),
+      `Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(', ')}`,
       ErrorCodes.VALIDATION_ERROR,
       400
     );
   }
 
-  // Validate file size
   if (file.size > MAX_IMAGE_SIZE) {
     throw new AppError(
-      new Error(`File size exceeds maximum of ${MAX_IMAGE_SIZE / 1024 / 1024}MB`),
+      `File size exceeds maximum of ${MAX_IMAGE_SIZE / 1024 / 1024}MB`,
       ErrorCodes.VALIDATION_ERROR,
       400
     );
   }
 
-  // Generate unique file key
   const fileKey = generateFileKey(file.name);
-
-  // Convert File to Buffer
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // Upload to object storage
   const uploadResult = await uploadToS3({
     Bucket: config.bucketMedia,
     Key: fileKey,
     Body: buffer,
-    ContentType: file.type,
-    CacheControl: 'public, max-age=31536000' // Cache for 1 year
+    ContentType: contentType,
+    CacheControl: 'public, max-age=31536000'
   });
 
   if (!uploadResult.success) {
-    throw new AppError(new Error(uploadResult.error || 'Failed to upload image'), ErrorCodes.INTERNAL_ERROR, 500);
+    console.error('[uploadImage] upload failed:', {
+      bucket: config.bucketMedia,
+      fileKey,
+      contentType,
+      error: uploadResult.error
+    });
+    throw new AppError(
+      uploadResult.error
+        ? `Failed to upload image to storage: ${uploadResult.error}`
+        : 'Failed to upload image to storage',
+      ErrorCodes.INTERNAL_ERROR,
+      500
+    );
   }
 
-  // Construct public URL
   const baseUrl = config.mediaPublicBaseUrl.replace(/\/$/, '');
   const publicUrl = `${baseUrl}/${fileKey}`;
 

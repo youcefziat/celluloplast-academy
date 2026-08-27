@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as Field from '@cio/ui/base/field';
+  import { Button } from '@cio/ui/base/button';
   import { Switch } from '@cio/ui/base/switch';
   import { InputField } from '@cio/ui/custom/input-field';
   import { TextareaField } from '@cio/ui/custom/textarea-field';
@@ -15,6 +16,10 @@
 
   let { disabled = false }: Props = $props();
 
+  let logoAvatar: File | undefined = $state();
+  let logoPreview = $state('');
+  let isLogoUploading = $state(false);
+
   let signatoryOneAvatar: File | undefined = $state();
   let signatoryTwoAvatar: File | undefined = $state();
   let signatoryOnePreview = $state('');
@@ -23,7 +28,13 @@
   let isSignatoryTwoUploading = $state(false);
 
   $effect(() => {
-    certificateEditorStore.isSignatureUploading = isSignatoryOneUploading || isSignatoryTwoUploading;
+    certificateEditorStore.isSignatureUploading = isLogoUploading || isSignatoryOneUploading || isSignatoryTwoUploading;
+  });
+
+  $effect(() => {
+    if (isLogoUploading) return;
+
+    logoPreview = certificateEditorStore.draft.logoUrl;
   });
 
   $effect(() => {
@@ -37,6 +48,22 @@
 
     signatoryTwoPreview = certificateEditorStore.draft.signatories[1].signatureUrl;
   });
+
+  async function uploadLogo(file: File) {
+    isLogoUploading = true;
+
+    try {
+      const logoUrl = await uploadImage(file);
+      certificateEditorStore.setLogoUrl(logoUrl);
+      logoPreview = logoUrl;
+      logoAvatar = undefined;
+    } catch (error) {
+      console.error('Error uploading certificate logo:', error);
+      snackbar.error('snackbar.landing_page_settings.error.try_again');
+    } finally {
+      isLogoUploading = false;
+    }
+  }
 
   async function uploadSignatorySignature(index: 0 | 1, avatar: File) {
     if (index === 0) {
@@ -69,6 +96,13 @@
   }
 
   $effect(() => {
+    const file = logoAvatar;
+    if (!file || isLogoUploading) return;
+
+    void uploadLogo(file);
+  });
+
+  $effect(() => {
     const avatar = signatoryOneAvatar;
     if (!avatar || isSignatoryOneUploading) return;
 
@@ -81,9 +115,39 @@
 
     void uploadSignatorySignature(1, avatar);
   });
+
+  function removeLogo() {
+    certificateEditorStore.clearLogoUrl();
+    logoPreview = '';
+    logoAvatar = undefined;
+  }
 </script>
 
 <Field.Group>
+  <Field.Set>
+    <Field.Legend>{$t('celluloplast_org_certificates.logo_label')}</Field.Legend>
+    <Field.Field>
+      <UploadImage
+        bind:avatar={logoAvatar}
+        bind:src={logoPreview}
+        shape="rounded-md"
+        widthHeight="w-24 h-24"
+        isDisabled={disabled}
+        bind:isUploading={isLogoUploading}
+      />
+      <Field.Description>
+        {$t('celluloplast_org_certificates.logo_hint')}
+      </Field.Description>
+      {#if certificateEditorStore.draft.logoUrl}
+        <Button type="button" variant="ghost" size="sm" class="mt-2" {disabled} onclick={removeLogo}>
+          {$t('celluloplast_org_certificates.logo_remove')}
+        </Button>
+      {/if}
+    </Field.Field>
+  </Field.Set>
+
+  <Field.Separator />
+
   <Field.Set>
     <Field.Legend>{$t('course.navItem.certificates.editor.section_header')}</Field.Legend>
     <Field.Group>

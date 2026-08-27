@@ -677,6 +677,10 @@
       "last_name_label": "Nom",
       "job_title_label": "Poste",
       "department_label": "Département",
+      "job_title_placeholder": "Sélectionner un poste",
+      "department_placeholder": "Sélectionner un département",
+      "job_title_empty": "Aucun poste — créez-les dans Administration → Postes.",
+      "department_empty": "Aucun département — créez-les dans Administration → Départements.",
       "manager_label": "Manager",
       "manager_placeholder": "Aucun manager",
       "cancel": "Annuler",
@@ -5066,7 +5070,19 @@
     "progress": "Progression",
     "certifications": "Certifications",
     "my_certificates": "Mes certificats",
-    "administration": "Administration"
+    "administration": "Administration",
+    "positions": "Postes",
+    "departments": "Départements",
+    "certificates": "Certificats"
+  },
+  "celluloplast_org_certificates": {
+    "editor_title": "Certificat entreprise",
+    "panel_templates_subtitle": "Ce modèle s’applique à toutes les formations de l’académie.",
+    "course_summary_subtitle": "Toutes les formations partagent ce modèle de certificat entreprise.",
+    "edit_enterprise_design": "Modifier le modèle entreprise",
+    "logo_label": "Logo du certificat",
+    "logo_hint": "Glissez-déposez ou cliquez pour téléverser. Affiché sur tous les certificats. Si vide, le logo de l’organisation est utilisé.",
+    "logo_remove": "Retirer le logo"
   },
   "celluloplast_certifications": {
     "title": "Certifications",
@@ -5229,6 +5245,44 @@
       "label": "Page {page} sur {total} ({count} lignes)",
       "prev": "Précédent",
       "next": "Suivant"
+    }
+  },
+  "celluloplast_hr_refs": {
+    "positions": {
+      "title": "Postes",
+      "subtitle": "Liste contrôlée des postes attribués aux employés.",
+      "add": "Ajouter un poste",
+      "edit": "Renommer le poste",
+      "name_label": "Nom",
+      "name_placeholder": "ex. Opérateur",
+      "employees": "Employés",
+      "empty": "Aucun poste pour le moment.",
+      "delete_confirm": "Supprimer ce poste ? Possible uniquement si aucun employé ne l'utilise.",
+      "created": "Poste créé",
+      "updated": "Poste mis à jour",
+      "deleted": "Poste supprimé",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "actions": "Actions"
+    },
+    "departments": {
+      "title": "Départements",
+      "subtitle": "Liste contrôlée des départements attribués aux employés.",
+      "add": "Ajouter un département",
+      "edit": "Renommer le département",
+      "name_label": "Nom",
+      "name_placeholder": "ex. Production",
+      "employees": "Employés",
+      "empty": "Aucun département pour le moment.",
+      "delete_confirm": "Supprimer ce département ? Possible uniquement si aucun employé ne l'utilise.",
+      "created": "Département créé",
+      "updated": "Département mis à jour",
+      "deleted": "Département supprimé",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "actions": "Actions"
     }
   }
 }

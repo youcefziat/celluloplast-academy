@@ -74,6 +74,7 @@ export const ZCertificateDesign = z.object({
   accentColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, { message: 'Accent must be a 6-digit hex color' }),
   subtitle: z.string().max(120).optional(),
   descriptionOverride: z.string().max(500).optional(),
+  logoUrl: z.url().optional(),
   signatories: z.tuple([ZCertificateSignatory, ZCertificateSignatory]),
   idFormat: z.string().max(40).optional()
 });

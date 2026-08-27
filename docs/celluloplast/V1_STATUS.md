@@ -33,9 +33,12 @@ Principe : masquer > configurer > modifier > supprimer (rebaseable sur upstream)
 | LMS étudiant simplifié | Oui (S10) |
 | Flags SaaS off (AI, billing, community…) | Oui (`features.ts`) |
 | Vocabulaire FR parcours V1 (Employés, Formations…) | Oui (S07–S11) |
-| Migration DB dédiée Celluloplast | **Oui** — `0007_organizationmember_hr_fields` (champs RH employés) |
+| Migration DB dédiée Celluloplast | **Oui** — `0007` (HR texte) + `0008` (référentiels postes/départements) |
 | Création employés (formulaire + CSV + invite) | Oui (août 2026) |
+| Référentiels Postes / Départements (CRUD admin) | Oui (S12) |
 | Paramètres org (nom + logo) — save fix | Oui (août 2026) |
+| Upload image (profil + org) — erreurs explicites | Oui (S12) |
+| Header sans « Académie ouverte » (exploreCatalog off) | Oui (S12) |
 | Tenant unique Celluloplast (seed + org-context) | Oui (août 2026) |
 
 ---
@@ -61,7 +64,7 @@ Permissions = upstream (`requiresAdmin`, membership cours). Pas de nouveau syst�
 | Employés / Apprenants | `/org/{slug}/audience` |
 | Progression | `/org/{slug}/progress` |
 | Certifications org | `/org/{slug}/certifications` |
-| Administration | `/org/{slug}/settings` (+ notifications, org, teams, customize-lms) |
+| Administration | `/org/{slug}/settings` (+ notifications, org, teams, customize-lms, **positions**, **departments**) |
 | LMS | `/lms`, `/lms/mylearning`, `/lms/certificates` |
 | Contenu formation | `/courses/{id}/lessons`, people, settings, certificates |
 
@@ -69,9 +72,9 @@ Permissions = upstream (`requiresAdmin`, membership cours). Pas de nouveau syst�
 
 # Database Changes
 
-**Migration Celluloplast `0007_organizationmember_hr_fields`** — champs RH sur `organizationmember` (prénom, nom, poste, département, manager).
+**Migration Celluloplast `0008_organization_hr_references`** — tables `organization_position` / `organization_department` ; FKs `position_id` / `department_id` sur `organizationmember` (remplace les colonnes texte de `0007`).
 
-Voir `docs/celluloplast/IMPLEMENTATION_2026-08-26.md` §1 pour appliquer la migration et la recette.
+Voir `docs/celluloplast/sprints/S12-employee-references-and-upload-fixes.md`.
 
 ---
 
@@ -84,6 +87,8 @@ Voir `docs/celluloplast/IMPLEMENTATION_2026-08-26.md` §1 pour appliquer la migr
 | Assignation audience → courses (upstream) | S09 |
 | `POST /organization/audience` — créer employé + invite | août 2026 |
 | `POST /organization/audience/import` — import CSV multi-colonnes | août 2026 |
+| `GET/POST/PUT/DELETE /organization/positions` | S12 |
+| `GET/POST/PUT/DELETE /organization/departments` | S12 |
 
 Pas de nouveau moteur d’enrollment ni d’archivage PDF.
 

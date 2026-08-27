@@ -53,6 +53,24 @@ export interface TemplateRenderOutput {
 
 export type TemplateRenderer = (args: TemplateRenderArgs) => TemplateRenderOutput;
 
+export function renderOrgLogo(logoUrl: string | undefined | null, className = 'org-logo'): string {
+  if (!logoUrl) return '';
+
+  return `<img class="${className}" src="${escapeHtml(logoUrl)}" alt="" />`;
+}
+
+export const ORG_LOGO_STYLES = `
+  .org-logo {
+    display: block;
+    margin: 0 auto 12px;
+    max-height: 64px;
+    max-width: 220px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+`;
+
 export interface SignatoryBlockOptions {
   wrapperClass?: string;
   nameClass: string;

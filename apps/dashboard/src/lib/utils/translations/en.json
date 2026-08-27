@@ -3804,6 +3804,10 @@
       "last_name_label": "Last name",
       "job_title_label": "Job title",
       "department_label": "Department",
+      "job_title_placeholder": "Select a job title",
+      "department_placeholder": "Select a department",
+      "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
+      "department_empty": "No departments yet — create them under Administration → Departments.",
       "manager_label": "Manager",
       "manager_placeholder": "No manager",
       "cancel": "Cancel",
@@ -5057,7 +5061,19 @@
     "progress": "Progress",
     "certifications": "Certifications",
     "my_certificates": "My certificates",
-    "administration": "Administration"
+    "administration": "Administration",
+    "positions": "Job titles",
+    "departments": "Departments",
+    "certificates": "Certificates"
+  },
+  "celluloplast_org_certificates": {
+    "editor_title": "Enterprise certificate",
+    "panel_templates_subtitle": "This design applies to every training in the academy.",
+    "course_summary_subtitle": "All trainings share this enterprise certificate design.",
+    "edit_enterprise_design": "Edit enterprise design",
+    "logo_label": "Certificate logo",
+    "logo_hint": "Drag and drop or click to upload. Used on every training certificate. If empty, the organization logo is used.",
+    "logo_remove": "Remove logo"
   },
   "celluloplast_certifications": {
     "title": "Certifications",
@@ -5220,6 +5236,44 @@
       "label": "Page {page} of {total} ({count} rows)",
       "prev": "Previous",
       "next": "Next"
+    }
+  },
+  "celluloplast_hr_refs": {
+    "positions": {
+      "title": "Job titles",
+      "subtitle": "Controlled list of job titles assigned to employees.",
+      "add": "Add job title",
+      "edit": "Rename job title",
+      "name_label": "Name",
+      "name_placeholder": "e.g. Operator",
+      "employees": "Employees",
+      "empty": "No job titles yet.",
+      "delete_confirm": "Delete this job title? This is only allowed when no employee uses it.",
+      "created": "Job title created",
+      "updated": "Job title updated",
+      "deleted": "Job title deleted",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "actions": "Actions"
+    },
+    "departments": {
+      "title": "Departments",
+      "subtitle": "Controlled list of departments assigned to employees.",
+      "add": "Add department",
+      "edit": "Rename department",
+      "name_label": "Name",
+      "name_placeholder": "e.g. Production",
+      "employees": "Employees",
+      "empty": "No departments yet.",
+      "delete_confirm": "Delete this department? This is only allowed when no employee uses it.",
+      "created": "Department created",
+      "updated": "Department updated",
+      "deleted": "Department deleted",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "actions": "Actions"
     }
   }
 }

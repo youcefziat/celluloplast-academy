@@ -12,7 +12,14 @@ export type OrgAudienceMember = {
   firstName: string | null;
   lastName: string | null;
   jobTitle: string | null;
-  department: string | null;
+  position: {
+    id: number;
+    name: string;
+  } | null;
+  department: {
+    id: number;
+    name: string;
+  } | null;
   manager: {
     id: number;
     email: string;

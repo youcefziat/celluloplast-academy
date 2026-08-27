@@ -13,6 +13,8 @@ import {
   ZCreateLinkInvite,
   ZCreateOrgPlan,
   ZCreateOrganization,
+  ZCreateOrganizationDepartment,
+  ZCreateOrganizationPosition,
   ZGetAudienceQuery,
   ZGetCoursesBySiteName,
   ZGetOrgSetup,
@@ -22,12 +24,23 @@ import {
   ZImportAudienceMembers,
   ZInviteTeamMembers,
   ZLMSExercisesParam,
+  ZOrganizationDepartmentParam,
+  ZOrganizationPositionParam,
   ZRemoveTeamMember,
   ZToggleLinkInvite,
   ZUpdateOrgPlan,
-  ZUpdateOrganization
+  ZUpdateOrganization,
+  ZUpdateOrganizationDepartment,
+  ZUpdateOrganizationPosition
 } from '@cio/utils/validation/organization';
 import { getOrganizationAudienceFilterOptions } from '@cio/db/queries/organization';
+import {
+  createDepartment,
+  deleteDepartment,
+  listDepartments,
+  updateDepartment
+} from '@api/services/organization/department';
+import { createPosition, deletePosition, listPositions, updatePosition } from '@api/services/organization/position';
 import { assertMcpAutomationUsageAllowed, recordMcpAutomationUsage } from '@api/services/organization/automation-usage';
 import {
   cancelOrgPlan,
@@ -300,6 +313,134 @@ export const organizationRouter = new Hono()
       return handleError(c, error, 'Failed to fetch audience assignment options');
     }
   })
+  /**
+   * GET /organization/positions
+   */
+  .get('/positions', authMiddleware, orgTeamMemberMiddleware, async (c) => {
+    try {
+      const orgId = c.req.header('cio-org-id')!;
+      const data = await listPositions(orgId);
+
+      return c.json({ success: true, data }, 200);
+    } catch (error) {
+      return handleError(c, error, 'Failed to list positions');
+    }
+  })
+  .post(
+    '/positions',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('json', ZCreateOrganizationPosition),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const data = await createPosition(orgId, c.req.valid('json'));
+
+        return c.json({ success: true, data }, 201);
+      } catch (error) {
+        return handleError(c, error, 'Failed to create position');
+      }
+    }
+  )
+  .put(
+    '/positions/:positionId',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('param', ZOrganizationPositionParam),
+    zValidator('json', ZUpdateOrganizationPosition),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const { positionId } = c.req.valid('param');
+        const data = await updatePosition(orgId, positionId, c.req.valid('json'));
+
+        return c.json({ success: true, data }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to update position');
+      }
+    }
+  )
+  .delete(
+    '/positions/:positionId',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('param', ZOrganizationPositionParam),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const { positionId } = c.req.valid('param');
+        const data = await deletePosition(orgId, positionId);
+
+        return c.json({ success: true, data }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to delete position');
+      }
+    }
+  )
+  /**
+   * GET /organization/departments
+   */
+  .get('/departments', authMiddleware, orgTeamMemberMiddleware, async (c) => {
+    try {
+      const orgId = c.req.header('cio-org-id')!;
+      const data = await listDepartments(orgId);
+
+      return c.json({ success: true, data }, 200);
+    } catch (error) {
+      return handleError(c, error, 'Failed to list departments');
+    }
+  })
+  .post(
+    '/departments',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('json', ZCreateOrganizationDepartment),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const data = await createDepartment(orgId, c.req.valid('json'));
+
+        return c.json({ success: true, data }, 201);
+      } catch (error) {
+        return handleError(c, error, 'Failed to create department');
+      }
+    }
+  )
+  .put(
+    '/departments/:departmentId',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('param', ZOrganizationDepartmentParam),
+    zValidator('json', ZUpdateOrganizationDepartment),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const { departmentId } = c.req.valid('param');
+        const data = await updateDepartment(orgId, departmentId, c.req.valid('json'));
+
+        return c.json({ success: true, data }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to update department');
+      }
+    }
+  )
+  .delete(
+    '/departments/:departmentId',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('param', ZOrganizationDepartmentParam),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const { departmentId } = c.req.valid('param');
+        const data = await deleteDepartment(orgId, departmentId);
+
+        return c.json({ success: true, data }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to delete department');
+      }
+    }
+  )
   /**
    * POST /organization/audience
    * Creates a student audience member and sends an invite email

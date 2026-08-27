@@ -48,7 +48,8 @@ Services attendus :
 | API | http://localhost:3081 |
 | Postgres | localhost (compose) |
 | Redis | localhost (compose) |
-| MinIO | profile `minio` (compose) |
+| MinIO | profile `minio` (compose) / inclus Celluloplast |
+| MailHog | http://localhost:8025 (emails locaux) — voir `LOCAL_EMAIL_TESTING.md` |
 | Jobs worker | inclus dans le stack (obligatoire pour e-mails / médias) |
 
 ---
@@ -91,7 +92,7 @@ pnpm dashboard:dev
 | Employés / Apprenants | `/org/{slug}/audience` |
 | Progression | `/org/{slug}/progress` |
 | Certifications (org) | `/org/{slug}/certifications` |
-| Administration | `/org/{slug}/settings` (ADMIN) |
+| Administration | `/org/{slug}/settings` (ADMIN) — Postes, Départements |
 | LMS étudiant | `/lms`, `/lms/mylearning`, `/lms/certificates` |
 
 > **Organisation principale (localhost)** : après seed upstream, la demo org s’appelle **Celluloplast** (`siteName` = `celluloplast`). Si la base existait déjà avec `Udemy Test` / `udemy-test`, exécuter une fois :
@@ -102,7 +103,15 @@ pnpm dashboard:dev
 >
 > ou `pnpm --filter @cio/db db:celluloplast:patch-org` (avec `packages/db/.env` pointant sur Postgres). Idempotent.
 
-> **Migration RH employés** (colonnes `first_name`, `last_name`, `job_title`, `department`, `manager_member_id` sur `organizationmember`) :
+> **Migration RH référentiels** (`0008_organization_hr_references` — tables `organization_position` / `organization_department`, FK membres) :
+>
+> ```powershell
+> docker exec celluloplast-api sh -c "cd /app/packages/db && pnpm db:migrate"
+> ```
+>
+> Puis reconstruire si besoin : `docker compose -f docker-compose.celluloplast.yaml up -d --build api dashboard`
+
+> **Migration RH employés** (historique `0007` — backfillée vers les référentiels en `0008`) :
 >
 > ```powershell
 > docker exec celluloplast-api sh -c "cd /app/packages/db && pnpm db:migrate"
@@ -143,9 +152,16 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] assigner étudiant manuellement (1 puis plusieurs ; doublon déjà inscrit OK)
 [ ] page progression (recherche, filtre formation, filtre statut)
 [ ] page certifications (liste + Voir PDF)
-[ ] Administration (profil / org / équipes) — pas de billing / AI / landing
-[ ] Paramètres org : modifier nom + logo → Enregistrer (persiste après reload)
-[ ] Employés : Ajouter un employé (formulaire) ou Importer CSV
+[ ] Administration (profil / org / équipes / postes / départements) — pas de billing / AI / landing
+[ ] Administration → Postes & Départements : CRUD ; delete refusé si employés rattachés
+[ ] Paramètres org : modifier nom + logo → Enregistrer (persiste après reload ; MinIO requis)
+    - Si « La mise à jour a échoué: Internal Server Error » : le dashboard doit avoir
+      `BODY_SIZE_LIMIT=943718400` (octets ; **pas** `900M` — sinon limite = 900 octets).
+      Recréer le conteneur : `docker compose -f docker-compose.celluloplast.yaml up -d --force-recreate dashboard`
+    - Logs typiques avant fix : `Content-length of … exceeds limit of 524288 bytes` (ou `900 bytes`) sur `POST /proxy/media/image`
+[ ] Profil : photo → Enregistrer (même flow `/media/image`)
+[ ] Header : pas de bouton « Académie ouverte »
+[ ] Employés : Ajouter un employé (dropdowns poste/département) ou Importer CSV (noms connus uniquement)
 ```
 
 ### STUDENT
@@ -209,6 +225,20 @@ pnpm --filter @cio/dashboard exec vite build --sourcemap false
 ```
 
 > Note : sourcemaps désactivés pour le build dashboard si l’espace disque est juste.
+
+---
+
+## E2E API — isolation + auto-assignation audience
+
+Script automatisé (pas de Playwright) contre le stack Docker déjà up. Crée postes / départements / 3 formations / 3 employés `e2e-*@celluloplast.local`, puis vérifie les `courseIds` des invites pending (Prod → A+C, Atelier → B+C, RH → C seulement).
+
+```powershell
+.\scripts\celluloplast\e2e-audience-assignment.ps1
+# équivalent :
+node scripts/celluloplast/e2e-audience-assignment.mjs
+```
+
+Prérequis : API `http://localhost:3081`, `admin@test.com` / `123456`, org `celluloplast`, migration `0008`. Exit code `0` = PASS.
 
 ---
 

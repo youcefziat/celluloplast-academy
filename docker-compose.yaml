@@ -79,6 +79,17 @@ services:
     profiles:
       - minio
 
+  # Optional local SMTP catcher. Enable with: docker compose --profile mail up -d
+  # Point SMTP_HOST=mailhog SMTP_PORT=1025 (and leave USER/PASSWORD empty).
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: cio-mailhog
+    ports:
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
+    profiles:
+      - mail
+
   api:
     build:
       context: .
@@ -170,6 +181,9 @@ services:
       CSP_FRAME_SRC_DOMAINS: ${CSP_FRAME_SRC_DOMAINS:-}
       CSP_FONT_SRC_DOMAINS: ${CSP_FONT_SRC_DOMAINS:-}
       CSP_MEDIA_SRC_DOMAINS: ${CSP_MEDIA_SRC_DOMAINS:-}
+      # adapter-node default is 512KB — too small for /proxy/media/* uploads.
+      # Integer bytes only (adapter-node 2.x: parseInt('900M') === 900). 943718400 = 900 MiB.
+      BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-943718400}
       # Upload size limits (megabytes). Unset = built-in defaults — see .env.example.
       UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
       UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}

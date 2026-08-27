@@ -22,7 +22,12 @@ export async function assembleCertificateRender(
   const organizationId = await getCourseOrganizationId(courseId);
   const organization = organizationId ? await getOrganizationById(organizationId) : null;
 
-  const design = resolveCertificateDesign(courseRow.certificate);
+  const orgSettings =
+    organization?.settings && typeof organization.settings === 'object'
+      ? (organization.settings as Record<string, unknown>)
+      : {};
+  const orgCertificateDesign = orgSettings.certificateDesign;
+  const design = resolveCertificateDesign(orgCertificateDesign ?? null);
 
   const issuedAtIso = body.issuedAt ?? new Date().toISOString();
   const issuedAtDate = new Date(issuedAtIso);
@@ -41,7 +46,7 @@ export async function assembleCertificateRender(
       courseName: courseRow.title,
       courseDescription: courseRow.description ?? '',
       orgName: organization?.name ?? '',
-      orgLogoUrl: organization?.avatarUrl ?? undefined,
+      orgLogoUrl: design.logoUrl ?? organization?.avatarUrl ?? undefined,
       date,
       certificateId
     }

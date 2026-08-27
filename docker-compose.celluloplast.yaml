@@ -1,4 +1,4 @@
-﻿# Celluloplast Academy — stack complète (ClassroomIO + branding fork)
+# Celluloplast Academy — stack complète (ClassroomIO + branding fork)
 #
 # Démarrage :
 #   .\scripts\start-docker.ps1
@@ -10,6 +10,7 @@
 #   Dashboard : http://localhost:3082
 #   API       : http://localhost:3081  (proxy via dashboard en usage normal)
 #   MinIO     : http://localhost:9001  (console)
+#   MailHog   : http://localhost:8025  (emails locaux)
 #
 # Login démo (après seed DB) : admin@test.com / 123456
 
@@ -91,6 +92,16 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     restart: 'no'
 
+  # Local-only email catcher. Override SMTP_* in .env for real providers; do not
+  # ship these defaults to production compose files (Coolify / images).
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: celluloplast-mailhog
+    ports:
+      - '127.0.0.1:1025:1025'
+      - '127.0.0.1:8025:8025'
+    restart: unless-stopped
+
   api:
     build:
       context: .
@@ -105,6 +116,8 @@ services:
         condition: service_healthy
       minio-init:
         condition: service_completed_successfully
+      mailhog:
+        condition: service_started
     healthcheck:
       test:
         [
@@ -126,11 +139,11 @@ services:
       REDIS_URL: redis://redis:6379
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-docker-local-client-id}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-docker-local-client-secret}
-      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_HOST: ${SMTP_HOST:-mailhog}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      SMTP_PORT: ${SMTP_PORT:-}
-      SMTP_SENDER: ${SMTP_SENDER:-}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SENDER: ${SMTP_SENDER:-Celluloplast Academy <no-reply@celluloplast.local>}
       OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:-http://minio:9000}
       OBJECT_STORAGE_PUBLIC_ENDPOINT: ${OBJECT_STORAGE_PUBLIC_ENDPOINT:-http://localhost:9000}
       OBJECT_STORAGE_ACCESS_KEY_ID: ${OBJECT_STORAGE_ACCESS_KEY_ID:-minioadmin}
@@ -180,6 +193,18 @@ services:
       CSP_FRAME_SRC_DOMAINS: ${CSP_FRAME_SRC_DOMAINS:-}
       CSP_FONT_SRC_DOMAINS: ${CSP_FONT_SRC_DOMAINS:-}
       CSP_MEDIA_SRC_DOMAINS: ${CSP_MEDIA_SRC_DOMAINS:-}
+      # adapter-node default is 512KB — too small for /proxy/media/* (avatars, logos).
+      # Must be an integer number of bytes: suffixes like "900M" are parseInt'd to 900
+      # on @sveltejs/adapter-node@2.x (parseInt('900M') === 900).
+      # 943718400 = 900 MiB (covers default UPLOAD_MAX_VIDEO_MB=800 + multipart overhead).
+      BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-943718400}
+      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
+      UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}
+      UPLOAD_MAX_VIDEO_MB: ${UPLOAD_MAX_VIDEO_MB:-}
+      UPLOAD_MAX_EXERCISE_FILE_MB: ${UPLOAD_MAX_EXERCISE_FILE_MB:-}
+      UPLOAD_MAX_AGENT_DOCUMENT_MB: ${UPLOAD_MAX_AGENT_DOCUMENT_MB:-}
+      UPLOAD_MAX_LANDING_IMAGE_MB: ${UPLOAD_MAX_LANDING_IMAGE_MB:-}
+      UPLOAD_MAX_THUMBNAIL_MB: ${UPLOAD_MAX_THUMBNAIL_MB:-}
     restart: unless-stopped
 
   jobs:
@@ -194,6 +219,8 @@ services:
         condition: service_healthy
       minio-init:
         condition: service_completed_successfully
+      mailhog:
+        condition: service_started
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379
@@ -208,11 +235,11 @@ services:
       OBJECT_STORAGE_BUCKET_VIDEOS: ${OBJECT_STORAGE_BUCKET_VIDEOS:-videos}
       OBJECT_STORAGE_BUCKET_DOCUMENTS: ${OBJECT_STORAGE_BUCKET_DOCUMENTS:-documents}
       OBJECT_STORAGE_BUCKET_MEDIA: ${OBJECT_STORAGE_BUCKET_MEDIA:-media}
-      SMTP_HOST: ${SMTP_HOST:-}
-      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_HOST: ${SMTP_HOST:-mailhog}
+      SMTP_PORT: ${SMTP_PORT:-1025}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      SMTP_SENDER: ${SMTP_SENDER:-}
+      SMTP_SENDER: ${SMTP_SENDER:-Celluloplast Academy <no-reply@celluloplast.local>}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     restart: unless-stopped
 

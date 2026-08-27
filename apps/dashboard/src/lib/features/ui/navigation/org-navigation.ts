@@ -256,6 +256,21 @@ const upstreamNavConfig: NavItemConfig[] = [
         matchPattern: '^/org/[^/]+/settings/auth(/.*)?$',
         path: '/settings/auth',
         isPaid: true
+      },
+      {
+        titleKey: 'celluloplast_navigation.positions',
+        path: '/settings/positions',
+        matchPattern: '^/org/[^/]+/settings/positions/?$'
+      },
+      {
+        titleKey: 'celluloplast_navigation.departments',
+        path: '/settings/departments',
+        matchPattern: '^/org/[^/]+/settings/departments/?$'
+      },
+      {
+        titleKey: 'celluloplast_navigation.certificates',
+        path: '/settings/certificates',
+        matchPattern: '^/org/[^/]+/settings/certificates(/.*)?$'
       }
     ],
     nestedRoutes: [
@@ -286,6 +301,18 @@ const upstreamNavConfig: NavItemConfig[] = [
       {
         path: 'teams',
         titleKey: 'settings.tabs.teams_tab'
+      },
+      {
+        path: 'positions',
+        titleKey: 'celluloplast_navigation.positions'
+      },
+      {
+        path: 'departments',
+        titleKey: 'celluloplast_navigation.departments'
+      },
+      {
+        path: 'certificates',
+        titleKey: 'celluloplast_navigation.certificates'
       },
       {
         path: 'auth',

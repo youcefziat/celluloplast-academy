@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import * as Dialog from '@cio/ui/base/dialog';
   import * as Field from '@cio/ui/base/field';
   import * as Select from '@cio/ui/base/select';
@@ -19,16 +20,22 @@
   let email = $state('');
   let firstName = $state('');
   let lastName = $state('');
-  let jobTitle = $state('');
-  let department = $state('');
+  let positionId = $state<string>('none');
+  let departmentId = $state<string>('none');
   let managerMemberId = $state<string>('none');
+  let refsLoaded = $state(false);
+
+  onMount(async () => {
+    await Promise.all([orgApi.getPositions(), orgApi.getDepartments()]);
+    refsLoaded = true;
+  });
 
   function resetForm() {
     email = '';
     firstName = '';
     lastName = '';
-    jobTitle = '';
-    department = '';
+    positionId = 'none';
+    departmentId = 'none';
     managerMemberId = 'none';
     orgApi.errors = {};
   }
@@ -46,8 +53,8 @@
       email: email.trim(),
       firstName: firstName.trim() || undefined,
       lastName: lastName.trim() || undefined,
-      jobTitle: jobTitle.trim() || undefined,
-      department: department.trim() || undefined,
+      positionId: positionId !== 'none' ? Number(positionId) : undefined,
+      departmentId: departmentId !== 'none' ? Number(departmentId) : undefined,
       managerMemberId: managerMemberId !== 'none' ? Number(managerMemberId) : undefined,
       sendEmail: true
     });
@@ -73,6 +80,20 @@
       ? t.get('audience.create.manager_placeholder')
       : (managerOptions.find((option) => option.value === managerMemberId)?.label ??
           t.get('audience.create.manager_placeholder'))
+  );
+
+  const selectedPositionLabel = $derived(
+    positionId === 'none'
+      ? t.get('audience.create.job_title_placeholder')
+      : (orgApi.positions.find((position) => String(position.id) === positionId)?.name ??
+          t.get('audience.create.job_title_placeholder'))
+  );
+
+  const selectedDepartmentLabel = $derived(
+    departmentId === 'none'
+      ? t.get('audience.create.department_placeholder')
+      : (orgApi.departments.find((department) => String(department.id) === departmentId)?.name ??
+          t.get('audience.create.department_placeholder'))
   );
 </script>
 
@@ -105,13 +126,47 @@
       </div>
 
       <Field.Field>
-        <Field.Label for="audience-create-job-title">{$t('audience.create.job_title_label')}</Field.Label>
-        <Input id="audience-create-job-title" bind:value={jobTitle} />
+        <Field.Label>{$t('audience.create.job_title_label')}</Field.Label>
+        {#if refsLoaded && orgApi.positions.length === 0}
+          <p class="ui:text-muted-foreground text-sm">{$t('audience.create.job_title_empty')}</p>
+        {:else}
+          <Select.Root type="single" bind:value={positionId}>
+            <Select.Trigger class="w-full">
+              {selectedPositionLabel}
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="none">{$t('audience.create.job_title_placeholder')}</Select.Item>
+              {#each orgApi.positions as position (position.id)}
+                <Select.Item value={String(position.id)}>{position.name}</Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        {/if}
+        {#if orgApi.errors.jobTitle}
+          <Field.Error>{orgApi.errors.jobTitle}</Field.Error>
+        {/if}
       </Field.Field>
 
       <Field.Field>
-        <Field.Label for="audience-create-department">{$t('audience.create.department_label')}</Field.Label>
-        <Input id="audience-create-department" bind:value={department} />
+        <Field.Label>{$t('audience.create.department_label')}</Field.Label>
+        {#if refsLoaded && orgApi.departments.length === 0}
+          <p class="ui:text-muted-foreground text-sm">{$t('audience.create.department_empty')}</p>
+        {:else}
+          <Select.Root type="single" bind:value={departmentId}>
+            <Select.Trigger class="w-full">
+              {selectedDepartmentLabel}
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="none">{$t('audience.create.department_placeholder')}</Select.Item>
+              {#each orgApi.departments as department (department.id)}
+                <Select.Item value={String(department.id)}>{department.name}</Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        {/if}
+        {#if orgApi.errors.department}
+          <Field.Error>{orgApi.errors.department}</Field.Error>
+        {/if}
       </Field.Field>
 
       <Field.Field>

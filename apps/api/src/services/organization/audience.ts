@@ -20,7 +20,11 @@ import {
   getLatestOrganizationInviteRowByOrgAndEmail,
   getOrgMembersByProfileIds,
   getOrganizationById,
+  getOrganizationDepartmentById,
+  getOrganizationDepartmentByName,
   getOrganizationMembersByNormalizedEmails,
+  getOrganizationPositionById,
+  getOrganizationPositionByName,
   getStudentOrganizationMemberByOrgAndEmail,
   hasActiveOrganizationInviteForEmail,
   revokeActiveOrganizationInvitesByEmails
@@ -41,6 +45,77 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORG_INVITE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 /** Parallel outbound invite emails; avoids sequential SMTP/API latency per recipient. */
 const EMAIL_SEND_CONCURRENCY = 5;
+
+type ResolvedHrRefs = {
+  positionId: number | null;
+  departmentId: number | null;
+};
+
+async function resolveAudienceHrRefs(
+  orgId: string,
+  input: {
+    positionId?: number;
+    departmentId?: number;
+    jobTitle?: string;
+    department?: string;
+  }
+): Promise<{ refs: ResolvedHrRefs; error?: string }> {
+  let positionId: number | null = null;
+  let departmentId: number | null = null;
+
+  if (input.positionId) {
+    const position = await getOrganizationPositionById(orgId, input.positionId);
+    if (!position) {
+      return {
+        refs: { positionId: null, departmentId: null },
+        error: `Poste introuvable (id ${input.positionId})`
+      };
+    }
+    positionId = position.id;
+  } else if (input.jobTitle) {
+    const position = await getOrganizationPositionByName(orgId, input.jobTitle);
+    if (!position) {
+      return {
+        refs: { positionId: null, departmentId: null },
+        error: `Poste "${input.jobTitle}" introuvable. Créez-le d'abord dans Administration > Postes.`
+      };
+    }
+    positionId = position.id;
+  }
+
+  if (input.departmentId) {
+    const department = await getOrganizationDepartmentById(orgId, input.departmentId);
+    if (!department) {
+      return {
+        refs: { positionId: null, departmentId: null },
+        error: `Département introuvable (id ${input.departmentId})`
+      };
+    }
+    departmentId = department.id;
+  } else if (input.department) {
+    const department = await getOrganizationDepartmentByName(orgId, input.department);
+    if (!department) {
+      return {
+        refs: { positionId: null, departmentId: null },
+        error: `Département "${input.department}" introuvable. Créez-le d'abord dans Administration > Départements.`
+      };
+    }
+    departmentId = department.id;
+  }
+
+  return { refs: { positionId, departmentId } };
+}
+
+function audienceMemberHrStrings(member: {
+  jobTitle?: string | null;
+  position?: { id: number; name: string } | null;
+  department?: { id: number; name: string } | null;
+}) {
+  return {
+    jobTitle: member.jobTitle ?? member.position?.name ?? null,
+    department: member.department?.name ?? null
+  };
+}
 
 async function mapWithConcurrency<T, R>(items: T[], concurrency: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   if (items.length === 0) {
@@ -272,6 +347,17 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     managerEmail: data.managerEmail
   });
 
+  const hrResolution = await resolveAudienceHrRefs(orgId, {
+    positionId: data.positionId,
+    departmentId: data.departmentId,
+    jobTitle: data.jobTitle,
+    department: data.department
+  });
+
+  if (hrResolution.error) {
+    throw new AppError(hrResolution.error, ErrorCodes.VALIDATION_ERROR, 400, 'jobTitle');
+  }
+
   const [created] = await createOrganizationMembers([
     {
       organizationId: orgId,
@@ -280,8 +366,8 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
       verified: false,
       firstName: data.firstName,
       lastName: data.lastName,
-      jobTitle: data.jobTitle,
-      department: data.department,
+      positionId: hrResolution.refs.positionId,
+      departmentId: hrResolution.refs.departmentId,
       managerMemberId: managerResolution.managerMemberId
     }
   ]);
@@ -321,12 +407,13 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
   const member = await getOrganizationAudienceMember(orgId, created.id);
 
   if (member) {
+    const hrStrings = audienceMemberHrStrings(member);
     await syncMemberToMatchingPublishedCourses(orgId, {
       memberId: member.id,
       profileId: member.profileId,
       email: member.email,
-      jobTitle: member.jobTitle,
-      department: member.department
+      jobTitle: hrStrings.jobTitle,
+      department: hrStrings.department
     });
   }
 
@@ -696,17 +783,42 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
   }
 
   const emails = normalized.rows.map((row) => row.email);
-  const rowByEmail = new Map(normalized.rows.map((row) => [row.email, row]));
-
   const memberRows = await getOrganizationMembersByNormalizedEmails(orgId, emails);
   const memberByEmail = new Map(memberRows.map((m) => [m.normalizedEmail, m]));
 
-  const newRows: TAudienceImportRow[] = [];
+  type ImportRowWithRefs = TAudienceImportRow & ResolvedHrRefs;
+  const acceptedRows: ImportRowWithRefs[] = [];
+
+  for (const row of normalized.rows) {
+    const hrResolution = await resolveAudienceHrRefs(orgId, {
+      jobTitle: row.jobTitle,
+      department: row.department
+    });
+
+    if (hrResolution.error) {
+      warnings.push(`${row.email}: ${hrResolution.error}`);
+      continue;
+    }
+
+    acceptedRows.push({
+      ...row,
+      positionId: hrResolution.refs.positionId,
+      departmentId: hrResolution.refs.departmentId
+    });
+  }
+
+  if (acceptedRows.length === 0) {
+    throw new AppError(warnings[0] ?? 'No valid rows to import', ErrorCodes.VALIDATION_ERROR, 400, 'rows');
+  }
+
+  const acceptedByEmail = new Map(acceptedRows.map((row) => [row.email, row]));
+
+  const newRows: ImportRowWithRefs[] = [];
   const existingStudentProfileIds: string[] = [];
   const pendingStudentEmails: string[] = [];
   const teamEmails: string[] = [];
 
-  for (const row of normalized.rows) {
+  for (const row of acceptedRows) {
     const m = memberByEmail.get(row.email);
     if (!m) {
       newRows.push(row);
@@ -768,8 +880,8 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
         verified: false,
         firstName: row.firstName,
         lastName: row.lastName,
-        jobTitle: row.jobTitle,
-        department: row.department
+        positionId: row.positionId,
+        departmentId: row.departmentId
       }))
     );
 
@@ -830,15 +942,15 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
 
   // Update HR fields for pending students already in the org (re-import with richer CSV).
   for (const email of pendingStudentEmails) {
-    const row = rowByEmail.get(email);
+    const row = acceptedByEmail.get(email);
     const existing = memberByEmail.get(email);
     if (!row || !existing) continue;
 
     await updateOrganizationAudienceMember(orgId, existing.id, {
       firstName: row.firstName,
       lastName: row.lastName,
-      jobTitle: row.jobTitle,
-      department: row.department
+      positionId: row.positionId,
+      departmentId: row.departmentId
     });
   }
 
@@ -847,7 +959,7 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
       orgId,
       pendingStudentEmails.map((email) => ({
         memberEmail: email,
-        managerEmail: rowByEmail.get(email)?.managerEmail
+        managerEmail: acceptedByEmail.get(email)?.managerEmail
       }))
     );
     warnings.push(...pendingManagerWarnings);
@@ -870,7 +982,7 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
     pendingEmailsFailed = pendingOutcome.emailsFailed;
   }
 
-  for (const row of normalized.rows) {
+  for (const row of acceptedRows) {
     const refreshedMembers = await getOrganizationMembersByNormalizedEmails(orgId, [row.email]);
     const memberRow = refreshedMembers[0];
     if (!memberRow || memberRow.roleId !== ROLE.STUDENT) {
@@ -882,12 +994,13 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
       continue;
     }
 
+    const hrStrings = audienceMemberHrStrings(member);
     await syncMemberToMatchingPublishedCourses(orgId, {
       memberId: member.id,
       profileId: member.profileId,
       email: member.email,
-      jobTitle: member.jobTitle,
-      department: member.department
+      jobTitle: hrStrings.jobTitle,
+      department: hrStrings.department
     });
   }
 

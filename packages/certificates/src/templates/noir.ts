@@ -1,6 +1,8 @@
 import {
   escapeHtml,
   getYear,
+  ORG_LOGO_STYLES,
+  renderOrgLogo,
   renderSignatoryBlock,
   shadeColor,
   SIGNATURE_IMAGE_STYLES,
@@ -16,6 +18,7 @@ export const renderNoir: TemplateRenderer = ({ design, data }) => {
 
   const body = `
     <div class="cert t-noir">
+      ${renderOrgLogo(data.orgLogoUrl, 'org-logo noir-logo')}
       <div class="top">
         <span>${escapeHtml(data.certificateId)}</span>
         <div class="line"></div>
@@ -208,6 +211,8 @@ export const renderNoir: TemplateRenderer = ({ design, data }) => {
       font-size: 8px;
       letter-spacing: 0.2em;
     }
+    ${ORG_LOGO_STYLES}
+    .t-noir .noir-logo { margin-top: 28px; margin-bottom: 8px; }
     ${SIGNATURE_IMAGE_STYLES}
   `;
 

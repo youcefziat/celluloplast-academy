@@ -1,15 +1,21 @@
 import type {
   AssignAudienceCoursesRequest,
   CreateAudienceMemberRequest,
+  CreateDepartmentRequest,
   CreateLinkInviteRequest,
+  CreatePositionRequest,
   DeleteAudienceMemberRequest,
+  DeleteDepartmentRequest,
+  DeletePositionRequest,
   DeleteTeamRequest,
   DomainRequestRequest,
   GetAudienceRequest,
   GetAudienceAssignmentOptionsRequest,
   AudienceAssignmentOptions,
+  GetDepartmentsRequest,
   GetLinkInviteRequest,
   GetOrgPublicCoursesRequest,
+  GetPositionsRequest,
   ImportAudienceRequest,
   InviteTeamRequest,
   OrgLinkInvite,
@@ -17,10 +23,14 @@ import type {
   OrganizationAudience,
   OrganizationAudiencePagination,
   OrganizationAudienceQuery,
+  OrganizationDepartment,
+  OrganizationPosition,
   OrganizationTeamMembers,
   ResendAudienceInviteRequest,
   RevokeAudienceInviteRequest,
-  ToggleLinkInviteRequest
+  ToggleLinkInviteRequest,
+  UpdateDepartmentRequest,
+  UpdatePositionRequest
 } from '../utils/types';
 import { BaseApiWithErrors, classroomio } from '$lib/utils/services/api';
 import type {
@@ -28,11 +38,24 @@ import type {
   TAudienceInviteByEmail,
   TCreateAudienceMember,
   TCreateOrganization,
+  TCreateOrganizationDepartment,
+  TCreateOrganizationPosition,
   TGetOrganizations,
   TImportAudienceMembers,
-  TUpdateOrganization
+  TUpdateOrganization,
+  TUpdateOrganizationDepartment,
+  TUpdateOrganizationPosition
 } from '@cio/utils/validation/organization';
-import { ZCreateAudienceMember, ZCreateOrganization, ZUpdateOrganization } from '@cio/utils/validation/organization';
+import type { TCertificateDesign } from '@cio/utils/validation/course';
+import {
+  ZCreateAudienceMember,
+  ZCreateOrganization,
+  ZCreateOrganizationDepartment,
+  ZCreateOrganizationPosition,
+  ZUpdateOrganization,
+  ZUpdateOrganizationDepartment,
+  ZUpdateOrganizationPosition
+} from '@cio/utils/validation/organization';
 import { currentOrg, mergeAccountOrgFromServer, orgs } from '$lib/utils/store/org';
 
 import type { AccountOrg } from '$features/app/types';
@@ -64,7 +87,11 @@ export interface TOrgUpdateForm {
   disableSignupMessage?: string;
   disableEmailPassword?: boolean;
   disableGoogleAuth?: boolean;
-  settings?: { signup?: { inviteOnly?: boolean }; emailNotifications?: Record<string, boolean> };
+  settings?: {
+    signup?: { inviteOnly?: boolean };
+    emailNotifications?: Record<string, boolean>;
+    certificateDesign?: TCertificateDesign;
+  };
 }
 
 /**
@@ -775,6 +802,209 @@ class OrgApi extends BaseApiWithErrors {
       onSuccess: (response) => {
         this.linkInvite = response.data;
         snackbar.success(isRevoked ? 'snackbar.link_invite.disabled' : 'snackbar.link_invite.enabled');
+      }
+    });
+  }
+
+  positions = $state<OrganizationPosition[]>([]);
+  departments = $state<OrganizationDepartment[]>([]);
+
+  async getPositions() {
+    return this.execute<GetPositionsRequest>({
+      requestFn: () => classroomio.organization.positions.$get(),
+      logContext: 'fetching positions',
+      onSuccess: (response) => {
+        this.positions = response.data;
+      }
+    });
+  }
+
+  async createPosition(data: TCreateOrganizationPosition) {
+    const parsed = ZCreateOrganizationPosition.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<CreatePositionRequest>({
+      requestFn: () => classroomio.organization.positions.$post({ json: parsed.data }),
+      logContext: 'creating position',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.positions.created');
+        this.success = true;
+        await this.getPositions();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  async updatePosition(positionId: number, data: TUpdateOrganizationPosition) {
+    const parsed = ZUpdateOrganizationPosition.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<UpdatePositionRequest>({
+      requestFn: () =>
+        classroomio.organization.positions[':positionId'].$put({
+          param: { positionId: String(positionId) },
+          json: parsed.data
+        }),
+      logContext: 'updating position',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.positions.updated');
+        this.success = true;
+        await this.getPositions();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  async deletePosition(positionId: number) {
+    return this.execute<DeletePositionRequest>({
+      requestFn: () =>
+        classroomio.organization.positions[':positionId'].$delete({
+          param: { positionId: String(positionId) }
+        }),
+      logContext: 'deleting position',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.positions.deleted');
+        this.success = true;
+        await this.getPositions();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  async getDepartments() {
+    return this.execute<GetDepartmentsRequest>({
+      requestFn: () => classroomio.organization.departments.$get(),
+      logContext: 'fetching departments',
+      onSuccess: (response) => {
+        this.departments = response.data;
+      }
+    });
+  }
+
+  async createDepartment(data: TCreateOrganizationDepartment) {
+    const parsed = ZCreateOrganizationDepartment.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<CreateDepartmentRequest>({
+      requestFn: () => classroomio.organization.departments.$post({ json: parsed.data }),
+      logContext: 'creating department',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.departments.created');
+        this.success = true;
+        await this.getDepartments();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  async updateDepartment(departmentId: number, data: TUpdateOrganizationDepartment) {
+    const parsed = ZUpdateOrganizationDepartment.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<UpdateDepartmentRequest>({
+      requestFn: () =>
+        classroomio.organization.departments[':departmentId'].$put({
+          param: { departmentId: String(departmentId) },
+          json: parsed.data
+        }),
+      logContext: 'updating department',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.departments.updated');
+        this.success = true;
+        await this.getDepartments();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  async deleteDepartment(departmentId: number) {
+    return this.execute<DeleteDepartmentRequest>({
+      requestFn: () =>
+        classroomio.organization.departments[':departmentId'].$delete({
+          param: { departmentId: String(departmentId) }
+        }),
+      logContext: 'deleting department',
+      onSuccess: async () => {
+        snackbar.success('celluloplast_hr_refs.departments.deleted');
+        this.success = true;
+        await this.getDepartments();
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
       }
     });
   }

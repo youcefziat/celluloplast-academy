@@ -1,6 +1,8 @@
 import {
   escapeHtml,
   getYear,
+  ORG_LOGO_STYLES,
+  renderOrgLogo,
   renderFooterMetaBlock,
   renderSignatoryBlock,
   SIGNATURE_IMAGE_STYLES,
@@ -22,7 +24,10 @@ export const renderPoster: TemplateRenderer = ({ design, data }) => {
       <div class="blob blob-3"></div>
       <div class="content">
         <div class="top">
-          <span class="pill">${escapeHtml(data.orgName)}</span>
+          <div class="brand">
+            ${renderOrgLogo(data.orgLogoUrl, 'org-logo poster-logo')}
+            <span class="pill">${escapeHtml(data.orgName)}</span>
+          </div>
           <span>${escapeHtml(data.certificateId)} / ${escapeHtml(data.date)}</span>
         </div>
         <div class="title">${escapeHtml(firstTitleWord || 'Award')} <em>${escapeHtml(titleEmphasis)}</em></div>
@@ -199,6 +204,9 @@ export const renderPoster: TemplateRenderer = ({ design, data }) => {
       z-index: 3;
       line-height: 0.8;
     }
+    ${ORG_LOGO_STYLES}
+    .t-poster .poster-logo { margin: 0 0 8px; }
+    .t-poster .brand { display: flex; flex-direction: column; align-items: flex-start; }
     ${SIGNATURE_IMAGE_STYLES}
   `;
 

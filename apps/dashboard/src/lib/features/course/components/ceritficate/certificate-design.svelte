@@ -1,21 +1,15 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { Button } from '@cio/ui/base/button';
   import { Badge } from '@cio/ui/base/badge';
   import { Certificate } from '@cio/ui';
   import * as Card from '@cio/ui/base/card';
   import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-  import ZapIcon from '@lucide/svelte/icons/zap';
   import { t } from '$lib/utils/functions/translations';
 
   import { courseApi } from '$features/course/api';
-  import { currentOrg, isFreePlan } from '$lib/utils/store/org';
-  import {
-    CERTIFICATE_TEMPLATES,
-    DEFAULT_CERTIFICATE_DESIGN,
-    type CertificateDesign,
-    resolveTemplateId
-  } from '@cio/certificates';
+  import { resolveOrgCertificateDesign } from '$features/org/utils/certificate-design';
+  import { currentOrg, currentOrgPath, isFreePlan } from '$lib/utils/store/org';
+  import { CERTIFICATE_TEMPLATES, type CertificateDesign } from '@cio/certificates';
 
   type Props = {
     errors?: Record<string, string>;
@@ -23,40 +17,14 @@
 
   let { errors: _errors }: Props = $props();
 
-  const design: CertificateDesign = $derived.by(() => {
-    const certificate = courseApi.course?.certificate;
-    const stored = certificate?.design as Partial<CertificateDesign> | undefined;
-    const legacyTheme = certificate?.theme as string | undefined;
-
-    return {
-      templateId: resolveTemplateId(stored?.templateId ?? legacyTheme),
-      accentColor: stored?.accentColor ?? DEFAULT_CERTIFICATE_DESIGN.accentColor,
-      subtitle: stored?.subtitle ?? DEFAULT_CERTIFICATE_DESIGN.subtitle,
-      descriptionOverride: stored?.descriptionOverride,
-      signatories: [
-        {
-          name: stored?.signatories?.[0]?.name ?? DEFAULT_CERTIFICATE_DESIGN.signatories[0].name,
-          role: stored?.signatories?.[0]?.role ?? DEFAULT_CERTIFICATE_DESIGN.signatories[0].role,
-          enabled: stored?.signatories?.[0]?.enabled ?? DEFAULT_CERTIFICATE_DESIGN.signatories[0].enabled,
-          signatureUrl: stored?.signatories?.[0]?.signatureUrl
-        },
-        {
-          name: stored?.signatories?.[1]?.name ?? DEFAULT_CERTIFICATE_DESIGN.signatories[1].name,
-          role: stored?.signatories?.[1]?.role ?? DEFAULT_CERTIFICATE_DESIGN.signatories[1].role,
-          enabled: stored?.signatories?.[1]?.enabled ?? DEFAULT_CERTIFICATE_DESIGN.signatories[1].enabled,
-          signatureUrl: stored?.signatories?.[1]?.signatureUrl
-        }
-      ],
-      idFormat: stored?.idFormat ?? DEFAULT_CERTIFICATE_DESIGN.idFormat
-    };
-  });
+  const design: CertificateDesign = $derived(resolveOrgCertificateDesign($currentOrg.settings));
 
   const previewData = $derived({
     recipientName: 'Eleanor Vance',
     courseName: courseApi.course?.title ?? 'Course Title',
     courseDescription: design.descriptionOverride || courseApi.course?.description || '',
     orgName: $currentOrg.name || 'Organization',
-    orgLogoUrl: $currentOrg.avatarUrl || undefined,
+    orgLogoUrl: design.logoUrl || $currentOrg.avatarUrl || undefined,
     date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' }),
     certificateId: (design.idFormat ?? 'N° {seq}').replace('{seq}', '0247')
   });
@@ -65,8 +33,7 @@
     CERTIFICATE_TEMPLATES.find((tpl) => tpl.id === design.templateId)?.label ?? design.templateId
   );
 
-  const courseId = $derived(courseApi.course?.id ?? '');
-  const editorHref = $derived(courseId ? resolve('/courses/[id]/certificates/editor', { id: courseId }) : '#');
+  const editorHref = $derived(`${$currentOrgPath}/settings/certificates`);
 </script>
 
 <div class="grid w-full gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -78,7 +45,7 @@
     <Card.Root>
       <Card.Header>
         <Card.Title class="text-base">{$t('course.navItem.certificates.editor.summary_title')}</Card.Title>
-        <Card.Description>{$t('course.navItem.certificates.editor.summary_subtitle')}</Card.Description>
+        <Card.Description>{$t('celluloplast_org_certificates.course_summary_subtitle')}</Card.Description>
       </Card.Header>
       <Card.Content class="space-y-3 pb-4">
         <div class="flex items-center justify-between">
@@ -113,11 +80,8 @@
         </div>
       </Card.Content>
       <Card.Footer>
-        <Button variant="secondary" class="w-full justify-center" disabled={$isFreePlan || !courseId} href={editorHref}>
-          {#if $isFreePlan}
-            <ZapIcon class="size-4" />
-          {/if}
-          {$t('course.navItem.certificates.editor.customize_design')}
+        <Button variant="secondary" class="w-full justify-center" disabled={$isFreePlan} href={editorHref}>
+          {$t('celluloplast_org_certificates.edit_enterprise_design')}
           <ArrowRightIcon class="size-4" />
         </Button>
       </Card.Footer>

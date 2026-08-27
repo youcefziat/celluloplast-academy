@@ -143,6 +143,10 @@ export type TOrganizationmember = typeof schema.organizationmember.$inferSelect;
 export type TNewOrganizationmember = typeof schema.organizationmember.$inferInsert;
 export type TOrganizationmemberEmailNotifications = typeof schema.organizationmemberEmailNotifications.$inferSelect;
 export type TNewOrganizationmemberEmailNotifications = typeof schema.organizationmemberEmailNotifications.$inferInsert;
+export type TOrganizationPosition = typeof schema.organizationPosition.$inferSelect;
+export type TNewOrganizationPosition = typeof schema.organizationPosition.$inferInsert;
+export type TOrganizationDepartment = typeof schema.organizationDepartment.$inferSelect;
+export type TNewOrganizationDepartment = typeof schema.organizationDepartment.$inferInsert;
 
 export type TQuestion = typeof schema.question.$inferSelect;
 export type TNewQuestion = typeof schema.question.$inferInsert;

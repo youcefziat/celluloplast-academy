@@ -10,6 +10,8 @@
 
   let { children }: Props = $props();
 
+  const isCertificatesPage = $derived(page.url.pathname.includes('/settings/certificates'));
+
   const showOrgSettingsTabs = $derived(
     page.url.pathname.endsWith('/settings/org') ||
       page.url.pathname.endsWith('/settings/customize-lms') ||
@@ -18,17 +20,21 @@
   );
 </script>
 
-<Page.Root class="w-full pb-10 md:max-w-3xl lg:mx-auto">
-  {#if showOrgSettingsTabs}
-    <Page.Header>
-      <Page.HeaderContent>
-        <Page.Title>{$t('settings.organization.organization_profile.heading')}</Page.Title>
-        <Page.Subtitle>{$t('settings.organization.page_subtitle')}</Page.Subtitle>
-      </Page.HeaderContent>
-    </Page.Header>
-
-    <OrgSettingsInlineTabs />
-  {/if}
-
+{#if isCertificatesPage}
   {@render children?.()}
-</Page.Root>
+{:else}
+  <Page.Root class="w-full pb-10 md:max-w-3xl lg:mx-auto">
+    {#if showOrgSettingsTabs}
+      <Page.Header>
+        <Page.HeaderContent>
+          <Page.Title>{$t('settings.organization.organization_profile.heading')}</Page.Title>
+          <Page.Subtitle>{$t('settings.organization.page_subtitle')}</Page.Subtitle>
+        </Page.HeaderContent>
+      </Page.Header>
+
+      <OrgSettingsInlineTabs />
+    {/if}
+
+    {@render children?.()}
+  </Page.Root>
+{/if}

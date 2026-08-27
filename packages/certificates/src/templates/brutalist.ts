@@ -1,4 +1,11 @@
-import { escapeHtml, renderSignatoryBlock, SIGNATURE_IMAGE_STYLES, type TemplateRenderer } from './shared';
+import {
+  escapeHtml,
+  ORG_LOGO_STYLES,
+  renderOrgLogo,
+  renderSignatoryBlock,
+  SIGNATURE_IMAGE_STYLES,
+  type TemplateRenderer
+} from './shared';
 
 export const renderBrutalist: TemplateRenderer = ({ design, data }) => {
   const accent = design.accentColor;
@@ -11,7 +18,10 @@ export const renderBrutalist: TemplateRenderer = ({ design, data }) => {
     <div class="cert t-brutalist">
       <div class="grid-bg"></div>
       <div class="header">
-        <div>${escapeHtml(data.orgName)}</div>
+        <div class="brand">
+          ${renderOrgLogo(data.orgLogoUrl, 'org-logo brutalist-logo')}
+          <div>${escapeHtml(data.orgName)}</div>
+        </div>
         <div class="blk">${escapeHtml(data.certificateId)}</div>
       </div>
       <div class="title-block">
@@ -194,6 +204,9 @@ export const renderBrutalist: TemplateRenderer = ({ design, data }) => {
       z-index: 3;
       background: rgba(255, 255, 255, 0.6);
     }
+    ${ORG_LOGO_STYLES}
+    .t-brutalist .brutalist-logo { margin: 0 0 8px; }
+    .t-brutalist .brand { display: flex; flex-direction: column; align-items: flex-start; }
     ${SIGNATURE_IMAGE_STYLES}
   `;
 

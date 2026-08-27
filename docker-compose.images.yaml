@@ -172,6 +172,9 @@ services:
       CSP_FRAME_SRC_DOMAINS: ${CSP_FRAME_SRC_DOMAINS:-}
       CSP_FONT_SRC_DOMAINS: ${CSP_FONT_SRC_DOMAINS:-}
       CSP_MEDIA_SRC_DOMAINS: ${CSP_MEDIA_SRC_DOMAINS:-}
+      # adapter-node default is 512KB — too small for /proxy/media/* uploads.
+      # Integer bytes only (adapter-node 2.x: parseInt('900M') === 900). 943718400 = 900 MiB.
+      BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-943718400}
       # Upload size limits (megabytes). Unset = built-in defaults — see .env.example.
       UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
       UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}

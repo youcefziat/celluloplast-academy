@@ -14,14 +14,22 @@ export interface CertificateRenderInput {
 }
 
 /**
- * Coerces a stored `course.certificate` JSONB blob (legacy or current) into a
- * complete `CertificateDesign` suitable for `renderCertificate`.
+ * Coerces a stored certificate design into a complete `CertificateDesign`.
+ *
+ * Accepts either:
+ * - a raw `CertificateDesign` (org `settings.certificateDesign`)
+ * - a legacy course blob `{ design?, theme? }` (compat)
  */
 export function resolveCertificateDesign(stored: unknown): CertificateDesign {
   const blob = stored && typeof stored === 'object' ? (stored as Record<string, unknown>) : {};
+
+  const looksLikeRawDesign =
+    typeof blob.templateId === 'string' || typeof blob.accentColor === 'string' || Array.isArray(blob.signatories);
+
   const legacyTheme = typeof blob.theme === 'string' ? (blob.theme as string) : undefined;
-  const storedDesign =
+  const nestedDesign =
     blob.design && typeof blob.design === 'object' ? (blob.design as Partial<CertificateDesign>) : undefined;
+  const storedDesign = (looksLikeRawDesign ? (blob as Partial<CertificateDesign>) : nestedDesign) ?? undefined;
 
   const templateId = resolveTemplateId(storedDesign?.templateId ?? legacyTheme);
 
@@ -52,6 +60,7 @@ export function resolveCertificateDesign(stored: unknown): CertificateDesign {
     accentColor,
     subtitle: storedDesign?.subtitle ?? DEFAULT_CERTIFICATE_DESIGN.subtitle,
     descriptionOverride: storedDesign?.descriptionOverride,
+    logoUrl: storedDesign?.logoUrl && /^https?:\/\//i.test(storedDesign.logoUrl) ? storedDesign.logoUrl : undefined,
     signatories,
     idFormat: storedDesign?.idFormat ?? DEFAULT_CERTIFICATE_DESIGN.idFormat
   };

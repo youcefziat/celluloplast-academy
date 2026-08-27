@@ -1,4 +1,12 @@
-import { escapeHtml, getYear, renderSignatoryBlock, SIGNATURE_IMAGE_STYLES, type TemplateRenderer } from './shared';
+import {
+  escapeHtml,
+  getYear,
+  ORG_LOGO_STYLES,
+  renderOrgLogo,
+  renderSignatoryBlock,
+  SIGNATURE_IMAGE_STYLES,
+  type TemplateRenderer
+} from './shared';
 
 export const renderClassique: TemplateRenderer = ({ design, data }) => {
   const accent = design.accentColor;
@@ -12,7 +20,10 @@ export const renderClassique: TemplateRenderer = ({ design, data }) => {
       <div class="corner tr"></div>
       <div class="corner bl"></div>
       <div class="corner br"></div>
-      <div class="top-tag">${escapeHtml(data.orgName)}</div>
+      <div class="brand">
+        ${renderOrgLogo(data.orgLogoUrl)}
+        <div class="top-tag">${escapeHtml(data.orgName)}</div>
+      </div>
       <div class="ornament">&#10086;</div>
       <div class="title">${escapeHtml(data.courseName)}</div>
       <div class="subtitle">${escapeHtml(subtitle)}</div>
@@ -71,13 +82,16 @@ export const renderClassique: TemplateRenderer = ({ design, data }) => {
       margin: 8px 0;
       letter-spacing: 0.5em;
     }
+    .t-classique .brand {
+      text-align: center;
+      margin-top: 60px;
+    }
     .t-classique .top-tag {
       text-align: center;
       font-family: 'Cinzel', serif;
       font-size: 13px;
       letter-spacing: 0.6em;
       color: ${accent};
-      margin-top: 60px;
       text-transform: uppercase;
     }
     .t-classique .title {
@@ -185,6 +199,7 @@ export const renderClassique: TemplateRenderer = ({ design, data }) => {
       letter-spacing: 0.2em;
       margin-top: 2px;
     }
+    ${ORG_LOGO_STYLES}
     ${SIGNATURE_IMAGE_STYLES}
   `;
 

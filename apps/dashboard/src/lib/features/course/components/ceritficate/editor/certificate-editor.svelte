@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { CERTIFICATE_TEMPLATES, type CertificateTemplateId } from '@cio/certificates';
   import { Certificate } from '@cio/ui';
   import { IconButton } from '@cio/ui/custom/icon-button';
@@ -9,8 +10,7 @@
   import { t } from '$lib/utils/functions/translations';
 
   import { courseApi } from '$features/course/api';
-  import { currentOrg } from '$lib/utils/store/org';
-  import { isFreePlan } from '$lib/utils/store/org';
+  import { currentOrg, isFreePlan } from '$lib/utils/store/org';
   import { profile } from '$lib/utils/store/user';
   import CertificateEditorHeader from './certificate-editor-header.svelte';
   import TemplatesPanel from './panels/templates-panel.svelte';
@@ -29,6 +29,7 @@
   });
 
   const courseTitle = $derived(courseApi.course?.title ?? '');
+  const backHref = $derived(resolve('/courses/[id]/certificates', { id: courseId }));
 
   const activeTemplateMeta = $derived(
     CERTIFICATE_TEMPLATES.find((tpl) => tpl.id === store.draft.templateId) ?? CERTIFICATE_TEMPLATES[0]
@@ -44,7 +45,7 @@
       courseApi.course?.description ||
       $t('course.navItem.certificates.editor.sample_description'),
     orgName: $currentOrg.name || $t('course.navItem.certificates.editor.sample_org'),
-    orgLogoUrl: $currentOrg.avatarUrl || undefined,
+    orgLogoUrl: store.draft.logoUrl || $currentOrg.avatarUrl || undefined,
     date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' }),
     certificateId: (store.draft.idFormat || 'N° {seq}').replace('{seq}', '0247')
   });
@@ -61,8 +62,8 @@
 {#if courseApi.course?.id === courseId}
   <div class="ui:bg-background ui:text-foreground flex h-dvh flex-col">
     <CertificateEditorHeader
-      {courseId}
-      {courseTitle}
+      title={courseTitle}
+      {backHref}
       templateLabel={activeTemplateMeta.label}
       isDirty={store.isDirty}
       isSaving={store.isSaving}

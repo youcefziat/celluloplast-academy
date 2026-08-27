@@ -29,6 +29,13 @@ export function setupCloudAnalytics(user?: PosthogBootstrapUser) {
 export function setupAnalyticsBasedOnLicense(user?: PosthogBootstrapUser) {
   initUserJot();
 
+  // SaaS trackers (PostHog / Umami) are cloud-only. Self-hosted has no
+  // tenant-router /ingest proxy, and ClassroomIO's PostHog project must not
+  // receive events from private deployments.
+  if (PUBLIC_IS_SELFHOSTED === 'true') {
+    return;
+  }
+
   if (licenseApi.hasAccess('no-tracking')) {
     return;
   }

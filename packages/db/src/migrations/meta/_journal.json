@@ -57,6 +57,13 @@
       "when": 1787780000000,
       "tag": "0007_organizationmember_hr_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787900000000,
+      "tag": "0008_organization_hr_references",
+      "breakpoints": true
     }
   ]
 }

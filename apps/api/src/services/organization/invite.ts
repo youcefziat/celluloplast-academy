@@ -509,8 +509,8 @@ export async function acceptOrganizationInvite(token: string, user: TAuthUser, c
               memberId: member.id,
               profileId: user.id,
               email: member.email,
-              jobTitle: member.jobTitle,
-              department: member.department
+              jobTitle: member.jobTitle ?? member.position?.name ?? null,
+              department: member.department?.name ?? null
             });
           }
         }
@@ -823,8 +823,8 @@ export async function acceptOrganizationInviteById(
             memberId: member.id,
             profileId: user.id,
             email: member.email,
-            jobTitle: member.jobTitle,
-            department: member.department
+            jobTitle: member.jobTitle ?? member.position?.name ?? null,
+            department: member.department?.name ?? null
           });
         }
       }

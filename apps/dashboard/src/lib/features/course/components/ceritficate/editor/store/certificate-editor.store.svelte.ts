@@ -4,12 +4,17 @@ import {
   type CertificateDesign,
   type CertificateTemplateId
 } from '@cio/certificates';
+import { get } from 'svelte/store';
 
 import { courseApi } from '$features/course/api';
+import { orgApi } from '$features/org/api/org.svelte';
+import { resolveOrgCertificateDesign } from '$features/org/utils/certificate-design';
 import { snackbar } from '$features/ui/snackbar/store';
+import { currentOrg } from '$lib/utils/store/org';
 import { t } from '$lib/utils/functions/translations';
 
 export type CertificateEditorPanel = 'templates' | 'content' | 'colors' | 'export';
+export type CertificateEditorMode = 'course' | 'org';
 
 /**
  * The store keeps optional fields as concrete strings so two-way bindings to
@@ -22,6 +27,7 @@ export interface CertificateEditorDraft {
   subtitle: string;
   descriptionOverride: string;
   idFormat: string;
+  logoUrl: string;
   signatories: [
     { name: string; role: string; enabled: boolean; signatureUrl: string },
     { name: string; role: string; enabled: boolean; signatureUrl: string }
@@ -40,11 +46,15 @@ function toDraftSignatory(
   };
 }
 
-function isPersistableSignatureUrl(url: string): boolean {
+function isPersistableUrl(url: string): boolean {
   const trimmed = url.trim();
   if (!trimmed) return false;
 
   return !trimmed.startsWith('blob:') && !trimmed.startsWith('data:');
+}
+
+function isPersistableSignatureUrl(url: string): boolean {
+  return isPersistableUrl(url);
 }
 
 function fromDraftSignatory(signatory: CertificateEditorDraft['signatories'][number]) {
@@ -65,6 +75,7 @@ function toDraft(design: CertificateDesign): CertificateEditorDraft {
     subtitle: design.subtitle ?? '',
     descriptionOverride: design.descriptionOverride ?? '',
     idFormat: design.idFormat ?? '',
+    logoUrl: design.logoUrl ?? '',
     signatories: [
       toDraftSignatory(design.signatories[0], DEFAULT_CERTIFICATE_DESIGN.signatories[0]),
       toDraftSignatory(design.signatories[1], DEFAULT_CERTIFICATE_DESIGN.signatories[1])
@@ -73,17 +84,20 @@ function toDraft(design: CertificateDesign): CertificateEditorDraft {
 }
 
 function fromDraft(draft: CertificateEditorDraft): CertificateDesign {
+  const logoUrl = draft.logoUrl.trim();
+
   return {
     templateId: draft.templateId,
     accentColor: draft.accentColor,
     subtitle: draft.subtitle.trim() || undefined,
     descriptionOverride: draft.descriptionOverride.trim() || undefined,
     idFormat: draft.idFormat.trim() || undefined,
+    logoUrl: isPersistableUrl(logoUrl) ? logoUrl : undefined,
     signatories: [fromDraftSignatory(draft.signatories[0]), fromDraftSignatory(draft.signatories[1])]
   };
 }
 
-function readStoredDesign(): CertificateDesign {
+function readCourseStoredDesign(): CertificateDesign {
   const certificate = courseApi.course?.certificate;
   const stored = certificate?.design as Partial<CertificateDesign> | undefined;
   const legacyTheme = certificate?.theme;
@@ -93,6 +107,7 @@ function readStoredDesign(): CertificateDesign {
     accentColor: stored?.accentColor ?? DEFAULT_CERTIFICATE_DESIGN.accentColor,
     subtitle: stored?.subtitle ?? DEFAULT_CERTIFICATE_DESIGN.subtitle,
     descriptionOverride: stored?.descriptionOverride,
+    logoUrl: stored?.logoUrl,
     signatories: [
       toDraftSignatory(stored?.signatories?.[0], DEFAULT_CERTIFICATE_DESIGN.signatories[0]),
       toDraftSignatory(stored?.signatories?.[1], DEFAULT_CERTIFICATE_DESIGN.signatories[1])
@@ -107,17 +122,33 @@ class CertificateEditorStore {
   initial = $state<CertificateEditorDraft>(toDraft(DEFAULT_CERTIFICATE_DESIGN));
   isSaving = $state(false);
   isSignatureUploading = $state(false);
+  mode = $state<CertificateEditorMode>('course');
   #initializedCourseId: string | null = null;
+  #initializedOrgId: string | null = null;
 
   readonly isDirty = $derived(JSON.stringify(this.draft) !== JSON.stringify(this.initial));
 
   syncFromCourse(courseId: string, force = false) {
+    this.mode = 'course';
     if (!force && this.#initializedCourseId === courseId) return;
 
-    const stored = readStoredDesign();
+    const stored = readCourseStoredDesign();
     this.initial = toDraft(stored);
     this.draft = toDraft(stored);
     this.#initializedCourseId = courseId;
+    this.#initializedOrgId = null;
+  }
+
+  syncFromOrg(orgId: string, force = false) {
+    this.mode = 'org';
+    if (!force && this.#initializedOrgId === orgId) return;
+
+    const org = get(currentOrg);
+    const stored = resolveOrgCertificateDesign(org.settings);
+    this.initial = toDraft(stored);
+    this.draft = toDraft(stored);
+    this.#initializedOrgId = orgId;
+    this.#initializedCourseId = null;
   }
 
   reset() {
@@ -130,6 +161,14 @@ class CertificateEditorStore {
 
   setAccent(color: string) {
     this.draft.accentColor = color;
+  }
+
+  setLogoUrl(logoUrl: string) {
+    this.draft.logoUrl = logoUrl;
+  }
+
+  clearLogoUrl() {
+    this.draft.logoUrl = '';
   }
 
   setSignatorySignatureUrl(index: 0 | 1, signatureUrl: string) {
@@ -152,6 +191,14 @@ class CertificateEditorStore {
   }
 
   async save() {
+    if (this.mode === 'org') {
+      return this.saveOrg();
+    }
+
+    return this.saveCourse();
+  }
+
+  private async saveCourse() {
     const course = courseApi.course;
     if (!course?.id) return;
 
@@ -188,6 +235,38 @@ class CertificateEditorStore {
       }
 
       if (Object.keys(courseApi.errors).length > 0) {
+        snackbar.error(t.get('course.navItem.certificates.editor.save_failed'));
+      }
+    } finally {
+      this.isSaving = false;
+    }
+  }
+
+  private async saveOrg() {
+    const org = get(currentOrg);
+    if (!org?.id) return;
+
+    if (this.isSignatureUploading) {
+      snackbar.error(t.get('course.navItem.certificates.editor.signature_upload_in_progress'));
+      return;
+    }
+
+    this.isSaving = true;
+    try {
+      const design = fromDraft(this.draft);
+
+      orgApi.success = false;
+      await orgApi.update(org.id, {
+        settings: {
+          certificateDesign: design
+        }
+      });
+
+      if (orgApi.success) {
+        this.initial = toDraft(design);
+        this.#initializedOrgId = null;
+        this.syncFromOrg(org.id, true);
+      } else if (Object.keys(orgApi.errors).length > 0) {
         snackbar.error(t.get('course.navItem.certificates.editor.save_failed'));
       }
     } finally {

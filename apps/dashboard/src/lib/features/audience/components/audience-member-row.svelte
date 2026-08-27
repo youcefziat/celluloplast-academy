@@ -65,8 +65,8 @@
     {/if}
   </Table.Cell>
   <Table.Cell>{row.email}</Table.Cell>
-  <Table.Cell class="hidden md:table-cell">{row.jobTitle || '—'}</Table.Cell>
-  <Table.Cell class="hidden md:table-cell">{row.department || '—'}</Table.Cell>
+  <Table.Cell class="hidden md:table-cell">{row.jobTitle || row.position?.name || '—'}</Table.Cell>
+  <Table.Cell class="hidden md:table-cell">{row.department?.name || '—'}</Table.Cell>
   <Table.Cell class="hidden lg:table-cell">{row.manager?.name || row.manager?.email || '—'}</Table.Cell>
   <Table.Cell>
     <Badge variant={statusBadgeVariant(row.status)}>{$t(statusLabelKey(row.status))}</Badge>

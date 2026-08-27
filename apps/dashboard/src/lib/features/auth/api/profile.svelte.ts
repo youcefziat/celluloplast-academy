@@ -110,20 +110,23 @@ export class ProfileApi extends BaseApiWithErrors {
       this.errors = {};
       this.success = false;
 
-      // Handle avatar upload if provided
       let avatarUrl: string | undefined;
       if (fields.avatar instanceof File) {
         avatarUrl = await uploadImage(fields.avatar);
       }
 
-      // Update user info via Better Auth (name and image)
-      await this.updateUserInfo(fields, avatarUrl);
-
-      // Update profile-specific fields via API route
+      // Persist profile (including avatarUrl) via API first — source of truth for the dashboard.
       const profileUpdates = this.buildProfileUpdates(fields, locale, avatarUrl);
       await this.updateProfile(profileUpdates);
 
-      // Handle locale change if needed
+      // Best-effort sync to Better Auth user.image; do not fail the whole save if this errors
+      // after the profile API already accepted avatarUrl.
+      try {
+        await this.updateUserInfo(fields, avatarUrl);
+      } catch (authError) {
+        console.error('Better Auth updateUser failed after profile save:', authError);
+      }
+
       if (hasLangChanged && locale) {
         handleLocaleChange(locale);
       }

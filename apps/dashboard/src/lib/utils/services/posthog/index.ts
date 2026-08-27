@@ -1,4 +1,5 @@
 import { dev } from '$app/environment';
+import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
 import { licenseApi } from '$features/license/api/license.svelte';
 import posthog from 'posthog-js';
 
@@ -8,14 +9,21 @@ const hasNoTracking = () => {
   return noTracking;
 };
 
+/** PostHog is ClassroomIO cloud telemetry; never init/send from self-hosted. */
+const shouldSkipTracking = (): boolean => {
+  if (dev || PUBLIC_IS_SELFHOSTED === 'true') return true;
+
+  return hasNoTracking();
+};
+
 export const capturePosthogEvent = (event: string, properties?: Record<string, unknown>): void => {
-  if (dev || hasNoTracking()) return;
+  if (shouldSkipTracking()) return;
 
   posthog.capture(event, properties);
 };
 
 export const identifyPosthogUser = (id: string, properties?: Record<string, unknown>): void => {
-  if (dev || hasNoTracking()) return;
+  if (shouldSkipTracking()) return;
 
   posthog.identify(id, properties);
 };
@@ -35,11 +43,12 @@ export type PosthogBootstrapUser = {
  * autocapture events fire with the user's properties already on the person.
  */
 export const initPosthog = (user?: PosthogBootstrapUser): void => {
-  if (dev || hasNoTracking()) return;
+  if (shouldSkipTracking()) return;
 
   posthog.init('phc_JfdHOZ6v0cVlGELBYx1Tmoen2nxNOrAzvgvrPA6Ksov', {
     // Route PostHog through our own domain via the tenant-router Worker so the
     // cookie is first-party and doesn't trigger the Lighthouse "third-party cookie" deduction.
+    // Cloud-only: apps/tenant-router proxies /ingest/* → eu.i.posthog.com.
     api_host: `${window.location.origin}/ingest`,
     ui_host: 'https://eu.posthog.com',
     ...(user && {

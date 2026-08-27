@@ -155,3 +155,18 @@ export type GetTokenAuthRequest = (typeof classroomio.organization)['token-auth'
 export type RotateTokenAuthRequest = (typeof classroomio.organization)['token-auth']['rotate']['$post'];
 export type DeleteTokenAuthRequest = (typeof classroomio.organization)['token-auth']['$delete'];
 export type ActivateTokenAuthRequest = (typeof classroomio.organization)['token-auth']['activate']['$put'];
+
+// Organization positions / departments (HR référentiels)
+export type GetPositionsRequest = (typeof classroomio.organization)['positions']['$get'];
+export type CreatePositionRequest = (typeof classroomio.organization)['positions']['$post'];
+export type UpdatePositionRequest = (typeof classroomio.organization)['positions'][':positionId']['$put'];
+export type DeletePositionRequest = (typeof classroomio.organization)['positions'][':positionId']['$delete'];
+export type GetPositionsSuccess = Extract<InferResponseType<GetPositionsRequest>, { success: true }>;
+export type OrganizationPosition = GetPositionsSuccess['data'][number];
+
+export type GetDepartmentsRequest = (typeof classroomio.organization)['departments']['$get'];
+export type CreateDepartmentRequest = (typeof classroomio.organization)['departments']['$post'];
+export type UpdateDepartmentRequest = (typeof classroomio.organization)['departments'][':departmentId']['$put'];
+export type DeleteDepartmentRequest = (typeof classroomio.organization)['departments'][':departmentId']['$delete'];
+export type GetDepartmentsSuccess = Extract<InferResponseType<GetDepartmentsRequest>, { success: true }>;
+export type OrganizationDepartment = GetDepartmentsSuccess['data'][number];

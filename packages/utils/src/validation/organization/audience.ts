@@ -36,6 +36,8 @@ export const ZCreateAudienceMember = z
     lastName: optionalTrimmedString,
     jobTitle: optionalTrimmedString,
     department: optionalTrimmedString,
+    positionId: z.coerce.number().int().positive().optional(),
+    departmentId: z.coerce.number().int().positive().optional(),
     managerMemberId: z.coerce.number().int().positive().optional(),
     managerEmail: z.email().optional(),
     courseIds: z.array(z.string().uuid()).optional(),
@@ -45,6 +47,14 @@ export const ZCreateAudienceMember = z
   .refine((data) => !(data.managerMemberId && data.managerEmail), {
     message: 'Provide either managerMemberId or managerEmail, not both',
     path: ['managerEmail']
+  })
+  .refine((data) => !(data.positionId && data.jobTitle), {
+    message: 'Provide either positionId or jobTitle, not both',
+    path: ['jobTitle']
+  })
+  .refine((data) => !(data.departmentId && data.department), {
+    message: 'Provide either departmentId or department, not both',
+    path: ['department']
   });
 
 export type TCreateAudienceMember = z.infer<typeof ZCreateAudienceMember>;

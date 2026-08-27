@@ -8,24 +8,33 @@ import nodemailer from 'nodemailer';
 let transporter: Transporter | undefined;
 
 const setupTransporter = async () => {
-  if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASSWORD) {
-    console.error('SMTP configuration missing');
+  // Host is required. User/password are optional so local relays (e.g. MailHog)
+  // work without inventing new env vars; production SMTP providers still pass auth.
+  if (!env.SMTP_HOST) {
+    console.error('SMTP configuration missing: SMTP_HOST is required');
     return undefined;
   }
 
   try {
     const smtpPort = parseInt(env.SMTP_PORT || '465', 10);
     const useImplicitTls = smtpPort === 465;
+    const hasAuth = Boolean(env.SMTP_USER && env.SMTP_PASSWORD);
 
     transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
       port: smtpPort,
       secure: useImplicitTls,
-      requireTLS: !useImplicitTls,
-      auth: {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASSWORD
-      }
+      // STARTTLS for authenticated submission ports (e.g. 587). Skip for plain
+      // local SMTP relays that do not speak TLS (MailHog on 1025).
+      requireTLS: !useImplicitTls && hasAuth,
+      ...(hasAuth
+        ? {
+            auth: {
+              user: env.SMTP_USER!,
+              pass: env.SMTP_PASSWORD!
+            }
+          }
+        : {})
     });
 
     await transporter.verify();

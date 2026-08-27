@@ -95,9 +95,12 @@ const ORG_NAV_V1: OrgNavEntry[] = [
     keepItems: [
       { path: '/settings' },
       { path: '/settings/notifications' },
-      { path: '/settings/org', keepNestedRoutes: ['teams', 'customize-lms'] }
+      { path: '/settings/org', keepNestedRoutes: ['teams', 'customize-lms'] },
+      { path: '/settings/positions' },
+      { path: '/settings/departments' },
+      { path: '/settings/certificates' }
     ],
-    keepNestedRoutes: ['notifications', 'teams', 'customize-lms']
+    keepNestedRoutes: ['notifications', 'teams', 'customize-lms', 'positions', 'departments', 'certificates']
   }
 ];
 
@@ -119,7 +122,14 @@ const LMS_NAV_V1: LmsNavEntry[] = [
 ];
 
 /** Org settings tabs kept in V1 (custom domains are out of scope). */
-const ORG_SETTINGS_TABS_V1 = ['/settings/org', '/settings/teams', '/settings/customize-lms'];
+const ORG_SETTINGS_TABS_V1 = [
+  '/settings/org',
+  '/settings/teams',
+  '/settings/customize-lms',
+  '/settings/positions',
+  '/settings/departments',
+  '/settings/certificates'
+];
 
 function findUpstreamEntry(configs: OrgNavItemConfig[], path: string): OrgNavItemConfig | undefined {
   for (const config of configs) {

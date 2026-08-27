@@ -103,7 +103,10 @@ effectively required: without SMTP (or Zoho) configured, signup verification, pa
 invites silently don't send (see [Email](#email)). Google OAuth, Unsplash, and `LICENSE_KEY` stay
 off until you set them. If you raise the `UPLOAD_MAX_*_MB` vars (documents, images, videos,
 assignment files; full list in [`.env.example`](../../.env.example)), set the same values on both
-`api` and `dashboard`, and raise your reverse-proxy body-size limit to match.
+`api` and `dashboard`, and raise `BODY_SIZE_LIMIT` on the dashboard (SvelteKit adapter-node
+defaults to **512KB**, which blocks typical avatar/logo uploads via `/proxy/media/image`) plus
+any reverse-proxy body-size limit to match. Compose defaults `BODY_SIZE_LIMIT=943718400`
+(900 MiB, integer bytes — do **not** use `900M`; adapter-node 2.x `parseInt`s that to 900 bytes).
 
 ## Verify
 

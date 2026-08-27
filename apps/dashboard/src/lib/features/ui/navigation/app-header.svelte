@@ -12,6 +12,7 @@
   import { setupProgressApi } from '$features/setup/api/setup-progress.svelte';
   import AppSetup from './app-setup.svelte';
   import VisitOrgSiteBtn from '$features/ui/visit-org-site-btn.svelte';
+  import { CELLULOPLAST_V1 } from '$lib/celluloplast/features';
 
   const siteName = $derived($currentOrg.siteName);
 
@@ -37,7 +38,9 @@
     <span class="grow"></span>
 
     <AppSetup />
-    <VisitOrgSiteBtn variant="outline" labelKey="dashboard.open_academy" />
+    {#if CELLULOPLAST_V1.exploreCatalog}
+      <VisitOrgSiteBtn variant="outline" labelKey="dashboard.open_academy" />
+    {/if}
 
     <Search />
 

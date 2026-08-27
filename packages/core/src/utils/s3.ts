@@ -21,7 +21,14 @@ export async function uploadToS3(params: PutObjectCommandInput): Promise<{ succe
     await getS3Client().send(new PutObjectCommand(params));
     return { success: true };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('[uploadToS3] PutObject failed', {
+      bucket: params.Bucket,
+      key: params.Key,
+      contentType: params.ContentType,
+      error: message
+    });
+    return { success: false, error: message };
   }
 }
 

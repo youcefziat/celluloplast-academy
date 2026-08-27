@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { Button } from '@cio/ui/base/button';
   import { Badge } from '@cio/ui/base/badge';
   import { t } from '$lib/utils/functions/translations';
   import ArrowLeftIcon from '@lucide/svelte/icons/arrow-left';
 
   interface Props {
-    courseId: string;
-    courseTitle: string;
+    title: string;
+    backHref: string;
     templateLabel: string;
     isDirty: boolean;
     isSaving: boolean;
@@ -18,8 +17,8 @@
   }
 
   let {
-    courseId,
-    courseTitle,
+    title,
+    backHref,
     templateLabel,
     isDirty,
     isSaving,
@@ -37,7 +36,7 @@
     <Button
       variant="ghost"
       size="icon"
-      href={resolve('/courses/[id]/certificates', { id: courseId })}
+      href={backHref}
       class="ui:size-8 shrink-0"
       aria-label={$t('course.navItem.certificates.editor.back')}
     >
@@ -46,7 +45,7 @@
 
     <div class="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
       <h1 class="truncate text-sm tracking-tight sm:text-base">
-        {courseTitle}
+        {title}
       </h1>
 
       <div class="flex flex-wrap items-center gap-1">

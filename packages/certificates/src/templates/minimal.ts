@@ -1,5 +1,7 @@
 import {
   escapeHtml,
+  ORG_LOGO_STYLES,
+  renderOrgLogo,
   renderFooterMetaBlock,
   renderSignatoryBlock,
   SIGNATURE_IMAGE_STYLES,
@@ -14,6 +16,7 @@ export const renderMinimal: TemplateRenderer = ({ design, data }) => {
 
   const body = `
     <div class="cert t-minimal">
+      ${renderOrgLogo(data.orgLogoUrl, 'org-logo minimal-logo')}
       <div class="top">
         <span>${escapeHtml(data.orgName)}</span>
         <span>${escapeHtml(data.certificateId)} &middot; ${escapeHtml(data.date)}</span>
@@ -160,6 +163,8 @@ export const renderMinimal: TemplateRenderer = ({ design, data }) => {
     }
     .t-minimal .footer .ref .k { color: ${accent}; }
     .t-minimal .footer .ref .v { color: ${accent}; }
+    ${ORG_LOGO_STYLES}
+    .t-minimal .minimal-logo { margin: 24px auto 8px; }
     ${SIGNATURE_IMAGE_STYLES}
   `;
 
