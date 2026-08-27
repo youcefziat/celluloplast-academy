@@ -32,6 +32,7 @@ import { alias } from 'drizzle-orm/pg-core';
 import { CELLULOPLAST_PRIMARY_ORG, CELLULOPLAST_PRIMARY_ORG_ID } from '@db/utils/seed/celluloplast-organization';
 import { db, type DbOrTxClient } from '@db/drizzle';
 import type { TAudienceSortBy, TAudienceSortOrder } from '@cio/utils/validation/organization';
+import type { TCourseAudienceAssignmentMode } from '@cio/utils/validation/course';
 
 export function getOrgIdBySiteName(siteName: string) {
   return db.select().from(schema.organization).where(eq(schema.organization.siteName, siteName)).limit(1);
@@ -1387,6 +1388,124 @@ export async function getOrganizationMembersByNormalizedEmails(
     console.error('getOrganizationMembersByNormalizedEmails error:', error);
     throw new Error(
       `Failed to get organization members by emails: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+}
+
+export type TOrganizationMemberForAudienceAssignment = {
+  memberId: number;
+  profileId: string | null;
+  email: string;
+  jobTitle: string | null;
+  department: string | null;
+};
+
+export async function getOrganizationAudienceFilterOptions(orgId: string): Promise<{
+  jobTitles: string[];
+  departments: string[];
+}> {
+  try {
+    const baseConditions = and(
+      eq(schema.organizationmember.organizationId, orgId),
+      eq(schema.organizationmember.roleId, ROLE.STUDENT)
+    );
+
+    const jobTitleRows = await db
+      .selectDistinct({ value: schema.organizationmember.jobTitle })
+      .from(schema.organizationmember)
+      .where(
+        and(baseConditions, isNotNull(schema.organizationmember.jobTitle), ne(schema.organizationmember.jobTitle, ''))
+      )
+      .orderBy(asc(schema.organizationmember.jobTitle));
+
+    const departmentRows = await db
+      .selectDistinct({ value: schema.organizationmember.department })
+      .from(schema.organizationmember)
+      .where(
+        and(
+          baseConditions,
+          isNotNull(schema.organizationmember.department),
+          ne(schema.organizationmember.department, '')
+        )
+      )
+      .orderBy(asc(schema.organizationmember.department));
+
+    return {
+      jobTitles: jobTitleRows.map((row) => row.value!.trim()).filter(Boolean),
+      departments: departmentRows.map((row) => row.value!.trim()).filter(Boolean)
+    };
+  } catch (error) {
+    console.error('getOrganizationAudienceFilterOptions error:', error);
+    throw new Error(
+      `Failed to get audience filter options: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+}
+
+export async function getOrganizationMembersForAudienceAssignment(
+  orgId: string,
+  filters: {
+    mode: TCourseAudienceAssignmentMode;
+    memberIds?: number[];
+    jobTitles?: string[];
+    departments?: string[];
+  }
+): Promise<TOrganizationMemberForAudienceAssignment[]> {
+  try {
+    const conditions = [
+      eq(schema.organizationmember.organizationId, orgId),
+      eq(schema.organizationmember.roleId, ROLE.STUDENT)
+    ];
+
+    if (filters.mode === 'members') {
+      const memberIds = filters.memberIds ?? [];
+      if (memberIds.length === 0) {
+        return [];
+      }
+      conditions.push(inArray(schema.organizationmember.id, memberIds));
+    }
+
+    if (filters.mode === 'jobTitles') {
+      const normalizedTitles = (filters.jobTitles ?? []).map((title) => title.toLowerCase().trim()).filter(Boolean);
+      if (normalizedTitles.length === 0) {
+        return [];
+      }
+      conditions.push(inArray(sql`lower(trim(${schema.organizationmember.jobTitle}))`, normalizedTitles));
+    }
+
+    if (filters.mode === 'departments') {
+      const normalizedDepartments = (filters.departments ?? [])
+        .map((dept) => dept.toLowerCase().trim())
+        .filter(Boolean);
+      if (normalizedDepartments.length === 0) {
+        return [];
+      }
+      conditions.push(inArray(sql`lower(trim(${schema.organizationmember.department}))`, normalizedDepartments));
+    }
+
+    const rows = await db
+      .select({
+        memberId: schema.organizationmember.id,
+        profileId: schema.organizationmember.profileId,
+        email: sql<string>`coalesce(${schema.profile.email}, ${schema.organizationmember.email})`.as('email'),
+        jobTitle: schema.organizationmember.jobTitle,
+        department: schema.organizationmember.department
+      })
+      .from(schema.organizationmember)
+      .leftJoin(schema.profile, eq(schema.organizationmember.profileId, schema.profile.id))
+      .where(and(...conditions));
+
+    return rows.map((row) => ({
+      memberId: row.memberId,
+      profileId: row.profileId ?? null,
+      email: row.email?.trim() ?? '',
+      jobTitle: row.jobTitle ?? null,
+      department: row.department ?? null
+    }));
+  } catch (error) {
+    console.error('getOrganizationMembersForAudienceAssignment error:', error);
+    throw new Error(
+      `Failed to get members for audience assignment: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 }

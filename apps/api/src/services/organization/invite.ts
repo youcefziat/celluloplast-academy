@@ -18,7 +18,9 @@ import {
   selectOrganizationMemberByOrgAndNormalizedEmail,
   selectOrganizationMemberByOrgAndProfile,
   setLinkInviteRevoked,
-  updateOrganizationMemberById
+  updateOrganizationMemberById,
+  getOrganizationAudienceMember,
+  getStudentOrganizationMemberByOrgAndEmail
 } from '@cio/db/queries/organization';
 import { getCourseGroupIds } from '@cio/db/queries/course';
 import { enrollUsersInCourseGroups } from '@cio/db/queries/group';
@@ -36,6 +38,7 @@ import { getProfileById, markUserAndProfileEmailVerified, updateProfile } from '
 import { enqueueTransactionalEmail } from '@api/services/jobs';
 import { buildEmailBranding, buildEmailFromName, sanitizeEmailSubject } from '@cio/email';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
+import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
 
 type OrganizationInviteStatus = 'ACTIVE' | 'EXPIRED' | 'REVOKED' | 'ACCEPTED';
 
@@ -490,6 +493,31 @@ export async function acceptOrganizationInvite(token: string, user: TAuthUser, c
         console.error('acceptOrganizationInvite cohort enrollment error:', error);
       }
     }
+
+    if (invite.invite.roleId === ROLE.STUDENT) {
+      try {
+        const studentMember = await getStudentOrganizationMemberByOrgAndEmail(
+          invite.invite.organizationId,
+          normalizedEmail
+        );
+
+        if (studentMember) {
+          const member = await getOrganizationAudienceMember(invite.invite.organizationId, studentMember.id);
+
+          if (member) {
+            await syncMemberToMatchingPublishedCourses(invite.invite.organizationId, {
+              memberId: member.id,
+              profileId: user.id,
+              email: member.email,
+              jobTitle: member.jobTitle,
+              department: member.department
+            });
+          }
+        }
+      } catch (error) {
+        console.error('acceptOrganizationInvite audience assignment sync error:', error);
+      }
+    }
   }
 
   const redirectTo = result.roleId === ROLE.STUDENT ? '/lms' : siteName ? `/org/${siteName}` : '/org';
@@ -780,6 +808,28 @@ export async function acceptOrganizationInviteById(
       );
     } catch (error) {
       console.error('acceptOrganizationInviteById cohort enrollment error:', error);
+    }
+  }
+
+  if (result.invite.roleId === ROLE.STUDENT) {
+    try {
+      const studentMember = await getStudentOrganizationMemberByOrgAndEmail(result.organization.id, normalizedEmail);
+
+      if (studentMember) {
+        const member = await getOrganizationAudienceMember(result.organization.id, studentMember.id);
+
+        if (member) {
+          await syncMemberToMatchingPublishedCourses(result.organization.id, {
+            memberId: member.id,
+            profileId: user.id,
+            email: member.email,
+            jobTitle: member.jobTitle,
+            department: member.department
+          });
+        }
+      }
+    } catch (error) {
+      console.error('acceptOrganizationInviteById audience assignment sync error:', error);
     }
   }
 

@@ -14,6 +14,7 @@ import {
 import { and, count, desc, eq, gt, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 
 import { ROLE } from '@cio/utils/constants';
+import type { TCourseAudienceAssignment } from '@cio/utils/validation/course';
 import { db, type DbOrTxClient } from '@db/drizzle';
 import { getCourseContentItems, type CourseContentItemRow } from './content';
 import { isExerciseCompletedSql } from './progression';
@@ -1485,5 +1486,56 @@ export async function updateCourseSlug(courseId: string, slug: string): Promise<
   } catch (error) {
     console.error('updateCourseSlug error:', error);
     throw new Error(`Failed to update course slug: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+export type TCourseWithAudienceAssignment = {
+  id: string;
+  title: string;
+  audienceAssignment: TCourseAudienceAssignment;
+};
+
+export async function getPublishedCoursesWithAudienceAssignment(
+  orgId: string
+): Promise<TCourseWithAudienceAssignment[]> {
+  try {
+    const rows = await db
+      .select({
+        id: schema.course.id,
+        title: schema.course.title,
+        metadata: schema.course.metadata
+      })
+      .from(schema.course)
+      .innerJoin(schema.group, eq(schema.course.groupId, schema.group.id))
+      .where(
+        and(
+          eq(schema.group.organizationId, orgId),
+          eq(schema.course.status, 'ACTIVE'),
+          eq(schema.course.isPublished, true),
+          sql`${schema.course.metadata}->'audienceAssignment' IS NOT NULL`
+        )
+      );
+
+    return rows.flatMap((row) => {
+      const metadata = row.metadata as { audienceAssignment?: TCourseAudienceAssignment } | null;
+      const assignment = metadata?.audienceAssignment;
+
+      if (!assignment || typeof assignment !== 'object' || !assignment.mode) {
+        return [];
+      }
+
+      return [
+        {
+          id: row.id,
+          title: row.title,
+          audienceAssignment: assignment
+        }
+      ];
+    });
+  } catch (error) {
+    console.error('getPublishedCoursesWithAudienceAssignment error:', error);
+    throw new Error(
+      `Failed to get published courses with audience assignment: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }

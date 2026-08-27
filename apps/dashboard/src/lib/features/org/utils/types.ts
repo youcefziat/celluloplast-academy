@@ -45,6 +45,14 @@ export type OrganizationAudience = OrganizationAudienceSuccess['data'];
 export type OrganizationAudiencePagination = OrganizationAudienceSuccess['pagination'];
 export type OrganizationAudienceMember = OrganizationAudience[number];
 
+export type GetAudienceAssignmentOptionsRequest =
+  (typeof classroomio.organization)['audience']['assignment-options']['$get'];
+export type AudienceAssignmentOptionsSuccess = Extract<
+  InferResponseType<GetAudienceAssignmentOptionsRequest>,
+  { success: true }
+>;
+export type AudienceAssignmentOptions = AudienceAssignmentOptionsSuccess['data'];
+
 // Org Public Courses  types
 export type GetOrgPublicCoursesRequest = typeof classroomio.organization.courses.public.$get;
 export type OrgPublicCoursesResponse = InferResponseType<GetOrgPublicCoursesRequest> | null;

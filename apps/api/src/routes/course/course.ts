@@ -50,6 +50,9 @@ import { assembleCertificateRender, assembleOwnerPreviewRender } from '@api/serv
 import { isCourseTeamMemberOrOrgAdmin } from '@cio/db/queries/group';
 import { generateCoursePdf } from '@api/utils/course';
 import { AppError, ErrorCodes, handleError } from '@api/utils/errors';
+import { audienceAssignmentChanged, syncCourseAudienceAssignment } from '@api/services/course/audience-assignment';
+import { getCourseById } from '@cio/db/queries/course';
+import type { TCourseAudienceAssignment } from '@cio/utils/validation/course/course';
 import { invitesRouter } from '@api/routes/course/invite';
 import { katexRouter } from '@api/routes/course/katex';
 import { lessonRouter } from '@api/routes/course/lesson';
@@ -349,6 +352,26 @@ export const courseRouter = new Hono()
         const validatedData = c.req.valid('json');
         const { tagIds, ...courseData } = validatedData;
 
+        const [existingCourse] = await getCourseById(courseId);
+        if (!existingCourse) {
+          throw new AppError('Course not found', ErrorCodes.COURSE_NOT_FOUND, 404);
+        }
+
+        const wasPublished = !!existingCourse.isPublished;
+        const nextIsPublished = courseData.isPublished ?? wasPublished;
+        const existingMetadata = existingCourse.metadata as { audienceAssignment?: TCourseAudienceAssignment } | null;
+        const nextAssignment =
+          courseData.metadata?.audienceAssignment ?? existingMetadata?.audienceAssignment ?? undefined;
+
+        if (!wasPublished && nextIsPublished && !nextAssignment) {
+          throw new AppError(
+            'Audience assignment is required when publishing a course',
+            ErrorCodes.VALIDATION_ERROR,
+            400,
+            'metadata.audienceAssignment'
+          );
+        }
+
         if (courseData.metadata?.welcomeEmailMessage) {
           courseData.metadata = {
             ...courseData.metadata,
@@ -358,8 +381,18 @@ export const courseRouter = new Hono()
 
         const result = await updateCourse(courseId, courseData);
 
+        const orgId = c.req.header('cio-org-id');
+        let audienceSyncResult = null;
+
+        if (orgId && result.isPublished && nextAssignment) {
+          const assignmentChanged = audienceAssignmentChanged(existingMetadata?.audienceAssignment, nextAssignment);
+
+          if (!wasPublished || assignmentChanged) {
+            audienceSyncResult = await syncCourseAudienceAssignment(orgId, courseId, nextAssignment);
+          }
+        }
+
         if (tagIds !== undefined) {
-          const orgId = c.req.header('cio-org-id');
           if (!orgId) {
             return c.json(
               {
@@ -379,7 +412,8 @@ export const courseRouter = new Hono()
               success: true,
               data: {
                 ...result,
-                tags
+                tags,
+                audienceSync: audienceSyncResult
               }
             },
             200
@@ -389,7 +423,10 @@ export const courseRouter = new Hono()
         return c.json(
           {
             success: true,
-            data: result
+            data: {
+              ...result,
+              audienceSync: audienceSyncResult
+            }
           },
           200
         );

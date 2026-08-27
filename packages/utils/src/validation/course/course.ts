@@ -363,6 +363,42 @@ export const ZCourseLessonTabsOrder = z.array(
   })
 );
 
+export const ZCourseAudienceAssignmentMode = z.enum(['all', 'members', 'jobTitles', 'departments']);
+export type TCourseAudienceAssignmentMode = z.infer<typeof ZCourseAudienceAssignmentMode>;
+
+export const ZCourseAudienceAssignment = z
+  .object({
+    mode: ZCourseAudienceAssignmentMode,
+    memberIds: z.array(z.number().int().positive()).optional(),
+    jobTitles: z.array(z.string().min(1).max(120)).optional(),
+    departments: z.array(z.string().min(1).max(120)).optional(),
+    sendEmail: z.boolean().default(true)
+  })
+  .superRefine((data, ctx) => {
+    if (data.mode === 'members' && (!data.memberIds || data.memberIds.length === 0)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'At least one employee must be selected',
+        path: ['memberIds']
+      });
+    }
+    if (data.mode === 'jobTitles' && (!data.jobTitles || data.jobTitles.length === 0)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'At least one job title must be selected',
+        path: ['jobTitles']
+      });
+    }
+    if (data.mode === 'departments' && (!data.departments || data.departments.length === 0)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'At least one department must be selected',
+        path: ['departments']
+      });
+    }
+  });
+export type TCourseAudienceAssignment = z.infer<typeof ZCourseAudienceAssignment>;
+
 const ZCourseMetadataFields = z.object({
   requirements: z.string().optional(),
   description: z.string().optional(),
@@ -385,7 +421,8 @@ const ZCourseMetadataFields = z.object({
   sessionTimezone: z.string().max(64).nullish(),
   sectionDisplay: z.record(z.string(), z.boolean()).optional(),
   isContentGroupingEnabled: z.boolean().optional(),
-  progressionMode: z.enum(['free', 'sequential']).optional()
+  progressionMode: z.enum(['free', 'sequential']).optional(),
+  audienceAssignment: ZCourseAudienceAssignment.optional()
 });
 
 // Course metadata schema matching the database structure

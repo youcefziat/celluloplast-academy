@@ -10,9 +10,11 @@
   import { InputField } from '@cio/ui/custom/input-field';
   import { TextareaField } from '@cio/ui/custom/textarea-field';
   import { DeleteModal, UnsavedChanges, UploadWidget } from '$features/ui';
+  import PublishAudienceAssignment from '$features/course/components/publish-audience-assignment.svelte';
   import { courseApi } from '$features/course/api';
-  import { settings } from '$features/course/utils/settings-store';
+  import { DEFAULT_COURSE_AUDIENCE_ASSIGNMENT, settings } from '$features/course/utils/settings-store';
   import { CELLULOPLAST_AUTHORING } from '$lib/celluloplast/course-authoring';
+  import { snackbar } from '$features/ui/snackbar/store';
   import { t } from '$lib/utils/functions/translations';
   import { handleOpenWidget } from '$features/ui/course-landing-page/store';
   import { currentOrgPath, isFreePlan } from '$lib/utils/store/org';
@@ -63,6 +65,59 @@
     hasUnsavedChanges = true;
   }
 
+  function buildAudienceAssignmentPayload() {
+    const assignment = $settings.audienceAssignment;
+
+    return {
+      mode: assignment.mode,
+      sendEmail: assignment.sendEmail,
+      ...(assignment.mode === 'members' ? { memberIds: assignment.memberIds } : {}),
+      ...(assignment.mode === 'jobTitles' ? { jobTitles: assignment.jobTitles } : {}),
+      ...(assignment.mode === 'departments' ? { departments: assignment.departments } : {})
+    };
+  }
+
+  function validateAudienceAssignment(isPublishing: boolean): boolean {
+    if (!isPublishing) {
+      return true;
+    }
+
+    const assignment = $settings.audienceAssignment;
+
+    if (assignment.mode === 'members' && assignment.memberIds.length === 0) {
+      snackbar.error('celluloplast_settings.audience_validation_members');
+      return false;
+    }
+
+    if (assignment.mode === 'jobTitles' && assignment.jobTitles.length === 0) {
+      snackbar.error('celluloplast_settings.audience_validation_job_titles');
+      return false;
+    }
+
+    if (assignment.mode === 'departments' && assignment.departments.length === 0) {
+      snackbar.error('celluloplast_settings.audience_validation_departments');
+      return false;
+    }
+
+    return true;
+  }
+
+  function mapCourseAudienceAssignment(course: Course) {
+    const saved = course.metadata?.audienceAssignment;
+
+    if (!saved || typeof saved !== 'object' || !('mode' in saved)) {
+      return { ...DEFAULT_COURSE_AUDIENCE_ASSIGNMENT };
+    }
+
+    return {
+      mode: saved.mode,
+      memberIds: saved.memberIds ?? [],
+      jobTitles: saved.jobTitles ?? [],
+      departments: saved.departments ?? [],
+      sendEmail: saved.sendEmail ?? true
+    };
+  }
+
   async function handleDeleteCourse() {
     if (!courseApi.course) return;
 
@@ -103,7 +158,8 @@
             typeof course.certificate?.exerciseMinScorePercent === 'number'
               ? course.certificate.exerciseMinScorePercent
               : null
-        }
+        },
+        audienceAssignment: mapCourseAudienceAssignment(course)
       });
     });
   }
@@ -117,7 +173,9 @@
     hasUnsavedChanges = false;
   }
 
-  export async function handleSave() {
+  export async function handleSave(options: { isPublicationFlow?: boolean } = {}) {
+    const { isPublicationFlow = false } = options;
+
     if (!$settings.courseTitle.trim()) {
       errors.title = $t('snackbar.course_settings.error.title');
       return;
@@ -128,11 +186,18 @@
       return;
     }
 
+    if (!validateAudienceAssignment($settings.isPublished)) {
+      return;
+    }
+
     if (!courseApi.course) return;
+
+    const audienceAssignment = buildAudienceAssignmentPayload();
 
     const metadataPayload = {
       ...(courseApi.course.metadata ?? {}),
-      allowNewStudent: $settings.isPublished
+      allowNewStudent: $settings.isPublished,
+      audienceAssignment
     };
 
     const certificatePayload = {
@@ -157,15 +222,37 @@
       certificate: certificatePayload
     };
 
-    const response = await courseApi.update(courseApi.course.id, updatePayload);
+    const response = await courseApi.update(courseApi.course.id, updatePayload, {
+      showSuccessToast: !isPublicationFlow
+    });
 
     if (courseApi.success && response) {
       hasUnsavedChanges = false;
+
+      if (isPublicationFlow && $settings.isPublished) {
+        const audienceSync = (response as { audienceSync?: { assigned: number; alreadyEnrolled: number } })
+          .audienceSync;
+
+        if (audienceSync) {
+          snackbar.success(
+            t.get('celluloplast_settings.publish_assigned_success', {
+              assigned: audienceSync.assigned,
+              alreadyEnrolled: audienceSync.alreadyEnrolled
+            })
+          );
+        } else {
+          snackbar.success('celluloplast_settings.publish_success');
+        }
+      }
     }
   }
 
   async function handlePublicationAction() {
     const nextPublished = !$settings.isPublished;
+
+    if (nextPublished && !validateAudienceAssignment(true)) {
+      return;
+    }
 
     $settings.isPublished = nextPublished;
     $settings.allowNewStudents = nextPublished;
@@ -173,7 +260,7 @@
     isPublicationSaving = true;
 
     try {
-      await handleSave();
+      await handleSave({ isPublicationFlow: true });
     } finally {
       isPublicationSaving = false;
     }
@@ -314,6 +401,12 @@
             <span class="ui:text-muted-foreground text-sm">{courseStatusLabel}</span>
           </div>
         </Field.Field>
+
+        <PublishAudienceAssignment
+          onChange={() => {
+            hasUnsavedChanges = true;
+          }}
+        />
 
         <Field.Field>
           <Button onclick={handlePublicationAction} loading={isPublicationSaving} disabled={isPublicationSaving}>

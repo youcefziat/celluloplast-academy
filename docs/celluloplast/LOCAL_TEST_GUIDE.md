@@ -138,8 +138,9 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] créer cours
 [ ] créer quiz
 [ ] certificat activé (threshold 100)
-[ ] publier
-[ ] assigner étudiant (1 puis plusieurs ; doublon déjà inscrit OK)
+[ ] publier avec cible audience (tous / employés / postes / départements) → employés correspondants inscrits
+[ ] ajouter un nouvel employé avec le même département/poste → inscription auto sans republier
+[ ] assigner étudiant manuellement (1 puis plusieurs ; doublon déjà inscrit OK)
 [ ] page progression (recherche, filtre formation, filtre statut)
 [ ] page certifications (liste + Voir PDF)
 [ ] Administration (profil / org / équipes) — pas de billing / AI / landing

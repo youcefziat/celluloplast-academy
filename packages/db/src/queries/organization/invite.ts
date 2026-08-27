@@ -532,3 +532,68 @@ export async function claimPendingOrganizationInvite(
     );
   }
 }
+
+/**
+ * Merges courseIds into active pending organization invites for the given emails.
+ * Does not revoke or recreate invites.
+ */
+export async function appendCourseIdsToPendingAudienceInvites(
+  organizationId: string,
+  emails: string[],
+  courseIds: string[]
+): Promise<number> {
+  const normalizedEmails = [...new Set(emails.map((email) => email.toLowerCase().trim()).filter(Boolean))];
+  const uniqueCourseIds = [...new Set(courseIds.filter(Boolean))];
+
+  if (normalizedEmails.length === 0 || uniqueCourseIds.length === 0) {
+    return 0;
+  }
+
+  try {
+    const invites = await db
+      .select()
+      .from(schema.organizationInvite)
+      .where(
+        and(
+          eq(schema.organizationInvite.organizationId, organizationId),
+          inArray(schema.organizationInvite.email, normalizedEmails),
+          eq(schema.organizationInvite.isRevoked, false),
+          isNull(schema.organizationInvite.acceptedAt),
+          gt(schema.organizationInvite.expiresAt, sql`NOW()`)
+        )
+      );
+
+    let updatedCount = 0;
+
+    for (const invite of invites) {
+      const metadata = (invite.metadata as { courseIds?: string[] } | null) ?? {};
+      const existingCourseIds = metadata.courseIds?.filter(Boolean) ?? [];
+      const mergedCourseIds = [...new Set([...existingCourseIds, ...uniqueCourseIds])];
+      const hasNewCourse = mergedCourseIds.length > existingCourseIds.length;
+
+      if (!hasNewCourse) {
+        continue;
+      }
+
+      await db
+        .update(schema.organizationInvite)
+        .set({
+          metadata: {
+            ...metadata,
+            courseIds: mergedCourseIds
+          },
+          updatedAt: new Date().toISOString()
+        })
+        .where(eq(schema.organizationInvite.id, invite.id));
+
+      updatedCount++;
+    }
+
+    return updatedCount;
+  } catch (error) {
+    console.error('appendCourseIdsToPendingAudienceInvites error:', error);
+    throw new Error(
+      `Failed to append course IDs to pending invites: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+}

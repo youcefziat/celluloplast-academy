@@ -6,6 +6,8 @@ import type {
   DeleteTeamRequest,
   DomainRequestRequest,
   GetAudienceRequest,
+  GetAudienceAssignmentOptionsRequest,
+  AudienceAssignmentOptions,
   GetLinkInviteRequest,
   GetOrgPublicCoursesRequest,
   ImportAudienceRequest,
@@ -160,6 +162,19 @@ class OrgApi extends BaseApiWithErrors {
     }
 
     return response;
+  }
+
+  async getAudienceAssignmentOptions(): Promise<AudienceAssignmentOptions | null> {
+    const response = await this.execute<GetAudienceAssignmentOptionsRequest>({
+      requestFn: () => classroomio.organization.audience['assignment-options'].$get(),
+      logContext: 'fetching audience assignment options'
+    });
+
+    if (response?.success) {
+      return response.data;
+    }
+
+    return null;
   }
 
   invalidatePublicCourses() {

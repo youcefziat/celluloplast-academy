@@ -27,6 +27,7 @@ import {
   ZUpdateOrgPlan,
   ZUpdateOrganization
 } from '@cio/utils/validation/organization';
+import { getOrganizationAudienceFilterOptions } from '@cio/db/queries/organization';
 import { assertMcpAutomationUsageAllowed, recordMcpAutomationUsage } from '@api/services/organization/automation-usage';
 import {
   cancelOrgPlan,
@@ -277,6 +278,26 @@ export const organizationRouter = new Hono()
       );
     } catch (error) {
       return handleError(c, error, 'Failed to fetch organization audience');
+    }
+  })
+  /**
+   * GET /organization/audience/assignment-options
+   * Distinct job titles and departments for publish-time audience targeting
+   */
+  .get('/audience/assignment-options', authMiddleware, orgTeamMemberMiddleware, async (c) => {
+    try {
+      const orgId = c.req.header('cio-org-id')!;
+      const options = await getOrganizationAudienceFilterOptions(orgId);
+
+      return c.json(
+        {
+          success: true,
+          data: options
+        },
+        200
+      );
+    } catch (error) {
+      return handleError(c, error, 'Failed to fetch audience assignment options');
     }
   })
   /**

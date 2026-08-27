@@ -1,6 +1,22 @@
 import type { TCourseType } from '@cio/db/types';
-import type { TCourseCallout } from '@cio/utils/validation/course';
+import type { TCourseCallout, TCourseAudienceAssignmentMode } from '@cio/utils/validation/course';
 import { writable } from 'svelte/store';
+
+export type CourseAudienceAssignmentState = {
+  mode: TCourseAudienceAssignmentMode;
+  memberIds: number[];
+  jobTitles: string[];
+  departments: string[];
+  sendEmail: boolean;
+};
+
+export const DEFAULT_COURSE_AUDIENCE_ASSIGNMENT: CourseAudienceAssignmentState = {
+  mode: 'all',
+  memberIds: [],
+  jobTitles: [],
+  departments: [],
+  sendEmail: true
+};
 
 type CourseSettings = {
   logo: string;
@@ -23,6 +39,7 @@ type CourseSettings = {
     requiredExerciseId: string | null;
     exerciseMinScorePercent: number | null;
   };
+  audienceAssignment: CourseAudienceAssignmentState;
 };
 
 export const settings = writable<CourseSettings>({
@@ -50,5 +67,6 @@ export const settings = writable<CourseSettings>({
     threshold: 100,
     requiredExerciseId: null,
     exerciseMinScorePercent: null
-  }
+  },
+  audienceAssignment: { ...DEFAULT_COURSE_AUDIENCE_ASSIGNMENT }
 });

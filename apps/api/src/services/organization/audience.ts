@@ -35,6 +35,7 @@ import { assertStudentCapacityOrThrow } from './student-limit';
 import { getProfilesByEmails } from '@cio/db/queries/auth';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
 import { getWelcomeSessionIcs } from '../course/session-invite';
+import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORG_INVITE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
@@ -319,6 +320,16 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
 
   const member = await getOrganizationAudienceMember(orgId, created.id);
 
+  if (member) {
+    await syncMemberToMatchingPublishedCourses(orgId, {
+      memberId: member.id,
+      profileId: member.profileId,
+      email: member.email,
+      jobTitle: member.jobTitle,
+      department: member.department
+    });
+  }
+
   return {
     member,
     emailsSent: inviteOutcome.emailsSent,
@@ -359,7 +370,7 @@ async function resolveCohortIdsAndNamesForImport(orgId: string, data: TImportAud
   return { cohortIds, cohortNames };
 }
 
-async function enrollAudienceStudentProfilesInCourses(
+export async function enrollAudienceStudentProfilesInCourses(
   orgId: string,
   organization: NonNullable<Awaited<ReturnType<typeof getOrganizationById>>>,
   profileIds: string[],
@@ -857,6 +868,27 @@ export async function importAudienceMembers(orgId: string, data: TImportAudience
     });
     pendingEmailsSent = pendingOutcome.emailsSent;
     pendingEmailsFailed = pendingOutcome.emailsFailed;
+  }
+
+  for (const row of normalized.rows) {
+    const refreshedMembers = await getOrganizationMembersByNormalizedEmails(orgId, [row.email]);
+    const memberRow = refreshedMembers[0];
+    if (!memberRow || memberRow.roleId !== ROLE.STUDENT) {
+      continue;
+    }
+
+    const member = await getOrganizationAudienceMember(orgId, memberRow.id);
+    if (!member) {
+      continue;
+    }
+
+    await syncMemberToMatchingPublishedCourses(orgId, {
+      memberId: member.id,
+      profileId: member.profileId,
+      email: member.email,
+      jobTitle: member.jobTitle,
+      department: member.department
+    });
   }
 
   return {

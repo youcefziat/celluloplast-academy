@@ -198,3 +198,25 @@ apps/dashboard/src/lib/celluloplast/**
 docs/celluloplast/LOCAL_TEST_GUIDE.md
 docs/celluloplast/IMPLEMENTATION_2026-08-26.md
 ```
+
+---
+
+## 8. Publication avec assignation audience
+
+### Objectif
+
+Lors de la publication d’une formation, l’admin choisit une cible : **tous**, **employés**, **postes** ou **départements**. La règle est stockée dans `course.metadata.audienceAssignment`. À la publication, les employés correspondants sont inscrits ; les nouveaux employés correspondants sont inscrits automatiquement (création, import CSV, acceptation d’invite).
+
+### Backend
+
+- Validation : `ZCourseAudienceAssignment` dans `packages/utils/src/validation/course/course.ts`
+- Queries : `getOrganizationAudienceFilterOptions`, `getOrganizationMembersForAudienceAssignment`, `getPublishedCoursesWithAudienceAssignment`
+- Service : `apps/api/src/services/course/audience-assignment.ts`
+- Hook `PUT /course/:courseId` — sync à la publication ou changement de règle
+- `GET /organization/audience/assignment-options` — listes distinctes postes/départements
+- Sync continue : `createAudienceMember`, `importAudienceMembers`, `acceptOrganizationInvite`
+
+### Frontend
+
+- Composant `publish-audience-assignment.svelte` dans la section Publication des paramètres formation
+- Store `audienceAssignment` dans `settings-store.ts`
