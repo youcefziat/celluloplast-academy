@@ -7,7 +7,6 @@
   import { t } from '$lib/utils/functions/translations';
   import { courseApi } from '$features/course/api';
   import type { Course } from '$features/course/utils/types';
-  import { parseCertificateThemeId } from '$features/course/utils/certificate-utils';
   import { isFreePlan, isOrgAdmin } from '$lib/utils/store/org';
   import { profile } from '$lib/utils/store/user';
   import { RefreshPageData, UnsavedChanges } from '$features/ui';
@@ -33,8 +32,6 @@
   let savedCertificateState = $state<string | null>(null);
   let savedCertificateStateCourseId = $state<string | null>(null);
 
-  const certificateTheme = $derived(courseApi.course?.certificate?.theme ?? '');
-
   const userRole = $derived.by(() => {
     const user = courseApi.group.people.find((person) => person.profileId === $profile.id);
     return user ? Number(user.roleId) : null;
@@ -51,8 +48,6 @@
       description: course.description ?? '',
       certificate: {
         isDownloadable: course.certificate?.isDownloadable ?? false,
-        theme: parseCertificateThemeId(course.certificate?.theme),
-        design: course.certificate?.design ?? null,
         deadline: course.certificate?.deadline ?? null,
         threshold: typeof course.certificate?.threshold === 'number' ? course.certificate.threshold : 100,
         requiredExerciseId: course.certificate?.requiredExerciseId ?? null,
@@ -104,8 +99,6 @@
       description: courseApi.course.description ?? '',
       certificate: {
         isDownloadable: courseApi.course.certificate?.isDownloadable ?? false,
-        theme: certificateTheme || 'classique',
-        design: courseApi.course.certificate?.design,
         deadline: courseApi.course.certificate?.deadline ?? null,
         threshold:
           typeof courseApi.course.certificate?.threshold === 'number' ? courseApi.course.certificate.threshold : 100,
@@ -163,15 +156,6 @@
     replaceState(resolve(`${url.pathname}${url.search}`, {}), page.state);
   }
 </script>
-
-<svelte:head>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Qwitcher+Grypen&family=Roboto:wght@300;400;700&display=swap"
-    rel="stylesheet"
-  />
-</svelte:head>
 
 <UnsavedChanges bind:hasUnsavedChanges />
 

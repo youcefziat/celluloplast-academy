@@ -1,6 +1,12 @@
 // SaaS default CSP domains, baked in at build time.
-// Self-hosted (adapter-node) starts with empty lists; runtime domains
-// are added via env vars in hooks.server.ts so pre-built Docker images stay configurable.
+// Self-hosted (adapter-node) starts with only the sources required by features
+// that unconditionally load external assets. Additional runtime domains are
+// added via env vars in hooks.server.ts so pre-built Docker images stay configurable.
+
+const certificateFontSources = {
+  styleSrc: ['https://fonts.googleapis.com'],
+  fontSrc: ['https://fonts.gstatic.com']
+};
 
 const saasDefaults = {
   scriptSrc: [
@@ -63,10 +69,10 @@ export function getCspDomains(isSelfHosted, serverUrl) {
   if (isSelfHosted) {
     return {
       scriptSrc: [],
-      styleSrc: [],
+      styleSrc: certificateFontSources.styleSrc,
       connectSrc: [],
       frameSrc: [],
-      fontSrc: [],
+      fontSrc: certificateFontSources.fontSrc,
       mediaSrc: [],
       apiOrigin: null
     };

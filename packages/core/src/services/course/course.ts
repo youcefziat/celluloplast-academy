@@ -353,13 +353,16 @@ export async function updateCourse(courseId: string, data: Partial<TCourse>) {
 
     const existingMetadata = existingCourse?.metadata;
     const mergedMetadata = data.metadata ? { ...existingMetadata, ...omitUndefinedValues(data.metadata) } : undefined;
+    const mergedCertificate = data.certificate
+      ? { ...existingCourse?.certificate, ...omitUndefinedValues(data.certificate) }
+      : undefined;
 
     const sanitizedData: Partial<TCourse> = {
       ...data,
       description: sanitizeOptionalHtml(data.description),
       overview: sanitizeOptionalHtml(data.overview),
       metadata: sanitizeCourseMetadata(mergedMetadata),
-      certificate: sanitizeCourseCertificate(data.certificate),
+      certificate: sanitizeCourseCertificate(mergedCertificate),
       logo: data.logo,
       slug: data.slug
     };

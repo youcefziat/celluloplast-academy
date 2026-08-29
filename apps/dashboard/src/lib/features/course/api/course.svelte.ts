@@ -741,13 +741,8 @@ export class CourseApi extends BaseApiWithErrors {
 
     if (!data.certificate) {
       data.certificate = {
-        isDownloadable: false,
-        theme: 'professional'
+        isDownloadable: false
       };
-    }
-
-    if (!data.certificate.theme) {
-      data.certificate.theme = 'professional';
     }
 
     // Set the course data

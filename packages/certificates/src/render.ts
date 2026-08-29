@@ -1,5 +1,11 @@
 import { LEGACY_THEME_MAP } from './constants';
-import type { CertificateDesign, CertificateRenderData, CertificateRenderResult, CertificateTemplateId } from './types';
+import type {
+  CertificateDesign,
+  CertificateRenderData,
+  CertificateRenderableDesign,
+  CertificateRenderResult,
+  CertificateTemplateId
+} from './types';
 import { CERTIFICATE_TEMPLATE_IDS } from './types';
 import { renderBrutalist } from './templates/brutalist';
 import { renderClassique } from './templates/classique';
@@ -7,6 +13,8 @@ import { renderMinimal } from './templates/minimal';
 import { renderNoir } from './templates/noir';
 import { renderPoster } from './templates/poster';
 import { BASE_STYLES, FONTS_LINK_HREF, type TemplateRenderer } from './templates/shared';
+import { isCertificateLayout } from './layout';
+import { renderCertificateLayoutBody } from './layout-render';
 
 const RENDERERS: Record<CertificateTemplateId, TemplateRenderer> = {
   classique: renderClassique,
@@ -28,10 +36,24 @@ export function resolveTemplateId(value: string | undefined | null): Certificate
   return 'classique';
 }
 
-export function renderCertificate(design: CertificateDesign, data: CertificateRenderData): CertificateRenderResult {
-  const templateId = resolveTemplateId(design.templateId);
-  const renderer = RENDERERS[templateId];
-  const { body, styles } = renderer({ design: { ...design, templateId }, data });
+export function renderCertificate(
+  design: CertificateRenderableDesign,
+  data: CertificateRenderData
+): CertificateRenderResult {
+  let body: string;
+  let styles: string;
+
+  if (isCertificateLayout(design)) {
+    const renderedLayout = renderCertificateLayoutBody(design, data);
+    body = renderedLayout.body;
+    styles = renderedLayout.styles;
+  } else {
+    const templateId = resolveTemplateId(design.templateId);
+    const renderer = RENDERERS[templateId];
+    const renderedTemplate = renderer({ design: { ...design, templateId }, data });
+    body = renderedTemplate.body;
+    styles = renderedTemplate.styles;
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -58,7 +80,7 @@ ${body}
  * Useful for iframe `srcdoc` and `<iframe>`-style previews where a separate
  * `addStyleTag` is not available.
  */
-export function renderCertificateDocument(design: CertificateDesign, data: CertificateRenderData): string {
+export function renderCertificateDocument(design: CertificateRenderableDesign, data: CertificateRenderData): string {
   const { html, styles } = renderCertificate(design, data);
 
   return html.replace('</head>', `<style>${styles}</style></head>`);

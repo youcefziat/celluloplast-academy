@@ -54,10 +54,7 @@ export const ZCourseDownloadParam = z.object({
 });
 export type TCourseDownloadParam = z.infer<typeof ZCourseDownloadParam>;
 
-/**
- * Per-course certificate design. Stored on `course.certificate.design`.
- * The 5 supported template ids match `@cio/certificates`.
- */
+/** Legacy certificate design schema kept only for reading historical course data. */
 export const ZCertificateSignatory = z.object({
   name: z.string().max(80).default(''),
   role: z.string().max(80).default(''),
@@ -79,6 +76,90 @@ export const ZCertificateDesign = z.object({
   idFormat: z.string().max(40).optional()
 });
 export type TCertificateDesign = z.infer<typeof ZCertificateDesign>;
+
+export const ZCertificateFontFamily = z.enum([
+  'inter',
+  'cormorant-garamond',
+  'cinzel',
+  'playfair-display',
+  'space-grotesk',
+  'dm-mono'
+]);
+export const ZCertificateVariable = z.enum([
+  'student.fullName',
+  'student.firstName',
+  'student.lastName',
+  'student.email',
+  'course.name',
+  'course.description',
+  'certificate.date',
+  'certificate.id',
+  'organization.name'
+]);
+const ZCertificateImageUrl = z.url().refine((value) => /^https?:\/\//i.test(value), {
+  message: 'Certificate images must use HTTP or HTTPS'
+});
+const ZCertificateElementBase = z.object({
+  id: z.string().min(1).max(80),
+  name: z.string().min(1).max(120),
+  x: z.number().finite().min(-1100).max(2200),
+  y: z.number().finite().min(-780).max(1560),
+  width: z.number().finite().min(8).max(2200),
+  height: z.number().finite().min(8).max(1560),
+  rotation: z.number().finite().min(-360).max(360),
+  opacity: z.number().finite().min(0).max(1),
+  zIndex: z.number().int().min(0).max(1000),
+  locked: z.boolean().optional()
+});
+const ZCertificateTextStyle = z.object({
+  fontFamily: ZCertificateFontFamily,
+  fontSize: z.number().finite().min(6).max(240),
+  fontWeight: z.union([z.literal(400), z.literal(500), z.literal(600), z.literal(700)]),
+  fontStyle: z.enum(['normal', 'italic']),
+  textAlign: z.enum(['left', 'center', 'right']),
+  color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  lineHeight: z.number().finite().min(0.7).max(3)
+});
+export const ZCertificateTextElement = ZCertificateElementBase.extend({
+  type: z.literal('text'),
+  text: z.string().max(2000),
+  ...ZCertificateTextStyle.shape
+});
+export const ZCertificateVariableElement = ZCertificateElementBase.extend({
+  type: z.literal('variable'),
+  variable: ZCertificateVariable,
+  ...ZCertificateTextStyle.shape
+});
+export const ZCertificateImageElement = ZCertificateElementBase.extend({
+  type: z.literal('image'),
+  role: z.enum(['logo', 'signature', 'image']),
+  src: ZCertificateImageUrl.optional(),
+  objectFit: z.enum(['contain', 'cover']),
+  keepRatio: z.boolean()
+});
+export const ZCertificateLayoutElement = z.discriminatedUnion('type', [
+  ZCertificateTextElement,
+  ZCertificateVariableElement,
+  ZCertificateImageElement
+]);
+export const ZCertificateLayout = z.object({
+  version: z.literal(1),
+  page: z.object({
+    width: z.literal(1100),
+    height: z.literal(780),
+    backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+    backgroundImageUrl: ZCertificateImageUrl.optional(),
+    backgroundImageOpacity: z.number().finite().min(0).max(1).optional()
+  }),
+  elements: z.array(ZCertificateLayoutElement).max(100),
+  certificateIdFormat: z.string().max(40).optional(),
+  sourcePresetId: ZCertificateTemplateId.optional()
+});
+export type TCertificateLayout = z.infer<typeof ZCertificateLayout>;
+
+/** Organization settings accept historical designs until they are saved in the visual editor. */
+export const ZCertificateOrganizationDesign = z.union([ZCertificateLayout, ZCertificateDesign]);
+export type TCertificateOrganizationDesign = z.infer<typeof ZCertificateOrganizationDesign>;
 
 /**
  * Body for `POST /:courseId/download/certificate(/png)`.
@@ -445,9 +526,9 @@ export type TCourseLandingPageMetadataUpdate = z.infer<typeof ZCourseLandingPage
 
 export const ZCertificationSettings = z.object({
   isDownloadable: z.boolean().optional(),
-  /** Legacy theme id (one of the 6 original themes). Kept for read compatibility; new courses use `design.templateId`. */
+  /** @deprecated Ignored by renderers; organization settings own the live visual design. */
   theme: z.string().optional(),
-  /** Atelier-era certificate design (template, accent, signatories, subtitle, etc.). */
+  /** @deprecated Ignored by renderers; retained only for legacy payload compatibility. */
   design: ZCertificateDesign.optional(),
   /** ISO 8601 datetime string or null to clear */
   deadline: z.union([z.string().min(1), z.null()]).optional(),

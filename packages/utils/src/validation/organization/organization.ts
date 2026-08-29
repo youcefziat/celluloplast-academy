@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 import { blockedSubdomain } from '@cio/utils/constants';
-import { ZCertificateDesign } from '../course/course';
+import { ZCertificateOrganizationDesign } from '../course/course';
 
 export const ZGetOrganizations = z.object({
   siteName: z.string().min(1).optional(),
@@ -131,7 +131,7 @@ export const ZUpdateOrganization = z.object({
         })
         .optional(),
       /** Enterprise-wide certificate design inherited live by all courses. */
-      certificateDesign: ZCertificateDesign.optional()
+      certificateDesign: ZCertificateOrganizationDesign.optional()
     })
     .optional()
 });

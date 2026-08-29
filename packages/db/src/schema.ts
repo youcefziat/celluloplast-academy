@@ -726,9 +726,9 @@ export const course = pgTable(
     isPublished: boolean('is_published').default(false),
     certificate: jsonb().default({}).$type<{
       isDownloadable?: boolean;
-      /** @deprecated Use `design.templateId`. Legacy 6-theme id; mapped on read via LEGACY_THEME_MAP. */
+      /** @deprecated Ignored. Certificate visuals inherit live from organization settings. */
       theme?: string;
-      /** Atelier-era certificate design. Source of truth for new courses. */
+      /** @deprecated Ignored. Kept only for legacy data compatibility. */
       design?: {
         templateId: 'classique' | 'brutalist' | 'noir' | 'poster' | 'minimal';
         accentColor: string;

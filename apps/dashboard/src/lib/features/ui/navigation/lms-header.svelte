@@ -35,9 +35,11 @@
 
       <Popover.Root>
         <Popover.Trigger>
-          <Button variant="outline" size="icon">
-            <BellIcon class="custom rounded-full" />
-          </Button>
+          {#snippet child({ props })}
+            <Button {...props} variant="secondary" size="icon">
+              <BellIcon class="custom rounded-full" />
+            </Button>
+          {/snippet}
         </Popover.Trigger>
         <Popover.Content>
           <Empty.Root class="ui:from-muted/50 ui:to-background ui:h-full ui:bg-gradient-to-b ui:from-30%">

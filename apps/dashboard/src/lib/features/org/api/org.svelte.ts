@@ -46,7 +46,7 @@ import type {
   TUpdateOrganizationDepartment,
   TUpdateOrganizationPosition
 } from '@cio/utils/validation/organization';
-import type { TCertificateDesign } from '@cio/utils/validation/course';
+import type { TCertificateOrganizationDesign } from '@cio/utils/validation/course';
 import {
   ZCreateAudienceMember,
   ZCreateOrganization,
@@ -90,7 +90,7 @@ export interface TOrgUpdateForm {
   settings?: {
     signup?: { inviteOnly?: boolean };
     emailNotifications?: Record<string, boolean>;
-    certificateDesign?: TCertificateDesign;
+    certificateDesign?: TCertificateOrganizationDesign;
   };
 }
 

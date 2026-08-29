@@ -138,7 +138,7 @@ export function buildCourseLandingPageProps(
       ? reviewsVisible.reduce((sum, r) => sum + (r.rating || 0), 0) / reviewsVisible.length
       : undefined;
 
-  const hasCertificate = Boolean(metadata?.certificate?.templateUrl || course.certificate?.design?.templateId);
+  const hasCertificate = Boolean(course.certificate?.isDownloadable);
 
   const courseTypeLabel =
     course.type === 'LIVE_CLASS' ? 'Live class' : course.type === 'COMPLIANCE' ? 'Compliance' : 'Self-paced';
@@ -146,7 +146,6 @@ export function buildCourseLandingPageProps(
   const includeRequirement = isVisible(NAV_ITEM_KEY.REQUIREMENT) && Boolean(metadata?.requirements);
   const includeDescription = isVisible(NAV_ITEM_KEY.DESCRIPTION) && Boolean(metadata?.description);
   const includeGoals = isVisible(NAV_ITEM_KEY.GOALS) && Boolean(metadata?.goals);
-  const includeCertificate = isVisible(NAV_ITEM_KEY.CERTIFICATE) && Boolean(metadata?.certificate?.templateUrl);
   const includeReviews = isVisible(NAV_ITEM_KEY.REVIEWS, reviewsVisible.length > 0);
   const includeInstructor = isVisible(NAV_ITEM_KEY.INSTRUCTOR);
 
@@ -202,7 +201,7 @@ export function buildCourseLandingPageProps(
       requirements: includeRequirement ? (metadata?.requirements ?? undefined) : undefined,
       description: includeDescription ? (metadata?.description ?? undefined) : undefined,
       goals: includeGoals ? (metadata?.goals ?? undefined) : undefined,
-      certificateUrl: includeCertificate ? metadata?.certificate?.templateUrl : undefined
+      certificateUrl: undefined
     },
     curriculum: {
       grouped: course.content?.grouped ?? false,

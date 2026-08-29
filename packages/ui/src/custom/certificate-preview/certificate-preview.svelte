@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
-  import { renderCertificateDocument, type CertificateDesign, type CertificateRenderData } from '@cio/certificates';
+  import {
+    renderCertificateDocument,
+    type CertificateRenderableDesign,
+    type CertificateRenderData
+  } from '@cio/certificates';
   import MinusIcon from '@lucide/svelte/icons/minus';
   import PlusIcon from '@lucide/svelte/icons/plus';
   import MaximizeIcon from '@lucide/svelte/icons/maximize';
@@ -9,7 +13,7 @@
   type ZoomMode = number | 'fit';
 
   interface Props {
-    design: CertificateDesign;
+    design: CertificateRenderableDesign;
     data: CertificateRenderData;
     zoom?: ZoomMode;
     showControls?: boolean;

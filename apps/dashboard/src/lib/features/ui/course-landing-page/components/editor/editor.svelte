@@ -193,9 +193,12 @@
       compliance: course.compliance ?? undefined,
       certificate: course.certificate
         ? {
-            ...course.certificate,
             isDownloadable: course.certificate.isDownloadable ?? undefined,
-            theme: course.certificate.theme ?? undefined
+            deadline: course.certificate.deadline ?? undefined,
+            threshold: course.certificate.threshold ?? undefined,
+            requiredExerciseId: course.certificate.requiredExerciseId ?? undefined,
+            exerciseMinScorePercent: course.certificate.exerciseMinScorePercent ?? undefined,
+            emailMessage: course.certificate.emailMessage ?? undefined
           }
         : undefined
     } as TCourseUpdate;
@@ -302,7 +305,7 @@
       {:else if selectedSection.key === 'chips'}
         <SkillsToolsForm bind:course {setter} />
       {:else if selectedSection.key === 'certificate'}
-        <CertificateForm bind:course {setter} />
+        <CertificateForm />
       {:else if selectedSection.key === 'reviews'}
         <ReviewsForm bind:course {setter} />
       {:else if selectedSection.key === 'instructor'}

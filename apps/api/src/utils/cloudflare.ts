@@ -6,9 +6,36 @@ export type ScreenshotViewport = {
   deviceScaleFactor?: number;
 };
 
+function assertBrowserRenderingConfigured() {
+  if (CLOUDFLARE.CONFIGS.ACCOUNT_ID && CLOUDFLARE.CONFIGS.RENDERING_API_KEY) return;
+
+  throw new Error(
+    'Cloudflare Browser Rendering is not configured. Set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_RENDERING_API_KEY.'
+  );
+}
+
+async function readRenderedBinary(
+  response: Response,
+  format: 'PDF' | 'PNG',
+  hasExpectedSignature: (buffer: Buffer) => boolean
+) {
+  if (!response.ok) {
+    throw new Error(`Cloudflare ${format} rendering failed with HTTP ${response.status}`);
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (!hasExpectedSignature(buffer)) {
+    throw new Error(`Cloudflare ${format} rendering returned an invalid ${format} payload`);
+  }
+
+  return buffer;
+}
+
 export const getCloudflarePdfBuffer = async (html: string, styles?: string) => {
   console.log('Generating PDF with Cloudflare API...');
   try {
+    assertBrowserRenderingConfigured();
+
     const pdfResponse = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE.CONFIGS.ACCOUNT_ID}/browser-rendering/pdf`,
       {
@@ -25,8 +52,7 @@ export const getCloudflarePdfBuffer = async (html: string, styles?: string) => {
     );
 
     console.log('PDF response status:', pdfResponse.status);
-    const arrayBuffer = await pdfResponse.arrayBuffer();
-    return Buffer.from(arrayBuffer);
+    return readRenderedBinary(pdfResponse, 'PDF', (buffer) => buffer.subarray(0, 5).toString() === '%PDF-');
   } catch (error) {
     console.error('Error generating PDF:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to generate PDF');
@@ -44,6 +70,8 @@ export const getCloudflarePngBuffer = async (
 ) => {
   console.log('Generating PNG with Cloudflare API...');
   try {
+    assertBrowserRenderingConfigured();
+
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE.CONFIGS.ACCOUNT_ID}/browser-rendering/screenshot`,
       {
@@ -66,9 +94,9 @@ export const getCloudflarePngBuffer = async (
     );
 
     console.log('PNG response status:', response.status);
-    const arrayBuffer = await response.arrayBuffer();
-
-    return Buffer.from(arrayBuffer);
+    return readRenderedBinary(response, 'PNG', (buffer) =>
+      buffer.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
+    );
   } catch (error) {
     console.error('Error generating PNG:', error);
     throw new Error(error instanceof Error ? error.message : 'Failed to generate PNG');

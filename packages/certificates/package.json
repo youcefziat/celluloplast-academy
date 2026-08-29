@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "dev": "tsc --watch",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "pnpm build && node --test ./tests/certificate-layout.test.mjs"
   },
   "dependencies": {
     "@cio/tsconfig": "workspace:*"

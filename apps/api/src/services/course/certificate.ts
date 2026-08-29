@@ -1,7 +1,8 @@
 import { AppError, ErrorCodes } from '@api/utils/errors';
-import { getCourseById, getOrganizationById, getProfileById, getCourseOrganizationId } from '@cio/db/queries';
-import { resolveCertificateDesign, type CertificateRenderInput } from '@api/utils/certificate';
+import { getCourseById, getCourseOrganizationId, getOrganizationById, getProfileById } from '@cio/db/queries';
+import type { CertificateRenderInput } from '@api/utils/certificate';
 import type { TCertificateDownloadRequest } from '@cio/utils/validation/course';
+import { resolveOrganizationCertificateLayout, splitCertificateRecipientName } from '@cio/certificates';
 
 /**
  * Loads the design + render data for a given course/student pair so the API
@@ -22,12 +23,12 @@ export async function assembleCertificateRender(
   const organizationId = await getCourseOrganizationId(courseId);
   const organization = organizationId ? await getOrganizationById(organizationId) : null;
 
-  const orgSettings =
-    organization?.settings && typeof organization.settings === 'object'
-      ? (organization.settings as Record<string, unknown>)
-      : {};
-  const orgCertificateDesign = orgSettings.certificateDesign;
-  const design = resolveCertificateDesign(orgCertificateDesign ?? null);
+  const design = resolveOrganizationCertificateLayout(organization?.settings);
+
+  const studentProfile = body.studentId ? await getProfileById(body.studentId) : null;
+  const recipientName = studentProfile?.fullname?.trim() || body.studentName;
+  const derivedRecipientName = splitCertificateRecipientName(recipientName);
+  const recipientEmail = studentProfile?.email ?? '';
 
   const issuedAtIso = body.issuedAt ?? new Date().toISOString();
   const issuedAtDate = new Date(issuedAtIso);
@@ -35,18 +36,21 @@ export async function assembleCertificateRender(
     ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' })
     : issuedAtDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
 
-  const certificateId = body.studentId
-    ? formatCertificateId(design.idFormat, body.studentId, issuedAtDate)
-    : formatCertificateId(design.idFormat, fallbackSequence(issuedAtDate), issuedAtDate);
+  const certificateSequence = body.studentId ?? fallbackSequence(issuedAtDate);
+  const certificateId = formatCertificateId(design.certificateIdFormat, certificateSequence, issuedAtDate);
+  const orgLogoUrl = organization?.avatarUrl ?? undefined;
 
   return {
     design,
     data: {
-      recipientName: body.studentName,
+      recipientName,
+      recipientFirstName: derivedRecipientName.firstName,
+      recipientLastName: derivedRecipientName.lastName,
+      recipientEmail,
       courseName: courseRow.title,
       courseDescription: courseRow.description ?? '',
       orgName: organization?.name ?? '',
-      orgLogoUrl: design.logoUrl ?? organization?.avatarUrl ?? undefined,
+      orgLogoUrl,
       date,
       certificateId
     }
@@ -70,9 +74,11 @@ export async function assembleOwnerPreviewRender(
   userId: string,
   body: TCertificateDownloadRequest
 ): Promise<CertificateRenderInput> {
-  const studentName = body.studentName.trim().length
-    ? body.studentName
-    : (await getProfileById(userId))?.fullname || 'Preview Recipient';
+  let studentName = body.studentName;
+  if (!studentName.trim().length) {
+    const profile = await getProfileById(userId);
+    studentName = profile?.fullname || 'Preview Recipient';
+  }
 
   return assembleCertificateRender(courseId, { ...body, studentName });
 }

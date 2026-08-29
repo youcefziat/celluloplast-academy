@@ -154,6 +154,16 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] page certifications (liste + Voir PDF)
 [ ] Administration (profil / org / équipes / postes / départements) — pas de billing / AI / landing
 [ ] Administration → Postes & Départements : CRUD ; delete refusé si employés rattachés
+[ ] Administration → Certificats : éditeur visuel desktop accessible
+[ ] ajouter un texte, un champ dynamique, un logo et une signature ; déplacer et redimensionner chaque objet
+[ ] annuler/rétablir, dupliquer, changer l’ordre des calques et tester les alignements
+[ ] importer un fond PNG/JPEG : il couvre le canevas, reste derrière les objets et n’est pas sélectionnable
+[ ] modifier la police, taille, graisse, italique, alignement et couleur d’un texte
+[ ] changer de preset après modification : confirmation affichée et calques personnalisés conservés
+[ ] Réinitialiser : confirmation affichée ; Discard restaure le dernier état sauvegardé
+[ ] Enregistrer puis recharger la page : positions, styles, fond, images et ordre des calques persistent
+[ ] comparer le canevas, le mode Prévisualisation et le PDF téléchargé : mêmes positions, tailles, polices, couleurs, images et fond
+[ ] vérifier les variables réelles sur le PDF d’un apprenant (nom, prénom, e-mail, formation, date, ID, organisation)
 [ ] Paramètres org : modifier nom + logo → Enregistrer (persiste après reload ; MinIO requis)
     - Si « La mise à jour a échoué: Internal Server Error » : le dashboard doit avoir
       `BODY_SIZE_LIMIT=943718400` (octets ; **pas** `900M` — sinon limite = 900 octets).
@@ -186,6 +196,7 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] nav : Accueil, Mes formations, Apprenants, Progression, Certifications (pas Administration)
 [ ] modifier uniquement ses formations autorisées
 [ ] voir apprenants / progression / certificats dans le scope
+[ ] depuis une formation → Certificats → éditeur d’organisation : aperçu en lecture seule, sans déplacement ni bouton Enregistrer
 [ ] vérifier permissions (pas d’élévation, pas de données hors scope)
 ```
 
