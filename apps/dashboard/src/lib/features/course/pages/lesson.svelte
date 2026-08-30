@@ -369,6 +369,34 @@
     autoSave();
   });
 
+  // A PowerPoint upload is converted to PDF by the worker, so poll until the derived
+  // file is ready instead of making the author reload the lesson to see the slides.
+  $effect(() => {
+    if (!browser || !courseId || !lessonId) return;
+    if (!lessonApi.hasDocumentsBeingProcessed) return;
+
+    let cancelled = false;
+    const startedAt = Date.now();
+    const POLL_INTERVAL_MS = 5000;
+    const POLL_TIMEOUT_MS = 10 * 60 * 1000;
+
+    const timer = setInterval(() => {
+      if (cancelled) return;
+
+      if (Date.now() - startedAt > POLL_TIMEOUT_MS || !lessonApi.hasDocumentsBeingProcessed) {
+        clearInterval(timer);
+        return;
+      }
+
+      void lessonApi.refreshDocumentProcessing(courseId, lessonId);
+    }, POLL_INTERVAL_MS);
+
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  });
+
   // Only save once when leaving edit mode (e.g. Save button or browser back).
   let didHandleExitEdit = false;
   $effect(() => {

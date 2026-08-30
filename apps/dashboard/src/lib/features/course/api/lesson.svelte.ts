@@ -153,6 +153,49 @@ export class LessonApi extends BaseApiWithErrors {
   }
 
   /**
+   * Re-reads the lesson and merges only the document conversion fields into the
+   * current state. A full replace would discard the author's unsaved edits.
+   */
+  async refreshDocumentProcessing(courseId: string, lessonId: string) {
+    if (!this.lesson) return;
+
+    const response = await classroomio.course[':courseId'].lesson[':lessonId'].$get({
+      param: { courseId, lessonId }
+    });
+
+    if (!response.ok) return;
+
+    const payload = await response.json();
+    const freshDocuments = payload?.data?.documents;
+
+    if (!Array.isArray(freshDocuments) || !this.lesson) return;
+
+    const freshByKey = new Map(freshDocuments.map((document) => [document.key, document]));
+    const currentDocuments = this.lesson.documents ?? [];
+
+    this.lesson = {
+      ...this.lesson,
+      documents: currentDocuments.map((document) => {
+        const fresh = freshByKey.get(document.key);
+
+        if (!fresh) return document;
+
+        return {
+          ...document,
+          type: fresh.type ?? document.type,
+          viewerLink: fresh.viewerLink,
+          processingStatus: fresh.processingStatus
+        };
+      })
+    };
+  }
+
+  /** True while at least one uploaded deck is still being converted to PDF. */
+  get hasDocumentsBeingProcessed(): boolean {
+    return (this.lesson?.documents ?? []).some((document) => document.processingStatus === 'processing');
+  }
+
+  /**
    * Updates a lesson
    */
   async update(courseId: string, lessonId: string, fields: TLessonUpdate): Promise<boolean> {
