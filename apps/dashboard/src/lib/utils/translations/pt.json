@@ -223,7 +223,8 @@
         "complete_download": "Download completo",
         "version_restored": "Versão restaurada com sucesso"
       },
-      "section_deleted": "Seção do curso excluída com sucesso"
+      "section_deleted": "Seção do curso excluída com sucesso",
+      "section_delete_failed": "Não foi possível excluir a seção do curso"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Slide",
               "slide_link": "Link do slide",
-              "helper_message": "Você pode incorporar Apresentações Google ou Apresentação Canva"
+              "helper_message": "Você pode incorporar Apresentações Google ou Apresentação Canva",
+              "upload_heading": "Enviar uma apresentação do PowerPoint",
+              "upload_hint": "Envie um arquivo PPT ou PPTX para ler os slides diretamente na aula.",
+              "upload_action": "Enviar apresentação",
+              "upload_title": "Enviar apresentação",
+              "upload_description": "Envie um arquivo PPT ou PPTX. Os arquivos devem ter menos de {size}.",
+              "file_type_error": "Formato não suportado. Formatos aceitos: PPT, PPTX."
             },
             "note": {
               "title": "Nota",

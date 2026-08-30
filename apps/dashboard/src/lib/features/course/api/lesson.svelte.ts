@@ -214,9 +214,12 @@ export class LessonApi extends BaseApiWithErrors {
         }
       },
       onError: (result) => {
-        if (typeof result === 'string') {
-          snackbar.error('snackbar.lessons.lesson_delete_failed');
+        if (typeof result !== 'string' && 'error' in result && result.error) {
+          snackbar.error(result.error);
+          return;
         }
+
+        snackbar.error('snackbar.lessons.lesson_delete_failed');
       }
     });
   }
@@ -341,7 +344,15 @@ export class LessonApi extends BaseApiWithErrors {
         classroomio.course[':courseId'].section[':sectionId'].$delete({
           param: { courseId, sectionId }
         }),
-      logContext: 'deleting course section'
+      logContext: 'deleting course section',
+      onError: (result) => {
+        if (typeof result !== 'string' && 'error' in result && result.error) {
+          snackbar.error(result.error);
+          return;
+        }
+
+        snackbar.error('snackbar.lessons.section_delete_failed');
+      }
     });
   }
 

@@ -57,7 +57,11 @@
   }
 
   function deleteDocument(index: number) {
-    void lessonApi.deleteLessonDocument(index);
+    const lessonIndex = lessonDocumentIndexes[index];
+
+    if (lessonIndex === undefined) return;
+
+    void lessonApi.deleteLessonDocument(lessonIndex);
   }
 
   function requestRemoveDocument(index: number) {
@@ -274,7 +278,8 @@
   }
 
   function reorderDocuments(documents: LessonDocument[]) {
-    lessonApi.updateLessonState('documents', documents);
+    // Slide decks are not part of this list, so re-append them to keep them stored.
+    lessonApi.updateLessonState('documents', [...documents, ...slideDocuments]);
   }
 
   function closePDFViewer() {
@@ -336,7 +341,16 @@
     event.preventDefault();
   }
 
-  let displayDocuments = $derived(lessonApi.lesson?.documents || []);
+  const allDocuments = $derived(lessonApi.lesson?.documents ?? []);
+  let displayDocuments = $derived(allDocuments.filter((doc) => doc.slot !== 'slide'));
+  const slideDocuments = $derived(allDocuments.filter((doc) => doc.slot === 'slide'));
+  /** Maps a position in `displayDocuments` back to its index in the stored array. */
+  const lessonDocumentIndexes = $derived(
+    allDocuments.reduce<number[]>((indexes, doc, index) => {
+      if (doc.slot !== 'slide') indexes.push(index);
+      return indexes;
+    }, [])
+  );
 </script>
 
 <DocumentList

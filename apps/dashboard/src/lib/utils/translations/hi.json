@@ -223,7 +223,8 @@
         "complete_download": "पूर्ण डाउनलोड करें",
         "version_restored": "संस्करण सफलतापूर्वक पुनर्स्थापित किया गया"
       },
-      "section_deleted": "पाठ्यक्रम अनुभाग सफलतापूर्वक हटा दिया गया"
+      "section_deleted": "पाठ्यक्रम अनुभाग सफलतापूर्वक हटा दिया गया",
+      "section_delete_failed": "पाठ्यक्रम अनुभाग हटाया नहीं जा सका"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "फिसल पट्टी",
               "slide_link": "स्लाइड लिंक",
-              "helper_message": "आप Google स्लाइड या Canva प्रेजेंटेशन को एम्बेड कर सकते हैं"
+              "helper_message": "आप Google स्लाइड या Canva प्रेजेंटेशन को एम्बेड कर सकते हैं",
+              "upload_heading": "PowerPoint प्रस्तुति अपलोड करें",
+              "upload_hint": "पाठ में सीधे स्लाइड पढ़ने के लिए PPT या PPTX फ़ाइल अपलोड करें।",
+              "upload_action": "प्रस्तुति अपलोड करें",
+              "upload_title": "प्रस्तुति अपलोड करें",
+              "upload_description": "PPT या PPTX फ़ाइल अपलोड करें। फ़ाइलें {size} से छोटी होनी चाहिए।",
+              "file_type_error": "प्रारूप समर्थित नहीं है। स्वीकृत प्रारूप: PPT, PPTX।"
             },
             "note": {
               "title": "नोट",

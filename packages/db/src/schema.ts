@@ -1021,6 +1021,8 @@ export const lesson = pgTable(
         viewerLink?: string;
         /** Derived from asset metadata when the lesson is read. */
         processingStatus?: 'processing' | 'ready' | 'failed';
+        /** Which lesson tab owns the entry. Absent means the Documents attachment list. */
+        slot?: 'slide';
       }[]
     >(),
     sectionId: uuid('section_id').references(() => courseSection.id, {

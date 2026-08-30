@@ -223,7 +223,8 @@
         "complete_download": "Download fuldført",
         "version_restored": "Version blev gendannet"
       },
-      "section_deleted": "Kursusafsnittet blev slettet"
+      "section_deleted": "Kursusafsnittet blev slettet",
+      "section_delete_failed": "Kunne ikke slette kursusafsnittet"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Dias",
               "slide_link": "Diaslink",
-              "helper_message": "Du kan integrere Google Slides eller Canva Presentation"
+              "helper_message": "Du kan integrere Google Slides eller Canva Presentation",
+              "upload_heading": "Upload en PowerPoint-præsentation",
+              "upload_hint": "Upload en PPT- eller PPTX-fil for at læse slides direkte i lektionen.",
+              "upload_action": "Upload præsentation",
+              "upload_title": "Upload præsentation",
+              "upload_description": "Upload en PPT- eller PPTX-fil. Filer skal være mindre end {size}.",
+              "file_type_error": "Formatet understøttes ikke. Accepterede formater: PPT, PPTX."
             },
             "note": {
               "title": "Bemærk",

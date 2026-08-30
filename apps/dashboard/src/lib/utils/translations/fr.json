@@ -223,7 +223,8 @@
         "complete_download": "Téléchargement terminé",
         "version_restored": "Version restaurée avec succès"
       },
-      "section_deleted": "Section de cours supprimée avec succès"
+      "section_deleted": "Section de cours supprimée avec succès",
+      "section_delete_failed": "Échec de la suppression de la section du cours"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Diapositive",
               "slide_link": "Lien de la diapositive",
-              "helper_message": "Vous pouvez intégrer Google Slides ou Canva Présentation"
+              "helper_message": "Vous pouvez intégrer Google Slides ou Canva Présentation",
+              "upload_heading": "Importer une présentation PowerPoint",
+              "upload_hint": "Importez un fichier PPT ou PPTX pour lire les diapositives directement dans la leçon.",
+              "upload_action": "Importer la présentation",
+              "upload_title": "Importer la présentation",
+              "upload_description": "Importez un fichier PPT ou PPTX. Les fichiers doivent faire moins de {size}.",
+              "file_type_error": "Format non pris en charge. Formats acceptés : PPT, PPTX."
             },
             "note": {
               "title": "Remarque",

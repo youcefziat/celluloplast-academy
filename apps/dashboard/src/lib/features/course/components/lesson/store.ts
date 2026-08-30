@@ -21,7 +21,9 @@ export const lessonDocUpload = writable({
   isCancelled: false,
   isModalOpen: false,
   isUploading: false,
-  uploadProgress: 0
+  uploadProgress: 0,
+  /** Which tab opened the modal. 'slide' uploads a deck for the Slides tab. */
+  slot: undefined as 'slide' | undefined
 });
 
 export async function handleDelete(lessonId: Lesson['id'] | undefined) {

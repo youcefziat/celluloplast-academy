@@ -223,7 +223,8 @@
         "complete_download": "Tải xuống hoàn tất",
         "version_restored": "Đã khôi phục phiên bản thành công"
       },
-      "section_deleted": "Phần khóa học đã được xóa thành công"
+      "section_deleted": "Phần khóa học đã được xóa thành công",
+      "section_delete_failed": "Không thể xóa phần khóa học"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Slide",
               "slide_link": "Liên kết slide",
-              "helper_message": "Bạn có thể nhúng Google Trang trình bày hoặc Bản trình bày Canva"
+              "helper_message": "Bạn có thể nhúng Google Trang trình bày hoặc Bản trình bày Canva",
+              "upload_heading": "Tải lên bản trình bày PowerPoint",
+              "upload_hint": "Tải lên tệp PPT hoặc PPTX để đọc các trang chiếu ngay trong bài học.",
+              "upload_action": "Tải lên bản trình bày",
+              "upload_title": "Tải lên bản trình bày",
+              "upload_description": "Tải lên tệp PPT hoặc PPTX. Tệp phải nhỏ hơn {size}.",
+              "file_type_error": "Định dạng không được hỗ trợ. Các định dạng được chấp nhận: PPT, PPTX."
             },
             "note": {
               "title": "Lưu ý",

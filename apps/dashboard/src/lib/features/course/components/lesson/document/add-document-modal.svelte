@@ -17,6 +17,7 @@
   import { getResolvedUploadLimits } from '$lib/utils/config/upload-limits-context';
   import {
     ALLOWED_DOCUMENT_TYPES,
+    POWERPOINT_DOCUMENT_TYPES,
     getDocumentTypeFromMimeType,
     isDocumentFileNameCompatibleWithMimeType,
     isPowerPointDocumentMimeType,
@@ -44,6 +45,34 @@
 
   const documentUploader = new DocumentUploader();
 
+  /** The Slides tab reuses this modal but only accepts a PowerPoint deck. */
+  const isSlideUpload = $derived($lessonDocUpload.slot === 'slide');
+  const acceptedMimeTypes: readonly AllowedDocumentMimeType[] = $derived(
+    isSlideUpload
+      ? (POWERPOINT_DOCUMENT_TYPES as readonly AllowedDocumentMimeType[])
+      : (ALLOWED_DOCUMENT_TYPES as readonly AllowedDocumentMimeType[])
+  );
+  const acceptAttribute = $derived(
+    isSlideUpload
+      ? '.pptx,.ppt,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint'
+      : '.pdf,.docx,.doc,.pptx,.ppt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint'
+  );
+  const titleKey = $derived(
+    isSlideUpload
+      ? 'course.navItem.lessons.materials.tabs.slide.upload_title'
+      : 'course.navItem.lessons.materials.tabs.document.upload_title'
+  );
+  const uploadDescriptionKey = $derived(
+    isSlideUpload
+      ? 'course.navItem.lessons.materials.tabs.slide.upload_description'
+      : 'course.navItem.lessons.materials.tabs.document.upload_description'
+  );
+  const typeErrorKey = $derived(
+    isSlideUpload
+      ? 'course.navItem.lessons.materials.tabs.slide.file_type_error'
+      : 'course.navItem.lessons.materials.tabs.document.file_type_error'
+  );
+
   function getFileType(file: File): LessonDocumentType {
     return getDocumentTypeFromMimeType(file.type as AllowedDocumentMimeType);
   }
@@ -57,12 +86,12 @@
   }
 
   function validateFile(file: File): string | null {
-    if (!ALLOWED_DOCUMENT_TYPES.includes(file.type as AllowedDocumentMimeType)) {
-      return $t('course.navItem.lessons.materials.tabs.document.file_type_error');
+    if (!acceptedMimeTypes.includes(file.type as AllowedDocumentMimeType)) {
+      return $t(typeErrorKey);
     }
 
     if (!isDocumentFileNameCompatibleWithMimeType(file.name, file.type as AllowedDocumentMimeType)) {
-      return $t('course.navItem.lessons.materials.tabs.document.file_type_error');
+      return $t(typeErrorKey);
     }
 
     if (!isUploadSizeBelowLimit(file.size, maxDocumentSize)) {
@@ -207,7 +236,8 @@
         key: fileKey,
         size: selectedFile.size,
         assetId,
-        ...(isPowerPointDocumentMimeType(selectedFile.type) ? { processingStatus: 'processing' as const } : {})
+        ...(isPowerPointDocumentMimeType(selectedFile.type) ? { processingStatus: 'processing' as const } : {}),
+        ...(isSlideUpload ? { slot: 'slide' as const } : {})
       };
 
       lessonApi.updateLessonState('documents', [document], { append: true });
@@ -286,7 +316,7 @@
 <Dialog.Root open={$lessonDocUpload.isModalOpen} onOpenChange={handleOpenChange}>
   <Dialog.Content class="w-[90%] max-w-4/5">
     <Dialog.Header>
-      <Dialog.Title>{$t('course.navItem.lessons.materials.tabs.document.upload_title')}</Dialog.Title>
+      <Dialog.Title>{$t(titleKey)}</Dialog.Title>
     </Dialog.Header>
     <UpgradeBanner className="mb-3" onClick={() => ($lessonDocUpload.isModalOpen = false)}>
       {$t('course.navItem.lessons.materials.tabs.document.upgrade')}
@@ -306,7 +336,7 @@
       {:else}
         <div class={isDisabled ? 'ui:opacity-50 ui:pointer-events-none' : ''}>
           <FileDropZone.Root
-            accept=".pdf,.docx,.doc,.pptx,.ppt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint"
+            accept={acceptAttribute}
             maxFiles={1}
             fileCount={0}
             maxFileSize={maxDocumentSize}
@@ -315,13 +345,9 @@
           >
             <FileDropZone.Trigger
               label={$t('course.navItem.lessons.materials.tabs.document.drag_drop')}
-              formatMaxFiles={(_count) =>
-                $t('course.navItem.lessons.materials.tabs.document.upload_description', {
-                  size: formatFileSize(maxDocumentSize)
-                })}
+              formatMaxFiles={(_count) => $t(uploadDescriptionKey, { size: formatFileSize(maxDocumentSize) })}
               formatMaxFilesAndSize={(_size) => ''}
-              formatMaxSize={(size) =>
-                $t('course.navItem.lessons.materials.tabs.document.upload_description', { size })}
+              formatMaxSize={(size) => $t(uploadDescriptionKey, { size })}
             />
           </FileDropZone.Root>
         </div>

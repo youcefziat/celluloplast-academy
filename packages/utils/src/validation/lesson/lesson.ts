@@ -54,7 +54,8 @@ export const ZLessonUpdate = z.object({
         link: z.string(),
         size: z.number().optional(),
         key: z.string(),
-        assetId: z.string().uuid().optional()
+        assetId: z.string().uuid().optional(),
+        slot: z.literal('slide').optional()
       })
     )
     .optional()

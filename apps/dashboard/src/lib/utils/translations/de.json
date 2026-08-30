@@ -223,7 +223,8 @@
         "complete_download": "Download abgeschlossen",
         "version_restored": "Version erfolgreich wiederhergestellt"
       },
-      "section_deleted": "Kursabschnitt erfolgreich gelöscht"
+      "section_deleted": "Kursabschnitt erfolgreich gelöscht",
+      "section_delete_failed": "Kursabschnitt konnte nicht gelöscht werden"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Folie",
               "slide_link": "Folien-Link",
-              "helper_message": "Sie können Google Slides oder Canva-Präsentationen einbetten"
+              "helper_message": "Sie können Google Slides oder Canva-Präsentationen einbetten",
+              "upload_heading": "PowerPoint-Präsentation hochladen",
+              "upload_hint": "Laden Sie eine PPT- oder PPTX-Datei hoch, um die Folien direkt in der Lektion zu lesen.",
+              "upload_action": "Präsentation hochladen",
+              "upload_title": "Präsentation hochladen",
+              "upload_description": "Laden Sie eine PPT- oder PPTX-Datei hoch. Dateien müssen kleiner als {size} sein.",
+              "file_type_error": "Format nicht unterstützt. Zulässige Formate: PPT, PPTX."
             },
             "note": {
               "title": "Hinweis",

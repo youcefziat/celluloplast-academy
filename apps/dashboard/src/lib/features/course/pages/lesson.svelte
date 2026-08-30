@@ -410,6 +410,7 @@
 
     $lessonDocUpload.isModalOpen = false;
     $lessonDocUpload.error = null;
+    $lessonDocUpload.slot = undefined;
 
     triggerAutoSave();
   }}

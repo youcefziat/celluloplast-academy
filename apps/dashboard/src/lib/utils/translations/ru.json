@@ -223,7 +223,8 @@
         "complete_download": "Загрузка завершена",
         "version_restored": "Версия успешно восстановлена"
       },
-      "section_deleted": "Раздел курса успешно удален"
+      "section_deleted": "Раздел курса успешно удален",
+      "section_delete_failed": "Не удалось удалить раздел курса"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Слайд",
               "slide_link": "Ссылка на слайд",
-              "helper_message": "Вы можете встроить Google Slides или Canva Presentation."
+              "helper_message": "Вы можете встроить Google Slides или Canva Presentation.",
+              "upload_heading": "Загрузить презентацию PowerPoint",
+              "upload_hint": "Загрузите файл PPT или PPTX, чтобы читать слайды прямо в уроке.",
+              "upload_action": "Загрузить презентацию",
+              "upload_title": "Загрузить презентацию",
+              "upload_description": "Загрузите файл PPT или PPTX. Размер файла должен быть меньше {size}.",
+              "file_type_error": "Формат не поддерживается. Допустимые форматы: PPT, PPTX."
             },
             "note": {
               "title": "Примечание",

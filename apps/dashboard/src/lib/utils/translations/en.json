@@ -2340,7 +2340,13 @@
             "slide": {
               "title": "Slide",
               "slide_link": "Slide Link",
-              "helper_message": "You can embed Google Slides or Canva Presentation"
+              "helper_message": "You can embed Google Slides or Canva Presentation",
+              "upload_heading": "Upload a PowerPoint deck",
+              "upload_hint": "Upload a PPT or PPTX file to read the slides directly in the lesson.",
+              "upload_action": "Upload presentation",
+              "upload_title": "Upload presentation",
+              "upload_description": "Upload a PPT or PPTX file. Files must be smaller than {size}.",
+              "file_type_error": "Format not supported. Accepted formats: PPT, PPTX."
             },
             "settings": {
               "title": "Settings"
@@ -4410,7 +4416,8 @@
       "error": {
         "try_later": "Something's not right - Please try later",
         "exercise_not_complete": "Complete all exercises to mark as complete"
-      }
+      },
+      "section_delete_failed": "Failed to delete course section"
     },
     "marks": {
       "error": "Error fetching marks"

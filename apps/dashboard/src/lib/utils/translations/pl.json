@@ -223,7 +223,8 @@
         "complete_download": "Pobierz ukończono",
         "version_restored": "Wersja została przywrócona pomyślnie"
       },
-      "section_deleted": "Sekcja kursu została pomyślnie usunięta"
+      "section_deleted": "Sekcja kursu została pomyślnie usunięta",
+      "section_delete_failed": "Nie udało się usunąć sekcji kursu"
     },
     "attendance": {
       "error": {
@@ -2162,7 +2163,13 @@
             "slide": {
               "title": "Slajd",
               "slide_link": "Link do slajdu",
-              "helper_message": "Możesz osadzić Prezentacje Google lub Prezentację Canva"
+              "helper_message": "Możesz osadzić Prezentacje Google lub Prezentację Canva",
+              "upload_heading": "Prześlij prezentację PowerPoint",
+              "upload_hint": "Prześlij plik PPT lub PPTX, aby czytać slajdy bezpośrednio w lekcji.",
+              "upload_action": "Prześlij prezentację",
+              "upload_title": "Prześlij prezentację",
+              "upload_description": "Prześlij plik PPT lub PPTX. Pliki muszą być mniejsze niż {size}.",
+              "file_type_error": "Format nieobsługiwany. Akceptowane formaty: PPT, PPTX."
             },
             "note": {
               "title": "Uwaga",
