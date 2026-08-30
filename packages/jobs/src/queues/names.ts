@@ -25,7 +25,8 @@ export const JOB_NAMES = {
     probeMetadata: 'probe-metadata',
     generateThumbnail: 'generate-thumbnail',
     extractAudio: 'extract-audio',
-    compressVideo: 'compress-video'
+    compressVideo: 'compress-video',
+    convertDocument: 'convert-document'
   },
   mediaTranscribe: {
     transcribeAudio: 'transcribe-audio'

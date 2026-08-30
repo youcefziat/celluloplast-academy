@@ -2,13 +2,18 @@ import './../bootstrap';
 
 import { Worker } from 'bullmq';
 
-import { recordDeadLetterJob, updateMediaJob } from '@cio/db/queries';
+import { getAssetById, recordDeadLetterJob, updateAsset, updateMediaJob } from '@cio/db/queries';
 import { JOB_NAMES, QUEUE_NAMES, createRedisConnection } from '@cio/jobs';
 
 import { JobCanceledError, errorMessage } from '../utils/cancel';
 import { env } from '../config/env';
 import { log } from '../utils/logger';
-import { processExtractAudio, processGenerateThumbnail, processProbeMetadata } from '../processors/media';
+import {
+  processConvertDocument,
+  processExtractAudio,
+  processGenerateThumbnail,
+  processProbeMetadata
+} from '../processors/media';
 
 const concurrency = Number.parseInt(env.MEDIA_WORKER_CONCURRENCY ?? '2', 10) || 2;
 const connection = createRedisConnection();
@@ -25,6 +30,8 @@ const worker = new Worker(
         return processGenerateThumbnail(job.data);
       case JOB_NAMES.media.extractAudio:
         return processExtractAudio(job.data);
+      case JOB_NAMES.media.convertDocument:
+        return processConvertDocument(job.data);
       default:
         throw new Error(`Unknown media job: ${job.name}`);
     }
@@ -42,6 +49,9 @@ worker.on('failed', async (job, err) => {
       stage: 'canceled',
       error: { code: 'CANCELED', message: 'Run canceled by user' }
     });
+    if (job.name === JOB_NAMES.media.convertDocument) {
+      await markDocumentConversionFailed(job.data, 'CANCELED');
+    }
     return;
   }
 
@@ -64,6 +74,10 @@ worker.on('failed', async (job, err) => {
     });
   }
 
+  if (job.name === JOB_NAMES.media.convertDocument) {
+    await markDocumentConversionFailed(job.data, 'WORKER_EXHAUSTED_RETRIES');
+  }
+
   await recordDeadLetterJob({
     organizationId: data?.actorContext?.organizationId ?? null,
     domain: 'media',
@@ -76,6 +90,36 @@ worker.on('failed', async (job, err) => {
     attempts: job.attemptsMade
   });
 });
+
+async function markDocumentConversionFailed(rawData: unknown, errorCode: string): Promise<void> {
+  const data = rawData as { assetId?: string; actorContext?: { organizationId?: string } };
+  const assetId = data.assetId;
+  const organizationId = data.actorContext?.organizationId;
+  if (!assetId || !organizationId) {
+    return;
+  }
+
+  try {
+    const asset = await getAssetById(assetId, organizationId);
+    const metadata =
+      asset?.metadata && typeof asset.metadata === 'object' && !Array.isArray(asset.metadata)
+        ? (asset.metadata as Record<string, unknown>)
+        : {};
+
+    await updateAsset(assetId, organizationId, {
+      metadata: {
+        ...metadata,
+        documentProcessing: {
+          status: 'failed',
+          errorCode,
+          failedAt: new Date().toISOString()
+        }
+      }
+    });
+  } catch (error) {
+    log.error('document-conversion-status-update-failed', { assetId, error: errorMessage(error) });
+  }
+}
 
 worker.on('ready', () => log.info('media-worker-ready', { concurrency, queue: QUEUE_NAMES.media }));
 worker.on('error', (err) => log.error('media-worker-error', { error: errorMessage(err) }));

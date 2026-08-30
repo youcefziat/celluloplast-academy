@@ -47,6 +47,14 @@ export const ZExtractAudioPayload = z.object({
 });
 export type TExtractAudioPayload = z.infer<typeof ZExtractAudioPayload>;
 
+export const ZConvertDocumentPayload = z.object({
+  mediaJobId: z.string().uuid(),
+  assetId: z.string().uuid(),
+  storageKey: z.string().min(1),
+  actorContext: ZActorContext
+});
+export type TConvertDocumentPayload = z.infer<typeof ZConvertDocumentPayload>;
+
 export const ZTranscribeAudioPayload = z.object({
   mediaJobId: z.string().uuid(),
   assetId: z.string().uuid(),

@@ -1017,6 +1017,10 @@ export const lesson = pgTable(
         size?: number;
         key: string;
         assetId?: string;
+        /** Signed URL for a derived browser-readable PDF; never persisted by lesson writes. */
+        viewerLink?: string;
+        /** Derived from asset metadata when the lesson is read. */
+        processingStatus?: 'processing' | 'ready' | 'failed';
       }[]
     >(),
     sectionId: uuid('section_id').references(() => courseSection.id, {

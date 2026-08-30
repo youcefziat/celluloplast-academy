@@ -103,3 +103,7 @@ export function videosBucket(): string {
 export function mediaBucket(): string {
   return getStorageConfig().bucketMedia;
 }
+
+export function documentsBucket(): string {
+  return getStorageConfig().bucketDocuments;
+}

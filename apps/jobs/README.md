@@ -49,7 +49,7 @@ through this worker.
 | Queue              | Jobs                                                    | Where the payload comes from                                                                  |
 | ------------------ | ------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `emails`           | `send`                                                  | `enqueueTransactionalEmail` / `enqueueRawEmail` in `apps/api/src/services/jobs/email-jobs.ts` |
-| `media`            | `probe-metadata`, `generate-thumbnail`, `extract-audio` | `startMediaJob` after a video asset upload                                                    |
+| `media`            | `probe-metadata`, `generate-thumbnail`, `extract-audio`, `convert-document` | Video post-processing and PowerPoint-to-PDF conversion                                        |
 | `media-transcribe` | `transcribe-audio`                                      | Same flow; only enqueued when `OPENAI_API_KEY` is set                                         |
 | `maintenance`      | `retention-compact`, `dead-letter-cleanup`              | Repeatable scheduled jobs                                                                     |
 

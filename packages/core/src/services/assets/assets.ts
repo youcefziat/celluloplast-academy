@@ -1,4 +1,11 @@
 import { AppError, ErrorCodes } from '@cio/utils/errors';
+import { HeadObjectCommand } from '@aws-sdk/client-s3';
+import {
+  ALLOWED_DOCUMENT_TYPES,
+  isDocumentFileNameCompatibleWithMimeType,
+  isPowerPointDocumentMimeType,
+  type AllowedDocumentMimeType
+} from '@cio/utils/validation/constants';
 import type {
   TAssetAttach,
   TAssetCreateUpload,
@@ -43,6 +50,7 @@ import {
 import { getS3Client, getStorageConfig } from '../../config/storage';
 import { enqueueAssetStorageCleanup, isRedisConfigured, type TAssetStorageCleanupPayload } from '@cio/jobs';
 import type { TAsset } from '@cio/db/types';
+import { getUploadLimits } from '../../config/upload-limits';
 
 const YOUTUBE_VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]{11}$/;
 
@@ -56,6 +64,62 @@ type YouTubeWatchPageMetadata = {
   durationSeconds: number | null;
   thumbnailUrl: string | null;
 };
+
+function toPlainMetadata(metadata: unknown): Record<string, unknown> {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+    return {};
+  }
+
+  return metadata as Record<string, unknown>;
+}
+
+async function verifyLessonDocumentUpload(data: TAssetCreateUpload): Promise<number | null | undefined> {
+  const metadata = toPlainMetadata(data.metadata);
+  if (
+    metadata.source !== 'lesson_document' ||
+    data.kind !== 'document' ||
+    data.provider !== 'upload' ||
+    !data.storageKey
+  ) {
+    return data.byteSize;
+  }
+
+  const mimeType = data.mimeType as AllowedDocumentMimeType | undefined;
+  if (!mimeType || !ALLOWED_DOCUMENT_TYPES.includes(mimeType)) {
+    throw new AppError('Unsupported lesson document type', ErrorCodes.VALIDATION_ERROR, 415);
+  }
+
+  const fileName = typeof metadata.fileName === 'string' ? metadata.fileName : (data.title ?? data.storageKey);
+  if (!isDocumentFileNameCompatibleWithMimeType(fileName, mimeType)) {
+    throw new AppError('Document filename extension does not match its MIME type', ErrorCodes.VALIDATION_ERROR, 400);
+  }
+
+  const storageConfig = getStorageConfig();
+  const response = await getS3Client().send(
+    new HeadObjectCommand({ Bucket: storageConfig.bucketDocuments, Key: data.storageKey })
+  );
+  const storedSize = response.ContentLength;
+  const storedMimeType = response.ContentType?.split(';', 1)[0]?.trim().toLowerCase();
+  const maxDocumentSize = getUploadLimits().documentBytes;
+
+  if (storedSize == null) {
+    throw new AppError('Stored document size is unavailable', ErrorCodes.VALIDATION_ERROR, 400);
+  }
+
+  if (storedSize >= maxDocumentSize) {
+    throw new AppError(
+      `File size exceeds maximum of ${maxDocumentSize / 1024 / 1024}MB`,
+      ErrorCodes.VALIDATION_ERROR,
+      413
+    );
+  }
+
+  if (storedMimeType !== mimeType) {
+    throw new AppError('Stored document MIME type does not match the upload request', ErrorCodes.VALIDATION_ERROR, 400);
+  }
+
+  return storedSize;
+}
 
 function assertAssetExists<T>(asset: T | null): T {
   if (!asset) {
@@ -231,6 +295,19 @@ export async function listOrganizationAssetsService(orgId: string, query: TAsset
 
 export async function createAssetFromUploadService(orgId: string, profileId: string, data: TAssetCreateUpload) {
   try {
+    const verifiedByteSize = await verifyLessonDocumentUpload(data);
+    const shouldConvertDocument =
+      data.kind === 'document' && data.provider === 'upload' && isPowerPointDocumentMimeType(data.mimeType);
+    const metadata = toPlainMetadata(data.metadata);
+    const initialMetadata = shouldConvertDocument
+      ? {
+          ...metadata,
+          documentProcessing: {
+            status: 'processing',
+            requestedAt: new Date().toISOString()
+          }
+        }
+      : metadata;
     const asset = await createOrGetAssetByStorageKey({
       organizationId: orgId,
       kind: data.kind,
@@ -239,7 +316,7 @@ export async function createAssetFromUploadService(orgId: string, profileId: str
       storageKey: data.storageKey ?? null,
       sourceUrl: data.sourceUrl ?? null,
       mimeType: data.mimeType ?? null,
-      byteSize: data.byteSize ?? null,
+      byteSize: verifiedByteSize ?? null,
       checksum: data.checksum ?? null,
       title: data.title ?? null,
       description: data.description ?? null,
@@ -248,7 +325,7 @@ export async function createAssetFromUploadService(orgId: string, profileId: str
       aspectRatio: data.aspectRatio ?? null,
       isExternal: data.isExternal,
       status: 'active',
-      metadata: data.metadata ?? {},
+      metadata: initialMetadata,
       createdByProfileId: profileId
     });
 
@@ -263,13 +340,53 @@ export async function createAssetFromUploadService(orgId: string, profileId: str
       });
     }
 
+    if (shouldConvertDocument && asset.storageKey) {
+      void enqueueDocumentPostProcessingForAsset({
+        organizationId: orgId,
+        assetId: asset.id,
+        storageKey: asset.storageKey,
+        triggeredByProfileId: profileId
+      });
+    }
+
     return asset;
   } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
     throw new AppError(
       error instanceof Error ? error.message : 'Failed to create asset',
       ErrorCodes.ASSET_CREATE_FAILED,
       500
     );
+  }
+}
+
+async function enqueueDocumentPostProcessingForAsset(input: {
+  organizationId: string;
+  assetId: string;
+  storageKey: string;
+  triggeredByProfileId: string;
+}): Promise<void> {
+  try {
+    const { startDocumentConversionJob } = await import('../jobs/media-jobs');
+    await startDocumentConversionJob(input);
+  } catch (error) {
+    console.error('enqueueDocumentPostProcessingForAsset failed:', error);
+    const asset = await getAssetById(input.assetId, input.organizationId);
+    const metadata = toPlainMetadata(asset?.metadata);
+
+    await updateAsset(input.assetId, input.organizationId, {
+      metadata: {
+        ...metadata,
+        documentProcessing: {
+          status: 'failed',
+          errorCode: 'ENQUEUE_FAILED',
+          failedAt: new Date().toISOString()
+        }
+      }
+    });
   }
 }
 
@@ -379,7 +496,8 @@ function buildAssetStorageCleanupPayload(asset: TAsset): TAssetStorageCleanupPay
     { bucket: config.bucketVideos, prefix: `${asset.id}/` },
     { bucket: config.bucketMedia, prefix: `thumbnails/${asset.id}/` },
     { bucket: config.bucketMedia, prefix: `audio/${asset.id}/` },
-    { bucket: config.bucketMedia, prefix: `transcripts/${asset.id}/` }
+    { bucket: config.bucketMedia, prefix: `transcripts/${asset.id}/` },
+    { bucket: config.bucketDocuments, prefix: `converted/${asset.id}/` }
   ];
 
   const keys: TAssetStorageCleanupPayload['keys'] = [];

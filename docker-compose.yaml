@@ -144,7 +144,7 @@ services:
       LICENSE_KEY: ${LICENSE_KEY:-}
       UNSPLASH_API_KEY: ${UNSPLASH_API_KEY:-}
       # Upload size limits (megabytes). Unset = built-in defaults — see .env.example.
-      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
+      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-50}
       UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}
       UPLOAD_MAX_VIDEO_MB: ${UPLOAD_MAX_VIDEO_MB:-}
       UPLOAD_MAX_EXERCISE_FILE_MB: ${UPLOAD_MAX_EXERCISE_FILE_MB:-}
@@ -185,7 +185,7 @@ services:
       # Integer bytes only (adapter-node 2.x: parseInt('900M') === 900). 943718400 = 900 MiB.
       BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-943718400}
       # Upload size limits (megabytes). Unset = built-in defaults — see .env.example.
-      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
+      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-50}
       UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}
       UPLOAD_MAX_VIDEO_MB: ${UPLOAD_MAX_VIDEO_MB:-}
       UPLOAD_MAX_EXERCISE_FILE_MB: ${UPLOAD_MAX_EXERCISE_FILE_MB:-}
@@ -194,8 +194,8 @@ services:
       UPLOAD_MAX_THUMBNAIL_MB: ${UPLOAD_MAX_THUMBNAIL_MB:-}
     restart: unless-stopped
 
-  # Background worker (BullMQ). Drains the Redis queue: video processing, transcription,
-  # AI course generation, and emails.
+  # Background worker (BullMQ). Drains video, PowerPoint conversion, transcription,
+  # AI course generation, and email jobs.
   jobs:
     build:
       context: .

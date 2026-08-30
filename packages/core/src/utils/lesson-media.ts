@@ -8,6 +8,12 @@ import type { TLesson } from '@cio/db/types';
 // Extract types from schema
 type LessonVideo = NonNullable<TLesson['videos']>[number];
 type LessonDocument = NonNullable<TLesson['documents']>[number];
+type CanonicalLessonDocument = LessonDocument & { processingPdfStorageKey?: string };
+
+type DocumentProcessingMetadata = {
+  status: 'processing' | 'ready' | 'failed';
+  pdfStorageKey?: string;
+};
 
 function mapProviderToVideoType(provider: string): LessonVideo['type'] {
   if (provider === 'youtube') return 'youtube';
@@ -33,7 +39,37 @@ function mapAssetMimeTypeToDocumentType(mimeType: string | null, fallbackType: L
     return 'docx';
   }
 
+  if (mimeType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+    return 'pptx';
+  }
+
+  if (mimeType === 'application/vnd.ms-powerpoint') {
+    return 'ppt';
+  }
+
   return fallbackType;
+}
+
+function readDocumentProcessingMetadata(metadata: unknown): DocumentProcessingMetadata | null {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+    return null;
+  }
+
+  const processing = (metadata as Record<string, unknown>).documentProcessing;
+  if (!processing || typeof processing !== 'object' || Array.isArray(processing)) {
+    return null;
+  }
+
+  const status = (processing as Record<string, unknown>).status;
+  if (status !== 'processing' && status !== 'ready' && status !== 'failed') {
+    return null;
+  }
+
+  const pdfStorageKey = (processing as Record<string, unknown>).pdfStorageKey;
+  return {
+    status,
+    ...(typeof pdfStorageKey === 'string' && pdfStorageKey.length > 0 ? { pdfStorageKey } : {})
+  };
 }
 
 function applyCanonicalVideoMetadata(
@@ -89,7 +125,7 @@ function applyCanonicalVideoMetadata(
 function applyCanonicalDocumentMetadata(
   documents: LessonDocument[],
   assets: Awaited<ReturnType<typeof getAssetsByIds>>
-): LessonDocument[] {
+): CanonicalLessonDocument[] {
   if (assets.length === 0) {
     return documents;
   }
@@ -106,13 +142,19 @@ function applyCanonicalDocumentMetadata(
       return document;
     }
 
+    const documentProcessing = readDocumentProcessingMetadata(asset.metadata);
+
     return {
       ...document,
       type: mapAssetMimeTypeToDocumentType(asset.mimeType, document.type),
       key: asset.storageKey ?? document.key,
       link: asset.provider === 'upload' ? document.link : (asset.sourceUrl ?? document.link),
       name: asset.title ?? document.name,
-      size: asset.byteSize ?? document.size
+      size: asset.byteSize ?? document.size,
+      ...(documentProcessing ? { processingStatus: documentProcessing.status } : {}),
+      ...(documentProcessing?.status === 'ready' && documentProcessing.pdfStorageKey
+        ? { processingPdfStorageKey: documentProcessing.pdfStorageKey }
+        : {})
     };
   });
 }
@@ -138,21 +180,37 @@ export async function enrichLessonWithPresignedUrls(lesson: LessonById): Promise
 
   const videoKeys = extractKeysFromObjects(canonicalVideos.filter((video) => video.type === 'upload'));
   const docKeys = extractKeysFromObjects(canonicalDocuments);
+  const viewerKeys = canonicalDocuments
+    .map((document) => document.processingPdfStorageKey)
+    .filter((key): key is string => Boolean(key));
+  const allDocumentKeys = Array.from(new Set([...docKeys, ...viewerKeys]));
 
   // Early return if no keys to process
-  if (videoKeys.length === 0 && docKeys.length === 0) {
+  if (videoKeys.length === 0 && allDocumentKeys.length === 0) {
     return lesson;
   }
 
   // Generate presigned URLs in parallel
   const [videoUrls, docUrls] = await Promise.all([
     generateVideoDownloadPresignedUrls(videoKeys),
-    generateDocumentDownloadPresignedUrls(docKeys)
+    generateDocumentDownloadPresignedUrls(allDocumentKeys)
   ]);
+
+  const enrichedDocuments = canonicalDocuments.map((document) => {
+    const originalLink = docUrls[document.key] ?? document.link;
+    const viewerLink = document.processingPdfStorageKey ? docUrls[document.processingPdfStorageKey] : undefined;
+    const { processingPdfStorageKey: _processingPdfStorageKey, ...publicDocument } = document;
+
+    return {
+      ...publicDocument,
+      link: originalLink,
+      ...(viewerLink ? { viewerLink } : {})
+    };
+  });
 
   return {
     ...lesson,
     videos: enrichObjectsWithUrls<LessonVideo>(canonicalVideos, videoUrls),
-    documents: enrichObjectsWithUrls<LessonDocument>(canonicalDocuments, docUrls)
+    documents: enrichedDocuments
   };
 }

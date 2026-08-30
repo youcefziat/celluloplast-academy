@@ -160,6 +160,7 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
       SKIP_DB_SETUP: ${SKIP_DB_SETUP:-}
       SEED_DEMO: ${SEED_DEMO:-true}
+      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-50}
     restart: unless-stopped
 
   dashboard:
@@ -198,7 +199,7 @@ services:
       # on @sveltejs/adapter-node@2.x (parseInt('900M') === 900).
       # 943718400 = 900 MiB (covers default UPLOAD_MAX_VIDEO_MB=800 + multipart overhead).
       BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-943718400}
-      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-}
+      UPLOAD_MAX_DOCUMENT_MB: ${UPLOAD_MAX_DOCUMENT_MB:-50}
       UPLOAD_MAX_IMAGE_MB: ${UPLOAD_MAX_IMAGE_MB:-}
       UPLOAD_MAX_VIDEO_MB: ${UPLOAD_MAX_VIDEO_MB:-}
       UPLOAD_MAX_EXERCISE_FILE_MB: ${UPLOAD_MAX_EXERCISE_FILE_MB:-}

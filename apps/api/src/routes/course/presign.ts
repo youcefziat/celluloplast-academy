@@ -16,14 +16,14 @@ import { authMiddleware } from '@api/middlewares/auth';
 import { generateFileKey } from '@cio/core/utils/upload';
 import { AppError } from '@api/utils/errors';
 import { MAX_DOCUMENT_SIZE, MAX_FILE_SIZE } from '@api/constants/upload';
+import { isUploadSizeBelowLimit } from '@cio/utils/config/upload-limits';
 
 /**
- * Advisory check on client-reported `fileSize`. Upload bytes go directly to object storage
- * via the presigned PUT URL, so omitting `fileSize` (or understating it) bypasses this guard.
- * Real enforcement requires storage-side policies (bucket max object size, etc.).
+ * Early check on client-reported `fileSize`. Upload bytes go directly to object storage,
+ * so asset registration independently verifies the stored Content-Length with HeadObject.
  */
-function assertPresignFileSizeWithinLimit(fileSize: number | undefined, maxBytes: number): void {
-  if (fileSize != null && fileSize > maxBytes) {
+export function assertPresignFileSizeWithinLimit(fileSize: number | undefined, maxBytes: number): void {
+  if (fileSize != null && !isUploadSizeBelowLimit(fileSize, maxBytes)) {
     throw new AppError(`File size exceeds maximum of ${maxBytes / 1024 / 1024}MB`, 'FILE_TOO_LARGE', 413);
   }
 }

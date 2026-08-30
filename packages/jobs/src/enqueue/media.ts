@@ -19,6 +19,11 @@ export interface EnqueueLessonVideoPipelineResult {
   jobIds: Record<string, string>;
 }
 
+export interface EnqueueDocumentConversionResult {
+  rootJobId: string;
+  jobIds: Record<string, string>;
+}
+
 function collectFlowJobIds(
   tree: Awaited<ReturnType<ReturnType<typeof getFlowProducer>['add']>>
 ): Record<string, string> {
@@ -148,6 +153,27 @@ export async function enqueueGenerateThumbnailOnly(input: {
     rootJobId: job.id ?? '',
     jobIds: {
       [JOB_NAMES.media.generateThumbnail]: job.id ?? ''
+    }
+  };
+}
+
+/** Enqueue an isolated PowerPoint → PDF conversion on the media worker. */
+export async function enqueueDocumentConversion(input: {
+  mediaJobId: string;
+  assetId: string;
+  storageKey: string;
+  actorContext: TActorContext;
+}): Promise<EnqueueDocumentConversionResult> {
+  const job = await getQueue(QUEUE_NAMES.media).add(
+    JOB_NAMES.media.convertDocument,
+    input,
+    QUEUE_DEFAULTS[QUEUE_NAMES.media]
+  );
+
+  return {
+    rootJobId: job.id ?? '',
+    jobIds: {
+      [JOB_NAMES.media.convertDocument]: job.id ?? ''
     }
   };
 }

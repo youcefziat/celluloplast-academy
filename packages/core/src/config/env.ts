@@ -89,7 +89,7 @@ const envSchema = z.object({
 
       return Number.isFinite(parsed) && parsed >= 1 ? Math.trunc(parsed) : 500;
     }),
-  /** Max course lesson document upload size in megabytes (default 5). */
+  /** Max course lesson document upload size in megabytes (default 50; files must be smaller). */
   UPLOAD_MAX_DOCUMENT_MB: z.string().optional(),
   /** Max image upload size in megabytes — avatars, media, editor images (default 5). */
   UPLOAD_MAX_IMAGE_MB: z.string().optional(),

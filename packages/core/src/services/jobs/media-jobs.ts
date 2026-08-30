@@ -12,6 +12,7 @@ import {
 } from '@cio/db/queries';
 import { getAssetById } from '@cio/db/queries/assets';
 import {
+  enqueueDocumentConversion,
   enqueueGenerateThumbnailOnly,
   enqueueLessonVideoPipeline,
   enqueueTranscriptionOnly,
@@ -20,6 +21,76 @@ import {
 
 import { logRedisUnavailableOnce } from '../../utils/redis/redis';
 import type { TMediaJob } from '@cio/db/types';
+
+export interface StartDocumentConversionJobInput {
+  organizationId: string;
+  assetId: string;
+  storageKey: string;
+  triggeredByProfileId: string | null;
+}
+
+/** Create and enqueue the isolated PowerPoint → PDF conversion job. */
+export async function startDocumentConversionJob(input: StartDocumentConversionJobInput): Promise<TMediaJob> {
+  const job = await createMediaJob({
+    organizationId: input.organizationId,
+    assetId: input.assetId,
+    triggeredByProfileId: input.triggeredByProfileId,
+    status: 'queued',
+    stage: 'converting-document',
+    progressPercent: 0
+  });
+
+  if (!isRedisConfigured()) {
+    logRedisUnavailableOnce(
+      'Redis not configured: PowerPoint document conversion cannot be enqueued. ' +
+        'Set REDIS_URL and run apps/jobs to process documents.'
+    );
+    await updateMediaJob(job.id, {
+      status: 'failed',
+      stage: 'failed',
+      error: {
+        code: 'REDIS_UNAVAILABLE',
+        message: 'Redis is required for PowerPoint document conversion'
+      }
+    });
+
+    throw new AppError('Document conversion is unavailable', ErrorCodes.INTERNAL_ERROR, 503);
+  }
+
+  try {
+    const enqueueResult = await enqueueDocumentConversion({
+      mediaJobId: job.id,
+      assetId: input.assetId,
+      storageKey: input.storageKey,
+      actorContext: {
+        userId: input.triggeredByProfileId,
+        organizationId: input.organizationId
+      }
+    });
+    const updated = await updateMediaJob(job.id, {
+      rootJobId: enqueueResult.rootJobId,
+      jobIds: enqueueResult.jobIds
+    });
+
+    return updated ?? job;
+  } catch (error) {
+    console.error('startDocumentConversionJob enqueue failed:', error);
+    await updateMediaJob(job.id, {
+      status: 'failed',
+      stage: 'failed',
+      error: {
+        code: 'ENQUEUE_FAILED',
+        message: error instanceof Error ? error.message : 'Failed to enqueue document conversion job'
+      }
+    });
+
+    throw new AppError(
+      error instanceof Error ? error : 'Failed to enqueue document conversion job',
+      ErrorCodes.INTERNAL_ERROR,
+      500
+    );
+  }
+}
 
 export interface StartTranscriptionOnlyMediaJobInput {
   organizationId: string;

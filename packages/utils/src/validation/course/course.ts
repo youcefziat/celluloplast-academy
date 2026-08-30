@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 import { toFiniteNumber } from '../../functions/number';
-import { ALLOWED_CONTENT_TYPES, ALLOWED_DOCUMENT_TYPES } from '../constants';
+import { ALLOWED_CONTENT_TYPES, ALLOWED_DOCUMENT_TYPES, isDocumentFileNameCompatibleWithMimeType } from '../constants';
 import { ZCourseCalloutInput } from './callout';
 import { ZCourseType } from './course-type';
 
@@ -216,11 +216,21 @@ export const ZCoursePresignUrlUpload = z.object({
 });
 export type TCoursePresignUrlUpload = z.infer<typeof ZCoursePresignUrlUpload>;
 
-export const ZCourseDocumentPresignUrlUpload = z.object({
-  fileName: z.string().min(1),
-  fileType: z.enum(ALLOWED_DOCUMENT_TYPES),
-  fileSize: z.number().int().min(0).optional()
-});
+export const ZCourseDocumentPresignUrlUpload = z
+  .object({
+    fileName: z.string().min(1),
+    fileType: z.enum(ALLOWED_DOCUMENT_TYPES),
+    fileSize: z.number().int().min(0).optional()
+  })
+  .superRefine((value, ctx) => {
+    if (!isDocumentFileNameCompatibleWithMimeType(value.fileName, value.fileType)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Document filename extension does not match its MIME type',
+        path: ['fileName']
+      });
+    }
+  });
 export type TCourseDocumentPresignUrlUpload = z.infer<typeof ZCourseDocumentPresignUrlUpload>;
 
 export const ZCourseDownloadPresignedUrl = z.object({

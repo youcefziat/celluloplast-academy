@@ -41,8 +41,13 @@ export type UploadLimitEnv = {
   UPLOAD_MAX_THUMBNAIL_MB?: string;
 };
 
+/** Upload caps are strict upper bounds: a file exactly at the limit is rejected. */
+export function isUploadSizeBelowLimit(fileSize: number, maxBytes: number): boolean {
+  return fileSize >= 0 && fileSize < maxBytes;
+}
+
 export function resolveUploadLimits(env: UploadLimitEnv): UploadLimits {
-  const documentMb = parseUploadLimitMb(env.UPLOAD_MAX_DOCUMENT_MB, 5);
+  const documentMb = parseUploadLimitMb(env.UPLOAD_MAX_DOCUMENT_MB, 50);
   const imageMb = parseUploadLimitMb(env.UPLOAD_MAX_IMAGE_MB, 5);
   const videoMb = parseUploadLimitMb(env.UPLOAD_MAX_VIDEO_MB, 800);
   const exerciseFileMb = parseUploadLimitMb(env.UPLOAD_MAX_EXERCISE_FILE_MB, 2);

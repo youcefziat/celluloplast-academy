@@ -2027,7 +2027,7 @@
               "download": "Download",
               "upload_document": "Upload dokument",
               "upload_title": "Upload dokument",
-              "upload_description": "Upload PDF-, DOCX- eller DOC-filer. Maksimal stÃ¸rrelse: 5MB",
+              "upload_description": "Upload PDF-, DOC-, DOCX-, PPT- eller PPTX-filer. Filer skal være mindre end {size}.",
               "drag_drop": "TrÃ¦k og slip dit dokument her",
               "or": "eller",
               "choose_file": "VÃ¦lg Fil",
@@ -2035,8 +2035,8 @@
               "uploading": "Uploader...",
               "upload_success": "Dokumentet blev uploadet!",
               "upload_error": "Kunne ikke uploade dokument",
-              "file_type_error": "Filtype understÃ¸ttes ikke. Upload venligst PDF-, DOCX- eller DOC-filer.",
-              "file_size_error": "FilstÃ¸rrelsen er for stor. Maksimal stÃ¸rrelse er {size}.",
+              "file_type_error": "Formatet understøttes ikke. Accepterede formater: PDF, DOC, DOCX, PPT, PPTX.",
+              "file_size_error": "Filen overskrider den maksimalt tilladte størrelse på {size}.",
               "type": "Type",
               "size": "StÃ¸rrelse",
               "upload_error_title": "Upload fejl",
@@ -2062,7 +2062,9 @@
               "attachments_heading": "VedhÃ¦ftede filer",
               "file_count": "{count, plural, one {# fil} other {# filer}}",
               "view_file": "Vis fil",
-              "reorder_file": "Omarranger fil"
+              "reorder_file": "Omarranger fil",
+              "processing": "Forbereder dokument...",
+              "conversion_failed": "PowerPoint-præsentationen kunne ikke forberedes til visning."
             },
             "video": {
               "title": "Video",

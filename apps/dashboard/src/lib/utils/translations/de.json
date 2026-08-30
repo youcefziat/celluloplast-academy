@@ -2027,7 +2027,7 @@
               "download": "Herunterladen",
               "upload_document": "Dokument hochladen",
               "upload_title": "Dokument hochladen",
-              "upload_description": "Laden Sie PDF-, DOCX- oder DOC-Dateien hoch. Maximale GrÃ¶ÃŸe: 5 MB",
+              "upload_description": "Laden Sie PDF-, DOC-, DOCX-, PPT- oder PPTX-Dateien hoch. Dateien müssen kleiner als {size} sein.",
               "drag_drop": "Ziehen Sie Ihr Dokument per Drag & Drop hierher",
               "or": "oder",
               "choose_file": "WÃ¤hlen Sie Datei",
@@ -2035,8 +2035,8 @@
               "uploading": "Hochladen...",
               "upload_success": "Dokument erfolgreich hochgeladen!",
               "upload_error": "Das Hochladen des Dokuments ist fehlgeschlagen",
-              "file_type_error": "Dateityp wird nicht unterstÃ¼tzt. Bitte laden Sie PDF-, DOCX- oder DOC-Dateien hoch.",
-              "file_size_error": "DateigrÃ¶ÃŸe zu groÃŸ. Die maximale GrÃ¶ÃŸe ist {size}.",
+              "file_type_error": "Format nicht unterstützt. Zulässige Formate: PDF, DOC, DOCX, PPT, PPTX.",
+              "file_size_error": "Die Datei überschreitet die maximal zulässige Größe von {size}.",
               "type": "Typ",
               "size": "GrÃ¶ÃŸe",
               "upload_error_title": "Fehler beim Hochladen",
@@ -2062,7 +2062,9 @@
               "attachments_heading": "AnhÃ¤nge",
               "file_count": "{count, plural, one {# Datei} other {# Dateien}}",
               "view_file": "Datei anzeigen",
-              "reorder_file": "Datei neu anordnen"
+              "reorder_file": "Datei neu anordnen",
+              "processing": "Dokument wird vorbereitet...",
+              "conversion_failed": "Die PowerPoint-Präsentation konnte nicht für die Anzeige vorbereitet werden."
             },
             "video": {
               "title": "Video",

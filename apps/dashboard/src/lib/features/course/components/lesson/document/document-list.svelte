@@ -96,6 +96,19 @@
     onDelete={attachmentMode === 'edit' ? handleDelete : undefined}
     onReorder={attachmentMode === 'edit' ? handleReorder : undefined}
   />
+  <div class="space-y-1" aria-live="polite">
+    {#each displayDocuments as document}
+      {#if (document.type === 'ppt' || document.type === 'pptx') && document.processingStatus === 'processing'}
+        <p class="ui:text-muted-foreground text-sm">
+          {document.name} — {$t('course.navItem.lessons.materials.tabs.document.processing')}
+        </p>
+      {:else if (document.type === 'ppt' || document.type === 'pptx') && document.processingStatus === 'failed'}
+        <p class="text-sm text-red-600">
+          {document.name} — {$t('course.navItem.lessons.materials.tabs.document.conversion_failed')}
+        </p>
+      {/if}
+    {/each}
+  </div>
 {:else if mode === MODES.edit}
   <Empty
     title={$t('course.navItem.lessons.materials.tabs.document.empty_title')}

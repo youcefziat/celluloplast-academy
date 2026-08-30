@@ -2027,7 +2027,7 @@
               "download": "Descargar",
               "upload_document": "Cargar documento",
               "upload_title": "Cargar documento",
-              "upload_description": "Cargue archivos PDF, DOCX o DOC. TamaÃ±o mÃ¡ximo: 5 MB",
+              "upload_description": "Sube archivos PDF, DOC, DOCX, PPT o PPTX. Los archivos deben pesar menos de {size}.",
               "drag_drop": "Arrastra y suelta tu documento aquÃ­",
               "or": "o",
               "choose_file": "Elija archivo",
@@ -2035,8 +2035,8 @@
               "uploading": "Subiendo...",
               "upload_success": "Â¡Documento cargado exitosamente!",
               "upload_error": "No se pudo cargar el documento",
-              "file_type_error": "Tipo de archivo no compatible. Cargue archivos PDF, DOCX o DOC.",
-              "file_size_error": "El tamaÃ±o del archivo es demasiado grande. El tamaÃ±o mÃ¡ximo es {size}.",
+              "file_type_error": "Formato no admitido. Formatos aceptados: PDF, DOC, DOCX, PPT, PPTX.",
+              "file_size_error": "El archivo supera el tamaño máximo permitido de {size}.",
               "type": "Tipo",
               "size": "TamaÃ±o",
               "upload_error_title": "Error de carga",
@@ -2062,7 +2062,9 @@
               "attachments_heading": "Adjuntos",
               "file_count": "{count, plural, one {# archivo} other {# archivos}}",
               "view_file": "Ver archivo",
-              "reorder_file": "Reordenar archivo"
+              "reorder_file": "Reordenar archivo",
+              "processing": "Preparando el documento...",
+              "conversion_failed": "No se pudo preparar la presentación de PowerPoint para su visualización."
             },
             "video": {
               "title": "Video",

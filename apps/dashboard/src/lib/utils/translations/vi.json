@@ -2027,7 +2027,7 @@
               "download": "Táº£i xuá»‘ng",
               "upload_document": "Táº£i tÃ i liá»‡u lÃªn",
               "upload_title": "Táº£i tÃ i liá»‡u lÃªn",
-              "upload_description": "Táº£i lÃªn tá»‡p PDF, DOCX hoáº·c DOC. KÃ­ch thÆ°á»›c tá»‘i Ä‘a: 5 MB",
+              "upload_description": "Tải lên tệp PDF, DOC, DOCX, PPT hoặc PPTX. Tệp phải nhỏ hơn {size}.",
               "drag_drop": "KÃ©o vÃ  tháº£ tÃ i liá»‡u cá»§a báº¡n vÃ o Ä‘Ã¢y",
               "or": "hoáº·c",
               "choose_file": "Chá»n tá»‡p",
@@ -2035,8 +2035,8 @@
               "uploading": "Äang táº£i lÃªn...",
               "upload_success": "TÃ i liá»‡u Ä‘Æ°á»£c táº£i lÃªn thÃ nh cÃ´ng!",
               "upload_error": "KhÃ´ng thá»ƒ táº£i tÃ i liá»‡u lÃªn",
-              "file_type_error": "Loáº¡i tá»‡p khÃ´ng Ä‘Æ°á»£c há»— trá»£. Vui lÃ²ng táº£i lÃªn tá»‡p PDF, DOCX hoáº·c DOC.",
-              "file_size_error": "KÃ­ch thÆ°á»›c tá»‡p quÃ¡ lá»›n. KÃ­ch thÆ°á»›c tá»‘i Ä‘a lÃ  {size}.",
+              "file_type_error": "Định dạng không được hỗ trợ. Các định dạng được chấp nhận: PDF, DOC, DOCX, PPT, PPTX.",
+              "file_size_error": "Tệp vượt quá kích thước tối đa cho phép là {size}.",
               "type": "Loáº¡i",
               "size": "KÃ­ch thÆ°á»›c",
               "upload_error_title": "Lá»—i táº£i lÃªn",
@@ -2062,7 +2062,9 @@
               "attachments_heading": "Tá»‡p Ä‘Ã­nh kÃ¨m",
               "file_count": "{count, plural, one {# tá»‡p} other {# tá»‡p}}",
               "view_file": "Xem tá»‡p",
-              "reorder_file": "Sáº¯p xáº¿p láº¡i tá»‡p"
+              "reorder_file": "Sáº¯p xáº¿p láº¡i tá»‡p",
+              "processing": "Đang chuẩn bị tài liệu...",
+              "conversion_failed": "Không thể chuẩn bị bản trình bày PowerPoint để xem."
             },
             "video": {
               "title": "Video",

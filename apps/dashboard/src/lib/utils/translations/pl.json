@@ -2027,7 +2027,7 @@
               "download": "Pobierz",
               "upload_document": "PrzeÅ›lij dokument",
               "upload_title": "PrzeÅ›lij dokument",
-              "upload_description": "PrzeÅ›lij pliki PDF, DOCX lub DOC. Maksymalny rozmiar: 5MB",
+              "upload_description": "Prześlij pliki PDF, DOC, DOCX, PPT lub PPTX. Pliki muszą być mniejsze niż {size}.",
               "drag_drop": "PrzeciÄ…gnij i upuÅ›Ä‡ tutaj swÃ³j dokument",
               "or": "lub",
               "choose_file": "Wybierz Plik",
@@ -2035,8 +2035,8 @@
               "uploading": "PrzesyÅ‚anie...",
               "upload_success": "Dokument przesÅ‚any pomyÅ›lnie!",
               "upload_error": "Nie udaÅ‚o siÄ™ przesÅ‚aÄ‡ dokumentu",
-              "file_type_error": "Typ pliku nie jest obsÅ‚ugiwany. PrzeÅ›lij pliki PDF, DOCX lub DOC.",
-              "file_size_error": "Rozmiar pliku jest zbyt duÅ¼y. Maksymalny rozmiar to {size}.",
+              "file_type_error": "Format nieobsługiwany. Akceptowane formaty: PDF, DOC, DOCX, PPT, PPTX.",
+              "file_size_error": "Plik przekracza maksymalny dozwolony rozmiar {size}.",
               "type": "Typ",
               "size": "Rozmiar",
               "upload_error_title": "BÅ‚Ä…d przesyÅ‚ania",
@@ -2062,7 +2062,9 @@
               "attachments_heading": "ZaÅ‚Ä…czniki",
               "file_count": "{count, plural, one {# plik} few {# pliki} many {# plikÃ³w} other {# plika}}",
               "view_file": "WyÅ›wietl plik",
-              "reorder_file": "ZmieÅ„ kolejnoÅ›Ä‡ pliku"
+              "reorder_file": "ZmieÅ„ kolejnoÅ›Ä‡ pliku",
+              "processing": "Przygotowywanie dokumentu...",
+              "conversion_failed": "Nie udało się przygotować prezentacji PowerPoint do wyświetlenia."
             },
             "video": {
               "title": "Wideo",

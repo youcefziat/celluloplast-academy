@@ -255,6 +255,21 @@
       return;
     }
 
+    if (doc.type === 'ppt' || doc.type === 'pptx') {
+      if (doc.processingStatus === 'processing') {
+        snackbar.info($t('course.navItem.lessons.materials.tabs.document.processing'));
+        return;
+      }
+
+      if (doc.processingStatus === 'failed' || !doc.viewerLink) {
+        snackbar.error($t('course.navItem.lessons.materials.tabs.document.conversion_failed'));
+        return;
+      }
+
+      handleViewPDF({ ...doc, type: 'pdf', link: doc.viewerLink });
+      return;
+    }
+
     window.open(doc.link, '_blank', 'noopener,noreferrer');
   }
 

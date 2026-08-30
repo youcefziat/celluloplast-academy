@@ -15,6 +15,15 @@
   import * as FileDropZone from '@cio/ui/custom/file-drop-zone';
   import type { FileRejectedReason } from '@cio/ui/custom/file-drop-zone';
   import { getResolvedUploadLimits } from '$lib/utils/config/upload-limits-context';
+  import {
+    ALLOWED_DOCUMENT_TYPES,
+    getDocumentTypeFromMimeType,
+    isDocumentFileNameCompatibleWithMimeType,
+    isPowerPointDocumentMimeType,
+    type AllowedDocumentMimeType,
+    type LessonDocumentType
+  } from '@cio/utils/validation/constants';
+  import { isUploadSizeBelowLimit } from '@cio/utils/config/upload-limits';
 
   interface Props {
     lessonId?: string;
@@ -30,22 +39,13 @@
 
   let uploadedDocument: NonNullable<Lesson['documents']>[number] | null = $state(null);
 
-  const ALLOWED_TYPES = [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword'
-  ];
-
   const uploadLimits = getResolvedUploadLimits();
   const maxDocumentSize = uploadLimits.documentBytes;
 
   const documentUploader = new DocumentUploader();
 
-  function getFileType(file: File): 'pdf' | 'docx' | 'doc' {
-    if (file.type === 'application/pdf') return 'pdf';
-    if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') return 'docx';
-    if (file.type === 'application/msword') return 'doc';
-    return 'pdf'; // fallback
+  function getFileType(file: File): LessonDocumentType {
+    return getDocumentTypeFromMimeType(file.type as AllowedDocumentMimeType);
   }
 
   function formatFileSize(bytes: number): string {
@@ -57,11 +57,15 @@
   }
 
   function validateFile(file: File): string | null {
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (!ALLOWED_DOCUMENT_TYPES.includes(file.type as AllowedDocumentMimeType)) {
       return $t('course.navItem.lessons.materials.tabs.document.file_type_error');
     }
 
-    if (file.size > maxDocumentSize) {
+    if (!isDocumentFileNameCompatibleWithMimeType(file.name, file.type as AllowedDocumentMimeType)) {
+      return $t('course.navItem.lessons.materials.tabs.document.file_type_error');
+    }
+
+    if (!isUploadSizeBelowLimit(file.size, maxDocumentSize)) {
       return $t('course.navItem.lessons.materials.tabs.document.file_size_error', {
         size: formatFileSize(maxDocumentSize)
       });
@@ -189,7 +193,8 @@
           isExternal: false,
           metadata: {
             fileName: selectedFile.name,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            source: 'lesson_document'
           }
         });
         assetId = asset?.id;
@@ -201,7 +206,8 @@
         link: presignedUrls[fileKey],
         key: fileKey,
         size: selectedFile.size,
-        assetId
+        assetId,
+        ...(isPowerPointDocumentMimeType(selectedFile.type) ? { processingStatus: 'processing' as const } : {})
       };
 
       lessonApi.updateLessonState('documents', [document], { append: true });
@@ -300,7 +306,7 @@
       {:else}
         <div class={isDisabled ? 'ui:opacity-50 ui:pointer-events-none' : ''}>
           <FileDropZone.Root
-            accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+            accept=".pdf,.docx,.doc,.pptx,.ppt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint"
             maxFiles={1}
             fileCount={0}
             maxFileSize={maxDocumentSize}
@@ -309,10 +315,13 @@
           >
             <FileDropZone.Trigger
               label={$t('course.navItem.lessons.materials.tabs.document.drag_drop')}
-              formatMaxFiles={(_count) => $t('course.navItem.lessons.materials.tabs.document.upload_description')}
-              formatMaxFilesAndSize={(size) => `(up to ${size})`}
+              formatMaxFiles={(_count) =>
+                $t('course.navItem.lessons.materials.tabs.document.upload_description', {
+                  size: formatFileSize(maxDocumentSize)
+                })}
+              formatMaxFilesAndSize={(_size) => ''}
               formatMaxSize={(size) =>
-                $t('course.navItem.lessons.materials.tabs.document.upload_description') + ` (${size})`}
+                $t('course.navItem.lessons.materials.tabs.document.upload_description', { size })}
             />
           </FileDropZone.Root>
         </div>

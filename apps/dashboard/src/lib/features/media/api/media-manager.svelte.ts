@@ -385,7 +385,8 @@ export class MediaApi extends BaseApiWithErrors {
       isExternal: false,
       metadata: {
         fileName: params.fileName,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        source: 'lesson_document'
       }
     });
 
