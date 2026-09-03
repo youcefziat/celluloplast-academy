@@ -80,19 +80,26 @@ services:
     container_name: celluloplast-minio-init
     depends_on:
       - minio
-    entrypoint: >
-      /bin/sh -c "
-      echo 'Waiting for MinIO...';
-      sleep 8;
-      mc alias set local http://minio:9000 $${MINIO_ROOT_USER:-minioadmin} $${MINIO_ROOT_PASSWORD:-minioadmin};
-      mc mb local/videos --ignore-existing;
-      mc mb local/documents --ignore-existing;
-      mc mb local/media --ignore-existing;
-      printf '%s' '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::media/*"]}]}' > /tmp/media-policy.json;
-      mc anonymous set-json /tmp/media-policy.json local/media;
-      echo 'MinIO buckets ready';
-      exit 0;
-      "
+    # Forme liste + bloc litteral (|) : chaque element est utilise tel quel comme
+    # argument, docker-compose ne le re-decoupe pas avec ses propres regles de
+    # guillemets. La forme precedente ("entrypoint: > … sh -c \"…\"") melangeait ce
+    # decoupage avec les guillemets doubles du JSON de la politique MinIO : le premier
+    # `"` du JSON refermait prematurement l'argument `-c`, tronquant le script avant
+    # que `mc anonymous set-json` ne s'execute (la politique restait celle d'avant).
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo 'Waiting for MinIO...'
+        sleep 8
+        mc alias set local http://minio:9000 $${MINIO_ROOT_USER:-minioadmin} $${MINIO_ROOT_PASSWORD:-minioadmin}
+        mc mb local/videos --ignore-existing
+        mc mb local/documents --ignore-existing
+        mc mb local/media --ignore-existing
+        printf '%s' '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::media/*"]}]}' > /tmp/media-policy.json
+        mc anonymous set-json /tmp/media-policy.json local/media
+        echo 'MinIO buckets ready'
+        exit 0
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
