@@ -21,17 +21,10 @@
     isCelluloplastLmsSimplified,
     sortCelluloplastLmsTrainings
   } from '$lib/celluloplast/lms';
-  import { CELLULOPLAST_V1 } from '$lib/celluloplast/features';
-  import * as ResourceListRow from '@cio/ui/custom/resource-list-row';
-  import { CourseListRow } from '$features/course/components';
-  import CoursePreviewModal from '$features/lms/components/course-preview-modal.svelte';
-  import type { RecommendedCourses } from '$features/course/types';
   import { Badge } from '@cio/ui/base/badge';
 
   type EnrolledCourse = (typeof coursesApi.enrolledCourses)[number];
 
-  let selectedCourse = $state<RecommendedCourses[number] | null>(null);
-  let previewOpen = $state(false);
   const isSimplified = isCelluloplastLmsSimplified();
 
   const sortedTrainings = $derived(sortCelluloplastLmsTrainings(coursesApi.enrolledCourses));
@@ -44,10 +37,6 @@
     if (!$profile.id || !$currentOrg.id) return;
 
     coursesApi.getEnrolledCourses();
-
-    if (CELLULOPLAST_V1.exploreCatalog) {
-      coursesApi.getRecommendedCourses({ limit: 3 });
-    }
   });
 
   function gotoCourse(id: string | undefined) {
@@ -179,51 +168,5 @@
   {:else}
     <!-- Upstream LMS dashboard retained for non-Celluloplast mode. -->
     <p class="ui:text-muted-foreground text-sm">{$t('dashboard.learning_awaits_you')}</p>
-  {/if}
-
-  {#if CELLULOPLAST_V1.exploreCatalog && (coursesApi.isLoading || coursesApi.recommendedCourses.length > 0)}
-    <section class="space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="ui:text-muted-foreground text-sm font-semibold tracking-[0.14em] uppercase">
-          {$t('dashboard.explore_more_courses')}
-        </h2>
-        <Button variant="outline" size="sm" onclick={() => goto('/lms/explore')}>
-          {$t('dashboard.view_more')}
-        </Button>
-      </div>
-
-      {#if coursesApi.isLoading}
-        <div class="ui:text-muted-foreground flex items-center justify-center py-8">
-          <Spinner class="size-6" />
-        </div>
-      {:else}
-        <ResourceListRow.Group class="@container">
-          {#each coursesApi.recommendedCourses as course (course.id)}
-            <CourseListRow
-              id={course.id}
-              slug={course.slug ?? ''}
-              title={course.title}
-              logo={course.logo}
-              type={course.type}
-              description={course.description ?? ''}
-              isPublished={course.isPublished ?? false}
-              lessonCount={course.lessonCount}
-              exerciseCount={course.exerciseCount}
-              isExplore={true}
-              isLMS={true}
-              hiddenColumns={['published', 'tags', 'students']}
-              onExploreClick={() => {
-                selectedCourse = course;
-                previewOpen = true;
-              }}
-            />
-          {/each}
-        </ResourceListRow.Group>
-      {/if}
-    </section>
-  {/if}
-
-  {#if selectedCourse}
-    <CoursePreviewModal course={selectedCourse} bind:open={previewOpen} />
   {/if}
 </div>

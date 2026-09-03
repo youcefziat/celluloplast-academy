@@ -9,22 +9,15 @@
 
   const upstreamOrgSettingsTabs = [
     { value: 'general', href: '/settings/org', label: 'settings.auth.tabs.general' },
-    {
-      value: 'domains',
-      href: '/settings/domains',
-      label: 'settings.organization.organization_profile.custom_domain.heading'
-    },
     { value: 'teams', href: '/settings/teams', label: 'settings.organization.organization_profile.team.heading' },
     { value: 'customize-lms', href: '/settings/customize-lms', label: 'settings.tabs.customize_lms_tab' }
   ] as const;
 
-  // Celluloplast V1 keeps general / teams / customize-lms; custom domains stay hidden.
   const orgSettingsTabs = upstreamOrgSettingsTabs.filter((tab) => isOrgSettingsTabVisible(tab.href));
 
   function getCurrentTab(pathname: string) {
     if (pathname.endsWith('/settings/org')) return 'general';
     if (pathname.endsWith('/settings/customize-lms')) return 'customize-lms';
-    if (pathname.endsWith('/settings/domains')) return 'domains';
     if (pathname.endsWith('/settings/teams')) return 'teams';
 
     return null;

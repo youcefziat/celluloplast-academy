@@ -7,7 +7,6 @@ import type { OrgTeamMember } from '../types/org';
 import { canUsePublicApi, getStudentLimit, isOrgOnFreePlan, isResourceLimitReached, PLAN } from '@cio/utils/plans';
 import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
 import { BRAND_ROOT_DOMAIN, ROLE, TENANT_ROOT_DOMAIN } from '@cio/utils/constants';
-import { STEPS } from '../constants/quiz';
 import type { Writable } from 'svelte/store';
 
 /** Deep-merge with this when hydrating an org from the API so nested `customization` keys stay stable. */
@@ -192,52 +191,3 @@ export const studentUsage = derived(currentOrg, ($currentOrg) => $currentOrg.lim
 export const isStudentLimitReached = derived(currentOrg, ($currentOrg) =>
   isResourceLimitReached($currentOrg.limits?.students)
 );
-
-// Quiz
-export const createQuizModal = writable({
-  open: false,
-  openEdit: false,
-  title: '',
-  id: null
-});
-
-export const deleteModal = writable({
-  id: null,
-  open: false,
-  isQuestion: false
-});
-
-interface QuizOption {
-  id: number;
-  label: string;
-  isCorrect: boolean;
-}
-
-interface QuizQuestion {
-  id: number;
-  label: string;
-  type: string;
-  options: QuizOption[];
-}
-
-interface QuizStore {
-  uuid: string;
-  title: string;
-  questions: QuizQuestion[];
-  timelimit: string;
-  theme: string;
-  pin: string;
-}
-
-export const quizStore = writable<QuizStore>({
-  uuid: '',
-  title: '',
-  questions: [],
-  timelimit: '10s',
-  theme: 'standard',
-  pin: ''
-});
-
-export const playQuizStore = writable({
-  step: STEPS.CONNECT_TO_PLAY
-});

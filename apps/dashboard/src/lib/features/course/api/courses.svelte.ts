@@ -2,12 +2,10 @@ import { BaseApiWithErrors, classroomio } from '$lib/utils/services/api';
 import type {
   GetOrgCoursesRequest,
   GetOrgCoursesRequestQuery,
-  GetRecommendedCoursesRequest,
   GetUserEnrolledCoursesRequest,
   OrgCourses,
   OrgCoursesPagination,
   OrgCoursesQuery,
-  RecommendedCourses,
   UserEnrolledCourses
 } from '$features/course/types';
 
@@ -20,10 +18,6 @@ export class CoursesApi extends BaseApiWithErrors {
   orgCourses = $state<OrgCourses>([]);
   orgCoursesPagination = $state<OrgCoursesPagination | null>(null);
   enrolledCourses = $state<UserEnrolledCourses>([]);
-  recommendedCourses = $state<RecommendedCourses>([]);
-  recommendedCoursesPagination = $state<{ page: number; limit: number; total: number; totalPages: number } | null>(
-    null
-  );
   private activeOrgCoursesRequestController: AbortController | null = null;
 
   cancelOrgCoursesRequest() {
@@ -35,7 +29,6 @@ export class CoursesApi extends BaseApiWithErrors {
   removeCourseFromLists(courseId: string) {
     this.orgCourses = this.orgCourses.filter((c) => c.id !== courseId);
     this.enrolledCourses = this.enrolledCourses.filter((c) => c.id !== courseId);
-    this.recommendedCourses = this.recommendedCourses.filter((c) => c.id !== courseId);
   }
 
   /**
@@ -129,42 +122,6 @@ export class CoursesApi extends BaseApiWithErrors {
       onSuccess: (response) => {
         if (response.data) {
           this.enrolledCourses = response.data;
-        }
-      }
-    });
-  }
-
-  /**
-   * Fetches recommended courses (published courses user isn't enrolled in) for the current organization
-   * Org ID is automatically added from currentOrg store
-   */
-  async getRecommendedCourses(options?: { limit?: number; page?: number }) {
-    const query: Record<string, string> = {};
-    if (options?.limit) query.limit = String(options.limit);
-    if (options?.page) query.page = String(options.page);
-
-    await this.execute<GetRecommendedCoursesRequest>({
-      requestFn: () =>
-        classroomio.organization.courses.recommended.$get({
-          query
-        }),
-      logContext: 'fetching recommended courses',
-      onSuccess: (response) => {
-        if (response.data) {
-          this.recommendedCourses = response.data;
-        }
-        if ('pagination' in response && response.pagination) {
-          this.recommendedCoursesPagination = response.pagination as typeof this.recommendedCoursesPagination;
-        }
-        this.errors = {};
-      },
-      onError: (result) => {
-        if (typeof result === 'string') {
-          console.error('Failed to fetch recommended courses:', result);
-          return;
-        }
-        if ('error' in result) {
-          console.error('Failed to fetch recommended courses:', result.error);
         }
       }
     });
