@@ -4,10 +4,17 @@
 #   docker compose -f docker-compose.celluloplast.yaml -f docker-compose.vps.yaml up -d --build
 #
 # Le fichier de base lie deja tous ses ports a 127.0.0.1 : rien n'est joignable
-# depuis Internet. Ces bindings sont conserves volontairement, ils servent au
-# debogage par tunnel SSH, par exemple pour lire les e-mails de MailHog :
+# depuis Internet. Ce binding est conserve volontairement, il sert au debogage par
+# tunnel SSH (ex. Postgres ou MinIO en direct sans passer par Caddy) :
 #
-#   ssh -L 8025:127.0.0.1:8025 deploy@<vps>   puis   http://localhost:8025
+#   ssh -L 9000:127.0.0.1:9000 deploy@<vps>
+#
+# Le service `mailhog` est defini dans le fichier de base mais gate derriere le
+# profil compose `mail` (voir docker-compose.celluloplast.yaml) : il ne demarre
+# jamais ici tant que le .env du VPS ne definit pas COMPOSE_PROFILES=mail, ce
+# qu'il ne doit pas faire. En production, SMTP_HOST/PORT/USER/PASSWORD/SENDER
+# dans le .env du VPS pointent vers un vrai relai SMTP (ex. smtp.hostinger.com) —
+# voir docs/celluloplast/LOCAL_EMAIL_TESTING.md pour le mapping des variables.
 #
 # Seul ajout : `dashboard` et `minio` rejoignent le reseau `proxy` (externe, cree
 # par la stack cellulo-forecast) pour que Caddy puisse les atteindre par leur nom

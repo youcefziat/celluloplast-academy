@@ -10,7 +10,8 @@
 #   Dashboard : http://localhost:3082
 #   API       : http://localhost:3081  (proxy via dashboard en usage normal)
 #   MinIO     : http://localhost:9001  (console)
-#   MailHog   : http://localhost:8025  (emails locaux)
+#   MailHog   : http://localhost:8025  (emails locaux — profil compose `mail`,
+#               voir COMPOSE_PROFILES dans .env.example)
 #
 # Login démo (après seed DB) : admin@test.com / 123456
 
@@ -105,11 +106,16 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     restart: 'no'
 
-  # Local-only email catcher. Override SMTP_* in .env for real providers; do not
-  # ship these defaults to production compose files (Coolify / images).
+  # Local-only email catcher, gated behind the `mail` compose profile so it never
+  # starts by accident where it is not wanted (e.g. docker-compose.vps.yaml, which
+  # does not activate that profile). Local dev keeps it: this repo's local .env sets
+  # COMPOSE_PROFILES=mail. See docs/celluloplast/LOCAL_EMAIL_TESTING.md.
+  # Override SMTP_* in .env for real providers; do not ship these defaults to
+  # production compose files (Coolify / images).
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: celluloplast-mailhog
+    profiles: ['mail']
     ports:
       - '127.0.0.1:1025:1025'
       - '127.0.0.1:8025:8025'
@@ -131,6 +137,7 @@ services:
         condition: service_completed_successfully
       mailhog:
         condition: service_started
+        required: false
     healthcheck:
       test:
         [
@@ -233,6 +240,7 @@ services:
         condition: service_completed_successfully
       mailhog:
         condition: service_started
+        required: false
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379

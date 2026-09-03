@@ -18,15 +18,27 @@ MailHog is a local SMTP sink + web UI.
 
 # Docker Service
 
-**Celluloplast stack** (`docker-compose.celluloplast.yaml`) — MailHog starts with the stack by default.
+**Celluloplast stack** (`docker-compose.celluloplast.yaml`) — MailHog is defined in the base
+file but gated behind the compose profile `mail`. It only starts when `COMPOSE_PROFILES=mail`
+is set (or `--profile mail` is passed), so it never appears by accident on a deployment `.env`
+that doesn't opt in. Local dev sets `COMPOSE_PROFILES=mail` in `.env` (see `.env.example`) so
+the everyday `docker compose up -d` keeps including it.
 
-**Upstream compose** (`docker-compose.yaml`) — optional profile:
+You can also start it explicitly regardless of the active profile:
+
+```bash
+docker compose -f docker-compose.celluloplast.yaml up -d mailhog
+```
+
+**Upstream compose** (`docker-compose.yaml`) — same idea, its own `mail` profile:
 
 ```bash
 docker compose --profile mail up -d mailhog
 ```
 
-Production compose files (`docker/coolify/…`, Railway, etc.) do **not** include MailHog.
+The VPS overlay (`docker-compose.vps.yaml`) does **not** set `COMPOSE_PROFILES`, so MailHog
+never starts there — the VPS `.env` points `SMTP_*` at a real provider instead (see
+"Production Difference" below).
 
 ---
 
@@ -70,10 +82,10 @@ Email links are built from `DASHBOARD_ORIGIN` (default `http://localhost:3082` i
 # How to Start
 
 ```powershell
-# From repo root — full Celluloplast stack (includes MailHog)
+# From repo root — full Celluloplast stack (MailHog included if .env sets COMPOSE_PROFILES=mail)
 docker compose -f docker-compose.celluloplast.yaml up -d
 
-# Or MailHog alone on an already-running stack
+# Or MailHog alone on an already-running stack, regardless of COMPOSE_PROFILES
 docker compose -f docker-compose.celluloplast.yaml up -d mailhog
 ```
 
@@ -151,10 +163,35 @@ Both must have the same `SMTP_*` pointing at MailHog in local Docker.
 
 # Production Difference
 
-| | Local (Celluloplast compose) | Production |
+| | Local (Celluloplast compose) | Production (VPS) |
 |--|------------------------------|------------|
-| SMTP host | `mailhog` (compose default) | Real provider via env (`SMTP_HOST`, …) |
-| MailHog service | Present | **Absent** |
+| SMTP host | `mailhog` (compose default, `mail` profile) | Real provider via `.env` (`SMTP_HOST`, …) |
+| MailHog service | Present when `COMPOSE_PROFILES=mail` | **Never started** (VPS `.env` leaves `COMPOSE_PROFILES` unset) |
 | Code | Env-driven only — no hardcoded `mailhog` | Same code |
 
 Never commit real SMTP passwords. Override `SMTP_*` in the deployment environment; do not rely on MailHog defaults outside local compose.
+
+## VPS example: Hostinger SMTP
+
+The env var names here differ from Django-style `EMAIL_*` settings used by other apps on the
+same VPS (e.g. Cellulo Forecast). Map them like this in the VPS `.env`:
+
+| Django-style (other app) | This app's `.env` |
+|---|---|
+| `EMAIL_HOST` | `SMTP_HOST` |
+| `EMAIL_PORT` | `SMTP_PORT` |
+| `EMAIL_HOST_USER` | `SMTP_USER` |
+| `EMAIL_HOST_PASSWORD` | `SMTP_PASSWORD` |
+| `DEFAULT_FROM_EMAIL` | `SMTP_SENDER` |
+| `EMAIL_USE_TLS` / `EMAIL_USE_SSL` | not needed — `@cio/email`'s `nodemailer` transport (`packages/email/src/utils/services/nodemailer.ts`) picks TLS mode from the port: `465` → implicit TLS, anything else with credentials set (e.g. `587`) → STARTTLS. No separate flag. |
+
+```text
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=587
+SMTP_USER=support@celluloapps.com
+SMTP_PASSWORD=<mot de passe>
+SMTP_SENDER=Celluloplast Academy <support@celluloapps.com>
+```
+
+`COMPOSE_PROFILES` must stay unset (or absent) in this `.env` so `mailhog` is never started
+alongside a real provider.
