@@ -20,7 +20,10 @@ COPY . .
 RUN pnpm install --offline --frozen-lockfile --ignore-scripts \
     --store-dir /pnpm/store --filter @cio/dashboard...
 RUN find . -name 'tsconfig.tsbuildinfo' -delete
-RUN NODE_OPTIONS="--max-old-space-size=8072" \
+# 4 Go suffisent pour ce depot allege (~12,5k modules). La valeur amont (8072) etait
+# dimensionnee pour un runner CI ; ajoutee aux ~8 Go que WSL2 s'octroie par defaut,
+# elle depasse la RAM d'un poste 16 Go et le build part en swap.
+RUN NODE_OPTIONS="--max-old-space-size=4096" \
     PUBLIC_IS_SELFHOSTED="${PUBLIC_IS_SELFHOSTED}" \
     pnpm -r --filter @cio/dashboard... build
 

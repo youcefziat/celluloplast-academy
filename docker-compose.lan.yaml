@@ -1,0 +1,18 @@
+# Overlay LAN — expose dashboard, API and MinIO on all interfaces (0.0.0.0).
+# Usage:
+#   docker compose -f docker-compose.celluloplast.yaml -f docker-compose.lan.yaml up -d --build
+#
+# Friends on the same Wi‑Fi: http://<your-lan-ip>:3082
+# !override replaces base 127.0.0.1 bindings (avoids duplicate port conflicts on Windows).
+
+services:
+  dashboard:
+    ports: !override
+      - '3082:3082'
+  api:
+    ports: !override
+      - '3081:3081'
+  minio:
+    ports: !override
+      - '9000:9000'
+      - '9001:9001'

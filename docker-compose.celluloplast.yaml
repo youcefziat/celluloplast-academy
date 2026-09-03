@@ -155,8 +155,6 @@ services:
       OBJECT_STORAGE_BUCKET_MEDIA: ${OBJECT_STORAGE_BUCKET_MEDIA:-media}
       PRIVATE_SERVER_KEY: ${PRIVATE_SERVER_KEY:?set PRIVATE_SERVER_KEY in .env}
       DASHBOARD_ORIGIN: ${DASHBOARD_ORIGIN:-http://localhost:3082}
-      LICENSE_KEY: ${LICENSE_KEY:-}
-      UNSPLASH_API_KEY: ${UNSPLASH_API_KEY:-}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
       SKIP_DB_SETUP: ${SKIP_DB_SETUP:-}
       SEED_DEMO: ${SEED_DEMO:-true}
@@ -241,6 +239,7 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_SENDER: ${SMTP_SENDER:-Celluloplast Academy <no-reply@celluloplast.local>}
+      # Whisper transcription only — no AI content generation in Celluloplast Academy.
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     restart: unless-stopped
 
