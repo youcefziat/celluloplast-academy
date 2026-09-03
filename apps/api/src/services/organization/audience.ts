@@ -46,6 +46,19 @@ const ORG_INVITE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 /** Parallel outbound invite emails; avoids sequential SMTP/API latency per recipient. */
 const EMAIL_SEND_CONCURRENCY = 5;
 
+/**
+ * cPanel/Office 365 mailbox migration (coexistence period, cPanel as internal relay):
+ * some @celluloplast.com mailboxes are only reachable, right now, through the O365 tenant
+ * domain. The account's email stays @celluloplast.com everywhere (login, identity, DB) — only
+ * where THIS ONE invite email is delivered changes.
+ */
+const OFFICE_365_TENANT_DOMAIN = 'celluloplast.onmicrosoft.com';
+
+function toOffice365DeliveryEmail(email: string): string {
+  const localPart = email.split('@')[0];
+  return `${localPart}@${OFFICE_365_TENANT_DOMAIN}`;
+}
+
 type ResolvedHrRefs = {
   positionId: number | null;
   departmentId: number | null;
@@ -401,7 +414,8 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     cohortIds,
     accessNamesLabel,
     invitedByProfileId,
-    shouldSendEmail: data.sendEmail
+    shouldSendEmail: data.sendEmail,
+    deliveryEmailOverrides: data.office365 ? new Map([[email, toOffice365DeliveryEmail(email)]]) : undefined
   });
 
   const member = await getOrganizationAudienceMember(orgId, created.id);
@@ -644,9 +658,26 @@ async function createStudentOrgInvitesAndSendEmails(input: {
   accessNamesLabel: string | undefined;
   invitedByProfileId: string;
   shouldSendEmail: boolean;
+  /**
+   * Redirects where the invite email is *delivered* for specific addresses, keyed by the
+   * lowercased account email. The account/invite identity stays the entered email — only the
+   * SMTP `to` changes. Used for the Office 365 checkbox during the cPanel/O365 mailbox
+   * migration (see `toOffice365DeliveryEmail`): the account stays `user@celluloplast.com`,
+   * the email is delivered to `user@celluloplast.onmicrosoft.com`.
+   */
+  deliveryEmailOverrides?: Map<string, string>;
 }): Promise<{ created: number; emailsSent: number; emailsFailed: number }> {
-  const { orgId, organization, emails, courseIds, cohortIds, accessNamesLabel, invitedByProfileId, shouldSendEmail } =
-    input;
+  const {
+    orgId,
+    organization,
+    emails,
+    courseIds,
+    cohortIds,
+    accessNamesLabel,
+    invitedByProfileId,
+    shouldSendEmail,
+    deliveryEmailOverrides
+  } = input;
 
   if (emails.length === 0) {
     return { created: 0, emailsSent: 0, emailsFailed: 0 };
@@ -714,7 +745,7 @@ async function createStudentOrgInvitesAndSendEmails(input: {
       try {
         const inviteLink = buildInviteLink(token, organization);
         await enqueueTransactionalEmail('studentOrgInvite', {
-          to: email,
+          to: deliveryEmailOverrides?.get(email) ?? email,
           fields: {
             email,
             orgName: organization.name,

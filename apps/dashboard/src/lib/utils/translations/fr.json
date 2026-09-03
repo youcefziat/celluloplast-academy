@@ -664,6 +664,8 @@
       "title": "Ajouter un employé",
       "description": "Créez la fiche employé et envoyez une invitation pour qu’il définisse son mot de passe.",
       "email_label": "E-mail",
+      "office365_label": "Office 365",
+      "office365_hint": "L’invitation sera envoyée à {email} au lieu de l’adresse saisie.",
       "first_name_label": "Prénom",
       "last_name_label": "Nom",
       "job_title_label": "Poste",

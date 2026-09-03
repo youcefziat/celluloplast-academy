@@ -87,9 +87,9 @@
           <img
             src={$currentOrg.avatarUrl ? $currentOrg.avatarUrl : DEFAULT_LOGO_PATH}
             alt={appBrandFallback($currentOrg.name)}
-            class="h-24 w-24 rounded-xl bg-white object-contain p-1"
-            width="96"
-            height="96"
+            class="h-32 w-32 rounded-xl bg-white object-contain p-1"
+            width="128"
+            height="128"
             decoding="async"
           />
         </a>

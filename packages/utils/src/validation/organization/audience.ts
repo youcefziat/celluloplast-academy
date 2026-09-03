@@ -42,7 +42,13 @@ export const ZCreateAudienceMember = z
     managerEmail: z.email().optional(),
     courseIds: z.array(z.string().uuid()).optional(),
     cohortIds: z.array(z.string().uuid()).optional(),
-    sendEmail: z.boolean().default(true)
+    sendEmail: z.boolean().default(true),
+    /**
+     * cPanel/Office 365 migration coexistence: deliver the invite email to
+     * `<local-part>@celluloplast.onmicrosoft.com` instead of the entered address. The account's
+     * email is unaffected — only where the invite is delivered changes.
+     */
+    office365: z.boolean().default(false)
   })
   .refine((data) => !(data.managerMemberId && data.managerEmail), {
     message: 'Provide either managerMemberId or managerEmail, not both',

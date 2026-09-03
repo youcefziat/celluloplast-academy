@@ -5,6 +5,7 @@
   import * as Select from '@cio/ui/base/select';
   import { Button } from '@cio/ui/base/button';
   import { Input } from '@cio/ui/base/input';
+  import { Checkbox } from '@cio/ui/base/checkbox';
   import { orgApi } from '$features/org/api/org.svelte';
   import type { OrganizationAudienceMember } from '$features/org/utils/types';
   import { t } from '$lib/utils/functions/translations';
@@ -23,6 +24,7 @@
   let positionId = $state<string>('none');
   let departmentId = $state<string>('none');
   let managerMemberId = $state<string>('none');
+  let office365 = $state(false);
   let refsLoaded = $state(false);
 
   onMount(async () => {
@@ -37,6 +39,7 @@
     positionId = 'none';
     departmentId = 'none';
     managerMemberId = 'none';
+    office365 = false;
     orgApi.errors = {};
   }
 
@@ -56,7 +59,8 @@
       positionId: positionId !== 'none' ? Number(positionId) : undefined,
       departmentId: departmentId !== 'none' ? Number(departmentId) : undefined,
       managerMemberId: managerMemberId !== 'none' ? Number(managerMemberId) : undefined,
-      sendEmail: true
+      sendEmail: true,
+      office365
     });
 
     if (!result) {
@@ -81,6 +85,12 @@
       : (managerOptions.find((option) => option.value === managerMemberId)?.label ??
           t.get('audience.create.manager_placeholder'))
   );
+
+  /** Local-part @ celluloplast.onmicrosoft.com — mirrors toOffice365DeliveryEmail on the API. */
+  const office365PreviewEmail = $derived.by(() => {
+    const localPart = email.trim().split('@')[0];
+    return localPart ? `${localPart}@celluloplast.onmicrosoft.com` : '';
+  });
 
   const selectedPositionLabel = $derived(
     positionId === 'none'
@@ -112,6 +122,16 @@
           <Field.Error>{orgApi.errors.email}</Field.Error>
         {/if}
       </Field.Field>
+
+      <Field.Field orientation="horizontal">
+        <Checkbox id="audience-create-office365" bind:checked={office365} />
+        <Field.Label for="audience-create-office365">{$t('audience.create.office365_label')}</Field.Label>
+      </Field.Field>
+      {#if office365 && office365PreviewEmail}
+        <p class="ui:text-muted-foreground text-sm">
+          {$t('audience.create.office365_hint', { email: office365PreviewEmail })}
+        </p>
+      {/if}
 
       <div class="grid gap-4 sm:grid-cols-2">
         <Field.Field>

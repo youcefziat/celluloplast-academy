@@ -729,6 +729,8 @@
       "title": "Add an employee",
       "description": "Create the employee record and send an invitation so they can set their password.",
       "email_label": "Email",
+      "office365_label": "Office 365",
+      "office365_hint": "Приглашение будет отправлено на {email} вместо введённого адреса.",
       "first_name_label": "First name",
       "last_name_label": "Last name",
       "job_title_label": "Job title",
