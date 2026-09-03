@@ -32,11 +32,11 @@ ClassroomIO est un LMS open source (AGPL-3.0) orienté formation en entreprise. 
 | `apps/dashboard` | Application LMS (admin / tutor / student) | **Cœur** |
 | `apps/api` | API HTTP + auth + RPC | **Cœur** |
 | `apps/jobs` | Worker emails / média / traitements | **Cœur** (requis) |
-| `apps/website` | Marketing classroomio.com | Hors scope (ne pas déployer) |
-| `apps/docs` | Documentation produit | Hors scope |
-| `apps/embeds` | Widget catalogue embarquable | Hors scope V1 |
-| `apps/tenant-router` | Domaines custom (cloud) | Hors scope V1 |
-| `apps/course-app` | App cours associée | À évaluer ; non prioritaire V1 |
+
+> Le monorepo ne contient plus que ces trois applications. `apps/website`, `apps/docs`,
+> `apps/embeds`, `apps/tenant-router`, `apps/course-app`, `packages/storybook`, `packages/mcp`
+> et `packages/ai-assistant` ont été supprimés lors du nettoyage 2026-08 — voir
+> `CLEANUP_AUDIT.md` et `DEAD_CODE_REPORT.md`.
 
 ### Couches API (à respecter)
 
@@ -277,26 +277,31 @@ Formation
 - Media + jobs (pour vidéos/docs)  
 - Audience / teams  
 
-### Ce qu’on ne déploie / n’expose pas (surface réduite)
+### Ce qui a été supprimé (nettoyage 2026-08)
 
-- `apps/website`, `apps/docs`, `apps/embeds` (sauf besoin futur)  
-- MCP, public API, Zapier (sauf intégration RH ultérieure)  
-- Agent IA, AI tutor, AI credits  
-- Community, widgets, org-site marketing, custom domains  
-- Billing Polar, plans payants, upgrade UI  
-- Multi-org, partenaires, marketplace  
+Agent IA / AI tutor / AI credits · MCP, API publique, Zapier · community, cohortes, widgets,
+étiquettes, quiz live · académie publique et pages d'atterrissage · billing Polar et UI d'upgrade ·
+UI multi-organisation · SDK tiers (UserJot, PostHog, Umami, Senja).
 
-### Couche « Celluloplast » (fine)
+Détail et preuves : `CLEANUP_AUDIT.md`, `DEAD_CODE_REPORT.md`, `BROKEN_LINKS_AUDIT.md`.
 
-Préférer une couche de **configuration / feature flags / navigation / i18n / branding** plutôt qu’un fork profond :
+### Ce qui reste masqué plutôt que supprimé
 
-1. **Nav filters** — retirer liens hors scope dans `org-navigation.ts` / `lms-navigation.ts`  
-2. **Defaults org** — community/exercises off via `customization`  
-3. **Branding** — logos, thème, textes, certificats  
-4. **Copy métier** — traductions FR « Formation / Module / Cours »  
-5. **Docs internes** — ce dossier `docs/celluloplast/`  
+Routeurs API `community`, `cohort`, `widgets`, `tags`, `org-site`, `unsplash`, `domain` ;
+`services/course/compliance` (dépendance de l'assignation d'employés) ; plugin SSO côté auth ;
+`@cio/utils/plans`. Le schéma DB est inchangé : aucune migration destructive.
 
-Éviter de supprimer packages upstream : cela casse les merges futurs.
+### Couche « Celluloplast »
+
+1. **Politique de navigation** — `lib/celluloplast/navigation.ts` reste le seul endroit qui décide
+   ce qu'un rôle voit (sidebar, fil d'Ariane, Ctrl+K lisent la même config)
+2. **Politique d'authoring / LMS / people** — `course-authoring.ts`, `lms.ts`, `people.ts`
+3. **Branding** — `brand.ts`, logos, thème, certificats
+4. **Copy métier** — traductions FR « Formation / Module / Cours »
+5. **Docs internes** — ce dossier `docs/celluloplast/`
+
+Le rebase upstream reste possible pour les domaines conservés (cours, leçons, exercices,
+certificats, audience) ; les surfaces supprimées sont à ignorer lors d'un merge.
 
 ### Stratégie git recommandée
 

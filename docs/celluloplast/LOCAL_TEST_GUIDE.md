@@ -200,12 +200,42 @@ Scénario minimal : 1 admin, 1 tuteur, 1 étudiant sur la même org.
 [ ] vérifier permissions (pas d’élévation, pas de données hors scope)
 ```
 
-### Hors V1 (ne doivent pas réapparaître dans le parcours)
+### Hors V1 — supprimé, doit répondre **404** (nettoyage 2026-08-31)
+
+Ces routes n'existent plus dans l'application : les ouvrir directement doit afficher la page 404,
+pas une page fonctionnelle.
 
 ```text
-[ ] pas d’AI Tutor / chat IA / génération IA dans l’UI
-[ ] pas de community / news feed / explore / marketplace / billing
+[ ] /org/{slug}/cohorts · /community · /widgets · /tags · /media · /analytics · /compliance
+[ ] /org/{slug}/mcp · /api · /zapier · /setup · /teams-overview · /quiz
+[ ] /org/{slug}/settings/billing · /ai-credits · /ai-tutor · /landingpage · /domains · /workspaces · /auth
+[ ] /courses/{id}/ai-tutor · /analytics · /attendance · /compliance · /landingpage
+[ ] /lms/explore · /lms/cohorts · /lms/community · /lms/exercises · /lms/settings/integrations
+[ ] /cohorts/{id}/... · /widgets/{id} · /widget-preview · /home
+[ ] /course/{slug} · /courses (catalogue public)
+```
+
+### Hors V1 — absences à vérifier dans l'UI
+
+```text
+[ ] aucun AI Tutor / chat IA / génération IA / crédits IA
+[ ] aucune community / fil d'actualité / explore / marketplace / billing / bouton d'upgrade
+[ ] header : ni « Académie ouverte », ni popover Notifications factice, ni checklist d'installation
+[ ] menu du pied de barre latérale : uniquement Profil, Thème, Déconnexion (pas de « Quoi de neuf »,
+    « Retour d'expérience », « Documentation », « Besoin d'aide »)
+[ ] Ctrl+K : groupes Formations / Employés / Pages / Réglages uniquement (ni Parcours, ni Widgets, ni Étiquettes)
+[ ] barre latérale de formation : pas de « Powered by »
+[ ] menu contextuel formation : pas de « Voir le site du cours » ni « Copier l'URL du cours » ni « Partager »
+[ ] Administration → Personnaliser le LMS : bannière, fond d'authentification, notation (pas de community/exercices/fil/poll)
 [ ] filtre Formations : SELF_PACED seulement
+[ ] onglets d'une formation : Contenu, Apprenants, Certificats, Réglages (+ Soumissions / Notes selon le cas)
+```
+
+### Réseau (onglet DevTools → Network, après connexion)
+
+```text
+[ ] aucune requête vers cdn.userjot.com, *.posthog.com, umami.hz.oncws.com, *.senja.io
+[ ] aucune requête vers *.classroomio.com ni assets.cdn.clsrio.com
 ```
 
 ---

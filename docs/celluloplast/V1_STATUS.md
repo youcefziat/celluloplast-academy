@@ -119,21 +119,25 @@ docs/celluloplast/*
 
 ---
 
-# Hidden Upstream Features
+# Removed Upstream Features (nettoyage 2026-08-31)
 
-Masqués (backend souvent intact) :
+**Supprimées** — routes, composants, API et dépendances : AI Tutor / crédits IA / génération IA ·
+community, news feed, explore catalog · billing Polar / plans / upgrade UI · UI multi-org ·
+automation (MCP, clés API, Zapier) · cohortes · pages d'atterrissage · widgets · gestionnaire de
+médias (page) · étiquettes · quiz live · analytique / conformité / présence · académie publique
+et site public · SDK tiers (UserJot, PostHog, Umami, Senja).
 
-- AI Tutor / crédits IA / génération IA
-- Community, news feed, explore catalog
-- Billing / plans / upgrade
-- Multi-org UI
-- Automation (MCP, API keys, Zapier)
-- Cohorts, landing marketing, widgets, media manager (nav)
+Ces routes **retournent désormais 404** : plus d'accès direct par URL.
+
+**Masquées** (backend intact, sans UI) : routeurs API `community`, `cohort`, `widgets`, `tags`,
+`org-site`, `unsplash`, `domain` ; `services/course/compliance` (dépendance de l'assignation
+d'employés) ; plugin SSO côté authentification ; `@cio/utils/plans`.
+
 - Import / export CSV Employés (V1)
 - Retrait hard-delete membre formation (UI)
 - Types LIVE / COMPLIANCE / PUBLIC à la création (filtre liste = SELF_PACED)
 
-Accès direct par URL à certaines routes upstream encore possible → limitation acceptée (pas de rewrite de garde-fous).
+Détail : `CLEANUP_AUDIT.md`, `DEAD_CODE_REPORT.md`, `BROKEN_LINKS_AUDIT.md`.
 
 ---
 
@@ -146,7 +150,6 @@ Accès direct par URL à certaines routes upstream encore possible → limitatio
 - Pas de CSV / sync Entra ID / SSO
 - Locales hors FR/EN souvent en anglais pour clés Celluloplast
 - Pagination client sur certains datasets
-- `/compliance` et autres surfaces masquées encore joignables par URL
 - Jest dashboard upstream cassé → pas de suite E2E Celluloplast automatisée
 
 ---
