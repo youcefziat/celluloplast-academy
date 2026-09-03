@@ -6,7 +6,8 @@
       "label": "Thay đổi chưa lưu"
     },
     "discard": "Hủy",
-    "save_changes": "Lưu thay đổi"
+    "save_changes": "Lưu thay đổi",
+    "reset": "Reset"
   },
   "validations": {
     "generic": {
@@ -472,17 +473,6 @@
     "in_progress": "Đang tiến hành chấm điểm",
     "graded": "Đã chấm điểm",
     "lesson": "Bài học"
-  },
-  "my_learning": {
-    "heading": "Học tập của tôi",
-    "progress": "Đang tiến hành",
-    "complete": "Hoàn thành",
-    "search": "Tìm kiếm khóa học",
-    "not_in_progress": "Không có khóa học nào đang diễn ra",
-    "any_progress": "Bất kỳ khóa học nào bạn bắt đầu sẽ được hiển thị ở đây",
-    "not_completed": "Không có khóa học nào hoàn thành",
-    "any_course": "Bất kỳ khóa học nào bạn hoàn thành sẽ được hiển thị ở đây",
-    "find_courses": "Tìm khóa học"
   },
   "certificates": {
     "heading": "Chứng chỉ",
@@ -2694,15 +2684,6 @@
     },
     "page_subtitle": "Nơi các bài học trở thành khóa học và khóa học trở thành đăng ký."
   },
-  "ai": {
-    "help_me": "Giúp tôi viết",
-    "placeholder": "Giúp tôi viết một mô tả ngắn",
-    "text": "Bắt đầu gõ...",
-    "reset": "Đặt lại",
-    "rephrase": "diễn đạt lại",
-    "insert": "Chèn",
-    "can_you": "Bạn có thể vui lòng viết lại điều này"
-  },
   "dashboard": {
     "morning_heading": "Chào buổi sáng",
     "afternoon_heading": "Chào buổi chiều",
@@ -2888,10 +2869,6 @@
       "interactive": "Tạo các câu đố tương tác với bảng điểm cho học sinh của bạn."
     }
   },
-  "markdown_editor": {
-    "write": "Viết",
-    "preview": "Xem trước"
-  },
   "navigation": {
     "goto": "đi đến",
     "courses": "Khóa học",
@@ -2909,73 +2886,6 @@
     "org_loading_state": "Đưa bạn đến tổ chức của bạn...",
     "add_organization": "+ Thêm tổ chức",
     "goto_dashboard": "Bảng điều khiển"
-  },
-  "add_org": {
-    "create_org": "Tạo tổ chức",
-    "name": "Tên tổ chức",
-    "org_sitename": "Tên miền phụ của học viện",
-    "create": "Tạo",
-    "sitename": "Tên miền phụ của học viện đã tồn tại",
-    "error_organization": "Đã xảy ra lỗi khi tạo tổ chức này. Vui lòng tải lại và thử lại"
-  },
-  "setup": {
-    "your_checklist": "Danh sách kiểm tra của bạn",
-    "get_started": "Bắt đầu",
-    "description": "Hoàn thành các bước này để thiết lập nền tảng học tập của bạn",
-    "progress": "Tiến độ",
-    "completed": "hoàn thành",
-    "done": "Xong",
-    "todo": "Việc cần làm",
-    "publish_course": {
-      "title": "Xuất bản một khóa học",
-      "desc": "Làm cho khóa học của bạn trở nên công khai và có thể mua được",
-      "button_label": "Xuất bản khóa học"
-    },
-    "exercise": {
-      "title": "Tạo một bài tập",
-      "desc": "Kiểm tra học sinh của bạn cho phép họ thể hiện sự hiểu biết của mình về vấn đề này",
-      "button_label": "Tạo bài tập"
-    },
-    "lesson": {
-      "title": "Tạo một bài học",
-      "desc": "Chia khóa học của bạn thành bài học mà học sinh có thể dễ dàng hiểu được",
-      "button_label": "Tạo bài học"
-    },
-    "course": {
-      "title": "Tạo khóa học",
-      "desc": "Tạo một khóa học mà bạn sẽ chia sẻ với học viên của mình",
-      "button_label": "Tạo khóa học"
-    },
-    "organization_profile": {
-      "title": "Cập nhật ảnh hồ sơ tổ chức",
-      "desc": "Thiết lập nhận diện chuyên nghiệp và dễ nhận biết cho tổ chức của bạn",
-      "button_label": "Cập nhật hồ sơ tổ chức"
-    },
-    "personal_profile": {
-      "title": "Tải lên ảnh hồ sơ và cập nhật tên người dùng",
-      "desc": "Cá nhân hóa và thêm dấu ấn con người, giúp các tương tác trở nên cá nhân và đáng nhớ hơn",
-      "button_label": "Cập nhật hồ sơ"
-    }
-  },
-  "pricing": {
-    "modal": {
-      "heading": "Kế hoạch nâng cấp",
-      "thanks": "Cảm ơn sự hỗ trợ của bạn",
-      "plan": "Gói của bạn đi kèm với các đặc quyền và lợi ích thú vị, bao gồm quyền truy cập vào tất cả các tính năng trong tương lai mà chúng tôi sẽ phát hành.",
-      "save": "Tiết kiệm 2 tháng",
-      "close": "Đóng",
-      "learn": "Tìm hiểu thêm",
-      "month": "tháng",
-      "monthly": "hàng tháng",
-      "annually": "Hàng năm",
-      "popular": "phổ biến",
-      "per_org": "Mỗi tổ chức"
-    },
-    "plan_names": {
-      "free": "miễn phí",
-      "early": "Áp dụng sớm",
-      "enterprise": "Enterprise"
-    }
   },
   "org_navigation": {
     "platform": "Nền tảng",
@@ -3827,20 +3737,6 @@
       "personal_page_subtitle": "Chọn thông báo email bạn nhận từ ClassroomIO."
     }
   },
-  "profileMenu": {
-    "profile": "HỒ SƠ",
-    "current_org": "TỔ CHỨC HIỆN TẠI",
-    "free_tools": "CÔNG CỤ MIỄN PHÍ",
-    "progress": "Báo cáo tiến độ",
-    "timer": "Hẹn giờ hoạt động",
-    "tic_tac": "ngón chân tictac",
-    "see_more": "Xem thêm",
-    "whats_new": "Có gì mới",
-    "launch_week": "Tuần ra mắt",
-    "feedback": "Phản hồi",
-    "documentation": "Tài liệu",
-    "need_help": "Cần giúp đỡ?"
-  },
   "login": {
     "sign_in_to_continue": "Sign in to continue",
     "welcome": "Chào mừng trở lại",
@@ -3906,7 +3802,16 @@
       }
     },
     "cancel": "Hủy bỏ",
-    "save": "Lưu"
+    "save": "Lưu",
+    "setup_error": {
+      "title": "Something went wrong",
+      "description": "We could not start the app. Reload the page, or contact your administrator if the problem persists.",
+      "reload": "Reload page"
+    },
+    "restricted": {
+      "title": "Restricted access",
+      "description": "This organization is not available for your account. Contact your administrator."
+    }
   },
   "welcome_modal": {
     "we_at": "Chúng tôi ở",
@@ -3999,85 +3904,6 @@
     "seconds": "giây",
     "snackbar_error": "lỗi khi gửi mã"
   },
-  "public_courses": {
-    "page_title": "Khóa học - ClassroomIO",
-    "heading": "Khóa học",
-    "subtitle": "Duyệt tất cả các khóa học được xuất bản",
-    "clear_filters": "Xóa bộ lọc",
-    "empty": {
-      "title": "Không tìm thấy khóa học nào",
-      "description": "Hãy thử xóa bộ lọc của bạn hoặc kiểm tra lại sau."
-    },
-    "catalog_empty": {
-      "title": "Chưa có khóa học nào được xuất bản",
-      "description": "Hãy quay lại sớm để xem các khóa học mới."
-    },
-    "filters": {
-      "title": "Lọc theo thẻ",
-      "help": "Chọn một hoặc nhiều thẻ để lọc các khóa học",
-      "empty": "Chưa có thẻ nào",
-      "tags_title": "Thẻ",
-      "types_title": "Các loại",
-      "search_placeholder": "Tìm kiếm khóa học...",
-      "clear_search": "Xóa tìm kiếm",
-      "pricing_title": "Định giá",
-      "pricing_free": "miễn phí",
-      "pricing_paid": "Đã trả tiền",
-      "selected": "Đã chọn:",
-      "save_changes": "Lưu thay đổi"
-    }
-  },
-  "tags_admin": {
-    "page_title": "Thẻ - ClassroomIO",
-    "heading": "Thẻ",
-    "create": "Tạo",
-    "tag_modal": {
-      "create_title": "Tạo thẻ",
-      "edit_title": "Chỉnh sửa thẻ",
-      "name": "Tên thẻ",
-      "description": "Mô tả",
-      "description_placeholder": "Mô tả tùy chọn",
-      "category": "Danh mục",
-      "color": "Màu",
-      "color_help": "Chọn một trong 10 màu",
-      "select_category": "Chọn một danh mục",
-      "no_groups": "Tạo nhóm thẻ trước khi tạo thẻ"
-    },
-    "group_modal": {
-      "create_title": "Tạo nhóm thẻ",
-      "edit_title": "Chỉnh sửa nhóm thẻ",
-      "name": "Tên nhóm",
-      "description": "Mô tả",
-      "description_placeholder": "Mô tả tùy chọn"
-    },
-    "empty": {
-      "title": "Chưa có nhóm thẻ nào",
-      "description": "Trước tiên hãy tạo nhóm thẻ, sau đó bắt đầu thêm thẻ."
-    },
-    "table": {
-      "tag": "Thẻ",
-      "total_courses": "Tổng số khóa học",
-      "course": "khóa học",
-      "courses": "các khóa học",
-      "description": "Mô tả",
-      "category": "Danh mục",
-      "action": "Hành động",
-      "empty_group": "Chưa có thẻ nào trong nhóm này"
-    },
-    "actions": {
-      "create_tag": "Tạo thẻ",
-      "create_group": "Tạo nhóm thẻ",
-      "edit_group": "Chỉnh sửa nhóm",
-      "edit_tag": "Chỉnh sửa thẻ",
-      "save": "Lưu",
-      "cancel": "Hủy bỏ",
-      "actions_menu": "Hành động gắn thẻ"
-    },
-    "common": {
-      "not_available": "N/A"
-    },
-    "page_subtitle": "Sắp xếp khóa học bằng nhãn để bộ lọc và danh sách dễ quét hơn."
-  },
   "invite": {
     "organization": {
       "page_title": "Tham gia cùng {orgName} trên ClassroomIO",
@@ -4110,300 +3936,6 @@
       "join_failed": "Không thể tham gia tổ chức",
       "joined": "Đã tham gia tổ chức"
     }
-  },
-  "automation": {
-    "title": "Tự động hóa",
-    "subtitle": "Kết nối các máy khách MCP ngay bây giờ, với Zapier và API công khai trên cùng một hệ thống khóa trong phạm vi tổ chức.",
-    "coming_soon": "Sắp có",
-    "mcp": {
-      "setup": {
-        "title": "Thiết lập máy khách",
-        "description": "Sử dụng một khóa trong phạm vi tổ chức cho mỗi lần tích hợp. Nếu một khóa bị xoay hoặc bị thu hồi, máy khách sẽ ngừng hoạt động cho đến khi bí mật mới được định cấu hình.",
-        "claude_code_description": "Đăng ký `@classroomio/mcp` với Mã Claude bằng cách sử dụng khóa trong phạm vi tổ chức được tạo.",
-        "codex_description": "Thêm máy chủ ClassroomIO MCP vào Codex bằng cùng một khóa trong phạm vi tổ chức.",
-        "cursor_description": "Dán cái này vào `~/.cursor/mcp.json` hoặc cấu hình MCP không gian làm việc của bạn.",
-        "opencode_description": "Thêm nội dung này vào `opencode.json` ở thư mục gốc dự án hoặc `~/.config/opencode/opencode.json`."
-      },
-      "keys": {
-        "title": "Khóa MCP",
-        "description": "Các khóa này xác thực tổ chức hiện tại khi máy khách MCP gọi ClassroomIO thông qua `@classroomio/mcp`.",
-        "generate": "Tạo khóa MCP",
-        "secret_once": "Bí mật này được hiển thị một lần. Sao chép nó vào ứng dụng khách MCP của bạn ngay bây giờ.",
-        "modal": {
-          "title": "Tạo khóa MCP",
-          "description": "Chọn tên cho khóa MCP này trước khi tạo.",
-          "name_label": "Tên khóa",
-          "name_placeholder": "ClassroomIO OpenCode",
-          "cancel": "Hủy",
-          "save": "Tạo khóa"
-        }
-      },
-      "usage": {
-        "title": "Cách sử dụng và giới hạn",
-        "description": "MCP có sẵn trên mọi gói. Việc sử dụng được kiểm soát bằng giới hạn khóa và giới hạn tần suất.",
-        "keys_title": "Khóa đang hoạt động",
-        "keys_description": "Sử dụng một khóa MCP cho mỗi lần tích hợp để có thể luân chuyển hoặc thu hồi quyền truy cập một cách dễ dàng.",
-        "rate_limits_title": "Giới hạn tỷ lệ",
-        "rate_limits_description": "Yêu cầu đọc/ghi/xuất bản được phép mỗi phút.",
-        "used_label": "Đã sử dụng:"
-      },
-      "page_subtitle": "Kết nối công cụ AI với ClassroomIO bằng khóa trong phạm vi tổ chức mà bạn có thể xoay bất cứ lúc nào.",
-      "view_docs": "Xem tài liệu"
-    },
-    "api": {
-      "subtitle": "Quản lý khóa API để tích hợp với API công khai ClassroomIO.",
-      "keys": {
-        "title": "Khóa API",
-        "description": "Các khóa này xác thực tổ chức hiện tại khi gọi API công khai ClassroomIO.",
-        "generate": "Tạo khóa API",
-        "secret_once": "Bí mật này chỉ hiển thị một lần. Hãy sao chép và lưu trữ an toàn.",
-        "empty_title": "Chưa có khóa API",
-        "empty_description": "Tạo khóa API trong phạm vi tổ chức đầu tiên để sử dụng API công khai ClassroomIO.",
-        "modal": {
-          "title": "Tạo khóa API",
-          "description": "Chọn tên cho khóa API này trước khi tạo.",
-          "name_label": "Tên khóa",
-          "name_placeholder": "Tích hợp API của tôi",
-          "cancel": "Hủy",
-          "save": "Tạo khóa"
-        }
-      },
-      "setup": {
-        "title": "Bắt đầu nhanh",
-        "description": "Dùng khóa API làm Bearer token cho mọi yêu cầu. Thay chỗ giữ chỗ bằng khóa ở trên, hoặc dán secret ngay sau khi tạo khóa."
-      },
-      "view_docs": "Xem tài liệu"
-    },
-    "keys": {
-      "active": "Đang hoạt động",
-      "revoked": "Đã thu hồi",
-      "rotate": "Xoay",
-      "revoke": "Thu hồi",
-      "empty_title": "Chưa có khóa MCP",
-      "empty_description": "Tạo khóa MCP trong phạm vi tổ chức đầu tiên để kết nối Mã Claude, Codex, Con trỏ hoặc OpenCode.",
-      "created_at_label": "Đã tạo:",
-      "last_used_label": "Sử dụng lần cuối:",
-      "never_used": "không bao giờ",
-      "scopes_label": "Phạm vi:",
-      "revoke_confirm": "Thu hồi khóa tự động hóa này?",
-      "rotate_confirm": "Xoay phím tự động hóa này?",
-      "table_key": "Chìa khóa",
-      "table_status": "Trạng thái",
-      "table_created": "Đã tạo",
-      "table_last_used": "Lần sử dụng cuối cùng"
-    },
-    "clients": {
-      "claude_code": "Claude Code",
-      "codex": "Codex",
-      "cursor": "Cursor",
-      "opencode": "OpenCode",
-      "curl": "cURL",
-      "javascript": "JavaScript",
-      "python": "Python",
-      "go": "Go"
-    },
-    "tabs": {
-      "mcp": "MCP",
-      "zapier": "Zapier",
-      "api": "API"
-    },
-    "permissions": {
-      "disabled_title": "Quyền truy cập chỉ đọc",
-      "disabled_description": "Chỉ quản trị viên tổ chức mới có thể tạo, xoay hoặc thu hồi khóa tự động hóa. Thầy cô có thể xem lại hướng dẫn thiết lập tại đây."
-    },
-    "zapier": {
-      "page_subtitle": "Tự động hóa ClassroomIO với hàng nghìn ứng dụng qua Zapier. Sắp ra mắt."
-    }
-  },
-  "ai_assistant": {
-    "empty_state": "Hãy yêu cầu tôi trợ giúp về nội dung khóa học của bạn — soạn thảo bài học, tạo câu hỏi hoặc lên kế hoạch cho khóa học từ một tài liệu.",
-    "input_placeholder": "Hãy hỏi trợ lý AI...",
-    "quote_lesson_note": "Trích dẫn trong trợ lý",
-    "attach_document": "Đính kèm tài liệu (PDF, DOCX, PPTX)",
-    "upgrade_to_upload": "Nâng cấp để tải lên tài liệu",
-    "tokens_exhausted": "Đã đạt đến giới hạn mã thông báo AI hàng tháng.",
-    "tokens_exhausted_buy_more": "Mua thêm",
-    "chat_history": "Lịch sử trò chuyện",
-    "no_conversations": "Chưa có cuộc trò chuyện nào",
-    "untitled": "Không có tiêu đề",
-    "new_chat": "Trò chuyện mới",
-    "tokens_label": "mã thông báo",
-    "implementing_course_plan": "Thực hiện kế hoạch khóa học",
-    "resume": "Tiếp tục",
-    "stopped_content_kept": "Đã dừng lại. Nội dung được tạo đã được giữ lại.",
-    "mention_lesson": "Bài học",
-    "mention_exercise": "bài tập",
-    "mention_section": "Phần",
-    "mention_no_results": "Không có nội dung phù hợp",
-    "uploading_document": "Đang tải tài liệu lên...",
-    "agent_running_warning": "Những thay đổi sẽ xuất hiện trong khóa học sau khi tác nhân hoàn tất. Đừng tải lại trang.",
-    "agent_running_warning_dismiss": "Đóng",
-    "quick_action": {
-      "upload_document_course": "Tải lên tài liệu để tạo khóa học",
-      "draft_lesson": "Soạn thảo bài học",
-      "generate_questions_from_lesson": "Tạo câu hỏi từ bài học này",
-      "summarize_lesson": "Tóm tắt bài học này",
-      "publish_course": "Giúp tôi xuất bản khóa học này"
-    },
-    "plan_applying_changes": "Đang áp dụng thay đổi",
-    "plan_working": "Đang xử lý",
-    "plan_progress": "{completed} / {total} bước đã hoàn thành",
-    "stop": "Dừng",
-    "copy_full_error": "Sao chép toàn bộ lỗi",
-    "resize_panel_aria_label": "Thay đổi kích thước bảng trợ lý AI",
-    "generic_working": "Đang xử lý",
-    "run_failed_after": "{action} không hoàn thành thành công.",
-    "tool": {
-      "pending": {
-        "working": "Đang xử lý",
-        "unknown_tool": "Đang chạy {toolName}",
-        "get_course_structure": "Đang đọc cấu trúc khóa học",
-        "get_lesson_content": "Đang đọc nội dung bài học",
-        "get_exercise_details": "Đang đọc bài tập",
-        "create_section": "Đang tạo phần",
-        "update_section": "Đang cập nhật phần",
-        "create_lesson": "Đang tạo bài học",
-        "update_lesson": "Đang cập nhật bài học",
-        "update_lesson_content": "Đang ghi nội dung bài học",
-        "create_exercise": "Đang tạo bài tập",
-        "create_exercise_section": "Đang tạo phần bài tập",
-        "update_exercise": "Đang cập nhật bài tập",
-        "update_exercise_section": "Đang cập nhật phần bài tập",
-        "add_questions": "Đang thêm câu hỏi",
-        "update_questions": "Đang cập nhật câu hỏi",
-        "reorder_content": "Đang sắp xếp lại nội dung",
-        "update_course_landing_page": "Đang cập nhật trang đích",
-        "check_course_go_live_readiness": "Đang kiểm tra điều kiện xuất bản",
-        "go_live_course": "Đang xuất bản khóa học",
-        "generate_course_plan": "Đang tạo kế hoạch khóa học",
-        "ask_template_questions": "Chuẩn bị mẫu biểu mẫu",
-        "fetch_documentation_url": "Trang đọc tài liệu",
-        "fetch_documentation_url_with_url": "Đang đọc {url}"
-      },
-      "meta": {
-        "lesson_char_count": "({count, plural, one {# ký tự} other {# ký tự}})",
-        "landing_page_preview": "· Xem trước thay đổi",
-        "exercise_questions_added": "· {count, plural, one {Đã thêm # câu hỏi} other {Đã thêm # câu hỏi}}",
-        "exercise_questions_updated": "· {count, plural, one {Đã cập nhật # câu hỏi} other {Đã cập nhật # câu hỏi}}"
-      },
-      "done": {
-        "generic": "Hoàn tất",
-        "create_section": "Đã tạo phần: {title}",
-        "update_section": "Đã cập nhật phần: {title}",
-        "create_lesson": "Đã tạo bài học: {title}",
-        "update_lesson": "Đã cập nhật bài học: {title}",
-        "update_lesson_content_fallback": "Đã ghi {count, plural, one {# ký tự} other {# ký tự}}",
-        "create_exercise": "Đã tạo bài tập «{title}» · {count, plural, one {# câu hỏi} other {# câu hỏi}}",
-        "update_exercise": "Đã cập nhật bài tập: {title}",
-        "update_exercise_section": "Đã cập nhật phần bài tập: {title}",
-        "add_questions_fallback": "{count, plural, one {Đã thêm # câu hỏi} other {Đã thêm # câu hỏi}}",
-        "update_questions_fallback": "{count, plural, one {Đã cập nhật # câu hỏi} other {Đã cập nhật # câu hỏi}}",
-        "create_exercise_section": "Đã tạo phần bài tập: {title}",
-        "get_course_structure": "Đã tải cấu trúc khóa học",
-        "get_lesson_content": "Đã tải nội dung bài học",
-        "get_exercise_details": "Đã tải bài tập",
-        "reorder_content": "Đã sắp xếp lại nội dung",
-        "update_course_landing_page": "Đã cập nhật trang đích: {title}",
-        "check_go_live_ready": "{warningCount, plural, =0{Sẵn sàng xuất bản} other{Sẵn sàng xuất bản — # cảnh báo}}",
-        "check_go_live_blocked": "{blockerCount, plural, one{# vấn đề cần giải quyết trước khi xuất bản} other{# vấn đề cần giải quyết trước khi xuất bản}}",
-        "go_live_published": "Đã xuất bản khóa học: {title}",
-        "go_live_not_published": "Khóa học chưa được xuất bản",
-        "generate_course_plan": "Đã tạo kế hoạch khóa học",
-        "ask_template_questions": "Mẫu biểu đã sẵn sàng",
-        "fetch_documentation_url": "Đọc {url}"
-      }
-    },
-    "student_empty_state": "Hãy hỏi tôi bất cứ điều gì về khóa học này - nhận lời giải thích, tự kiểm tra hoặc tóm tắt những gì bạn đang đọc.",
-    "messages_used_label": "tin nhắn trong tháng này",
-    "plan_thinking": "Đang suy nghĩ về yêu cầu của bạn…",
-    "plan_implement": "Kế hoạch thực hiện",
-    "plan_ask_changes_placeholder": "Hãy cho tôi biết những gì cần thay đổi trong kế hoạch…",
-    "plan_ask_changes_send_aria": "Gửi yêu cầu thay đổi",
-    "send": "Gửi",
-    "rename_chat_aria": "Đổi tên cuộc trò chuyện",
-    "rename_chat_input_aria": "Tiêu đề cuộc trò chuyện",
-    "rename_chat_placeholder": "Tiêu đề cuộc trò chuyện",
-    "rename_chat_failed": "Không thể đổi tên cuộc trò chuyện này. Hãy thử lại.",
-    "error_rate_limit": "Dịch vụ AI tạm thời bận. Vui lòng thử lại sau giây lát.",
-    "error_rate_limit_with_wait": "Dịch vụ AI tạm thời bận. Vui lòng thử lại sau {seconds} giây.",
-    "error_context_too_long": "Cuộc trò chuyện quá dài. Hãy thử bắt đầu một cuộc trò chuyện mới hoặc rút ngắn tin nhắn của bạn.",
-    "error_network": "Lỗi mạng. Vui lòng kiểm tra kết nối của bạn và thử lại.",
-    "context_usage_tooltip": "Đã sử dụng mã thông báo {used} / {max}",
-    "context_full_title": "Cửa sổ ngữ cảnh đã đầy",
-    "context_full_description": "Trợ lý sẽ tự động tóm tắt các tin nhắn cũ hơn để bạn có thể tiếp tục làm việc trong cuộc trò chuyện này.",
-    "context_full_compact": "Cuộc trò chuyện nhỏ gọn",
-    "context_full_compacting": "Đang nén...",
-    "context_full_new_chat": "Bắt đầu cuộc trò chuyện mới với bản tóm tắt",
-    "context_full_summarizing": "Đang tạo bản tóm tắt...",
-    "context_compacted_badge": "Cuộc trò chuyện đã được nén lại ({count} tin nhắn trước đó)",
-    "student_quick_action": {
-      "explain_lesson": "Giải thích bài học này",
-      "quiz_me": "Đố tôi về điều này",
-      "summarize_section": "Tóm tắt phần này",
-      "what_to_review": "Tôi nên xem xét gì tiếp theo?"
-    },
-    "run_running": "Tạo khóa học",
-    "run_completed": "Quá trình tạo khóa học đã hoàn tất",
-    "run_failed": "Tạo khóa học không thành công",
-    "run_canceled": "Việc tạo khóa học đã bị hủy",
-    "run_waiting_for_worker": "Đang chờ nhân viên nền",
-    "run_checkpoint": "Đang lưu điểm kiểm tra tiến độ",
-    "retry": "Thử lại",
-    "run_monitor_aria": "Đang tạo khóa học",
-    "run_summary": {
-      "completed": "Chạy xong.",
-      "completed_with_counts": "Đã hoàn thành chạy — đã tạo {counts}.",
-      "failed": "Chạy không thành công.",
-      "failed_with_reason": "Chạy không thành công — {reason}.",
-      "canceled": "Cuộc chạy bị hủy.",
-      "canceled_with_counts": "Cuộc chạy đã bị hủy — đã tạo {counts} trước khi dừng.",
-      "paused": "Chạy bị tạm dừng. Tiếp tục để tiếp tục.",
-      "paused_with_counts": "Cuộc chạy bị tạm dừng — đã tạo {counts} cho đến nay. Tiếp tục để tiếp tục."
-    },
-    "changes_card": {
-      "summary_count": "{count} mục đã thay đổi",
-      "expand": "Mở rộng các thay đổi",
-      "collapse": "Thu gọn các thay đổi",
-      "action": {
-        "created": "Đã tạo",
-        "metadata_updated": "Đã cập nhật siêu dữ liệu",
-        "content_written": "Nội dung viết",
-        "questions_added": "+{count} câu hỏi",
-        "questions_updated": "{count} câu hỏi đã được chỉnh sửa",
-        "section_added": "Đã thêm khối",
-        "section_edited": "Đã chỉnh sửa khối"
-      },
-      "status": {
-        "completed": "Đã hoàn thành",
-        "failed": "thất bại",
-        "canceled": "Đã hủy",
-        "paused": "Đã tạm dừng"
-      }
-    },
-    "plan_view": {
-      "expand": "Mở rộng kế hoạch",
-      "collapse": "Thu gọn kế hoạch"
-    },
-    "run_monitor": {
-      "cancel": "Hủy chạy",
-      "dismiss": "Loại bỏ",
-      "now_doing": "bây giờ",
-      "input_disabled_hint": "Cuộc trò chuyện bị tạm dừng trong khi nhân viên hỗ trợ hoàn tất việc xây dựng khóa học. Hủy bỏ hoặc đợi cho đến khi nó hoàn thành.",
-      "dismiss_confirm": "Bỏ đi",
-      "dismiss_cancel": "Tiếp tục chạy",
-      "dismiss_confirm_body": "Rời khỏi cuộc chạy bị hủy bỏ này? Nút Tiếp tục sẽ biến mất - mọi cuộc trò chuyện tiếp theo sẽ bắt đầu mới và sẽ không tiếp tục kế hoạch.",
-      "stuck_queued": {
-        "title": "Công nhân không phản hồi",
-        "body": "Lần chạy này đã chờ hơn 30 giây mà không có công nhân đón. Nhân viên chạy nền có thể không hoạt động hoặc đang khởi động lại."
-      }
-    },
-    "ask_ai": "Hỏi AI",
-    "content_input_placeholder": "Hỏi về nội dung này…",
-    "ask_ai_expand_aria": "Mở đầu vào Hỏi AI",
-    "ask_ai_input_aria": "Hỏi AI về nội dung này",
-    "upload_error_file_too_large": "Tệp quá lớn. Kích thước tối đa là 5 MB.",
-    "upload_error_unsupported_type": "Loại tệp không được hỗ trợ. Vui lòng tải lên tệp PDF, DOCX, PPTX hoặc ODT.",
-    "upload_error_generic": "Không thể tải tài liệu lên. Vui lòng thử lại."
   },
   "widgets": {
     "heading": "Widget",
@@ -4678,29 +4210,6 @@
       "description": "Đếm số học sinh trong tất cả các khóa học tuân thủ."
     }
   },
-  "public_course": {
-    "exercise": {
-      "submit": "Kiểm tra câu trả lời của tôi",
-      "try_again": "Thử lại",
-      "practice_again": "Luyện tập lại",
-      "attempt_option": "Hãy thử {attemptNumber} - {correct}/{total}",
-      "attempts_select_aria": "nỗ lực của bạn",
-      "privacy_hint": "Được chấm điểm ngay lập tức trong trình duyệt của bạn - không có gì được gửi.",
-      "summary_template": "Bạn đã nhận được [[đúng]]/[[tổng]] đúng."
-    },
-    "powered_by": {
-      "label": "Được cung cấp bởi",
-      "brand": "ClassroomIO"
-    },
-    "footer_nav": {
-      "previous": "trước đó",
-      "next": "Tiếp theo"
-    },
-    "header": {
-      "explore_courses": "Khám phá các khóa học",
-      "sign_in": "Đăng nhập"
-    }
-  },
   "account": {
     "workspaces": {
       "page_title": "Không gian làm việc",
@@ -4729,119 +4238,6 @@
       "other_organizations": "Các tổ chức khác"
     }
   },
-  "aiTutor": {
-    "creditsPage": {
-      "tutorSummaryTitle": "Gia sư AI sử dụng hợp lý",
-      "atCap": "Ở mức tối đa",
-      "approaching": "Đang đến gần nắp",
-      "totalActive": "Sinh viên năng động trong tháng này",
-      "learnersHeading": "Sinh viên",
-      "headerLearner": "Học viên",
-      "headerMessages": "Tin nhắn",
-      "headerTokens": "Mã thông báo",
-      "headerStatus": "Trạng thái",
-      "statusUnder": "Dưới nắp",
-      "statusApproaching": "Đang đến gần",
-      "statusAtCap": "Ở mức tối đa"
-    },
-    "takeABreak": {
-      "title": "Gia sư AI của bạn đang nghỉ ngơi",
-      "learnerCap": "Bạn đã đạt đến giới hạn tin nhắn của gia sư trong tháng này. Tin nhắn của bạn sẽ được đặt lại vào ngày 1 tháng sau.",
-      "poolExhausted": "Không gian làm việc của bạn đã hết chỗ làm gia sư AI cho tháng này. Vui lòng kiểm tra lại sau hoặc liên hệ với người hướng dẫn của bạn.",
-      "disabled": "Gia sư AI chưa được bật cho không gian làm việc này."
-    },
-    "groundingScope": {
-      "course": "Toàn bộ khóa học",
-      "lesson": "Chỉ bài học hiện tại",
-      "workspace": "Toàn bộ không gian làm việc"
-    },
-    "codePolicy": {
-      "hints_only": "Chỉ gợi ý",
-      "allowed": "Cho phép ví dụ mã đầy đủ",
-      "forbidden": "Không có mã trong câu trả lời"
-    },
-    "assessmentMode": {
-      "hint_only": "Chỉ gợi ý (không có câu trả lời trực tiếp)",
-      "direct_answer": "Cho phép trả lời trực tiếp",
-      "block_during_exercise": "Chặn trợ giúp khi học sinh đang làm bài tập"
-    },
-    "responseLength": {
-      "short": "Ngắn (1–3 câu)",
-      "medium": "Trung bình (1–2 đoạn văn ngắn)",
-      "long": "Dài (giải thích có cấu trúc)"
-    },
-    "persona": {
-      "encouraging": "Khuyến khích",
-      "friendly": "Thân thiện",
-      "formal": "Trang trọng",
-      "socratic": "Socrate",
-      "custom": "tùy chỉnh"
-    },
-    "field": {
-      "enabled": "Đã bật gia sư AI",
-      "persona": "Persona gia sư",
-      "customPersona": "Tính cách tùy chỉnh",
-      "customPersona_description": "Mô tả cách phát âm của gia sư - giọng điệu, phong cách xưng hô, bất cứ điều gì cụ thể đối với khán giả của bạn.",
-      "responseLength": "Độ dài phản hồi",
-      "welcomeMessage": "Tin nhắn chào mừng",
-      "welcomeMessage_description": "Hiển thị ở trên câu trả lời của gia sư đầu tiên trong mỗi cuộc trò chuyện mới.",
-      "disclaimerFooter": "Chân trang từ chối trách nhiệm",
-      "disclaimerFooter_description": "Được thêm vào mỗi câu trả lời của gia sư để học sinh nhớ rằng gia sư không phải là một con người.",
-      "thingsToSay": "Những điều cần nói",
-      "thingsToSay_description": "Ví dụ: “Luôn nhắc học sinh đọc giáo trình trước tuần thứ 3”. “Khuyến khích học sinh tóm tắt bài học bằng lời lẽ của mình.”",
-      "thingsNotToSay": "Những điều không nên nói",
-      "thingsNotToSay_description": "Ví dụ: \"Đừng tiết lộ câu trả lời cho bài kiểm tra cuối kỳ.\" \"Đừng bao giờ nói với học sinh bạn đã viết bài đánh giá nào.\"",
-      "forbiddenTopics": "Chủ đề bị cấm",
-      "forbiddenTopics_description": "Danh sách được phân tách bằng dấu phẩy. Gia sư sẽ từ chối thảo luận về những điều này.",
-      "forbiddenTopics_placeholder": "chính trị, tôn giáo, tư vấn y tế cá nhân",
-      "blockOffTopic": "Chặn các câu hỏi lạc đề",
-      "profanityFilter": "Bộ lọc nội dung tục tĩu và nhạy cảm",
-      "assessmentMode": "Chế độ đánh giá",
-      "revealSolutionsAfterAttempts": "Tiết lộ giải pháp sau N lần thử",
-      "revealSolutionsAfterAttempts_description": "Sau nhiều lần thất bại, gia sư có thể đưa ra một ví dụ điển hình. Đặt thành 0 để cho phép trả lời trực tiếp.",
-      "codePolicy": "Chính sách mã",
-      "groundingScope": "Phạm vi nối đất",
-      "requireCitations": "Yêu cầu trích dẫn tài liệu khóa học",
-      "escalationEnabled": "Cung cấp sự leo thang của con người",
-      "escalationEmail": "Email liên hệ của giảng viên",
-      "inheritFromOrg": "Sử dụng mặc định của không gian làm việc"
-    },
-    "section": {
-      "availability": "sẵn có",
-      "availability_description": "Bật hoặc tắt gia sư AI cho học sinh trong không gian làm việc này.",
-      "personality": "Tính cách",
-      "personality_description": "Gia sư giới thiệu bản thân như thế nào và trả lời trong bao lâu.",
-      "guidance": "Điều nên nói · điều không nên nói",
-      "guidance_description": "Hướng dẫn bằng văn bản tự do mà gia sư sẽ tuân theo trong mỗi câu trả lời, cùng với danh sách tùy chọn các chủ đề không được phép.",
-      "assessment": "Bài tập và đánh giá",
-      "assessment_description": "Cách gia sư cư xử khi học sinh yêu cầu giúp đỡ làm bài tập.",
-      "grounding": "Căn cứ & trích dẫn",
-      "grounding_description": "Giới hạn những gì gia sư có thể nói và liệu nó có trích dẫn tài liệu khóa học hay không.",
-      "escalation": "Leo thang",
-      "escalation_description": "Nơi chỉ điểm cho học sinh khi họ cần một con người thực sự.",
-      "inheritance": "Kế thừa khóa học",
-      "inheritance_description": "Kế thừa các giá trị mặc định của không gian làm việc hoặc đặt phần ghi đè cho mỗi khóa học."
-    },
-    "snackbar": {
-      "saved": "Đã lưu cài đặt gia sư AI"
-    },
-    "state": {
-      "loading": "Đang tải cài đặt gia sư AI…"
-    },
-    "action": {
-      "save": "Lưu thay đổi"
-    },
-    "page": {
-      "course": {
-        "title": "Gia sư AI cho khóa học này",
-        "description": "Kế thừa các giá trị mặc định của AI Tutor trong không gian làm việc của bạn hoặc ghi đè cách hành xử của gia sư trong khóa học này."
-      },
-      "org": {
-        "title": "Cài đặt AI Tutor",
-        "description": "Mặc định cho mọi khóa học trong không gian làm việc này. Các khóa học có thể kế thừa hoặc ghi đè chúng."
-      }
-    }
-  },
   "hls_upload": {
     "rungs": {
       "p360": "360p",
@@ -4862,213 +4258,6 @@
       "finalizing": "Đang lưu…",
       "done": "Sẵn sàng",
       "failed": "Tải lên không thành công"
-    }
-  },
-  "cohorts": {
-    "heading": "Nhóm học tập",
-    "page_title": "Nhóm học tập",
-    "create": "Nhóm học tập mới",
-    "create_success": "Đã tạo nhóm học tập",
-    "update_success": "Đã cập nhật nhóm học tập",
-    "delete_success": "Nhóm học tập đã bị xóa",
-    "members_added": "Đã thêm thành viên",
-    "member_removed": "Thành viên đã bị xóa",
-    "course_added": "Đã thêm khóa học",
-    "course_removed": "Đã xóa khóa học",
-    "empty_title": "Chưa có nhóm học tập nào",
-    "empty_description": "Tạo nhóm học tập chứng nhận hoặc tuân thủ đầu tiên của bạn.",
-    "settings": {
-      "general": "chung",
-      "name_label": "Tên",
-      "description_label": "Mô tả",
-      "status_label": "Trạng thái",
-      "save": "Lưu thay đổi",
-      "danger_zone": "Vùng nguy hiểm",
-      "delete": "Xóa nhóm học tập",
-      "delete_description": "Sau khi xóa, nhóm học tập này và tất cả dữ liệu của nó sẽ không thể phục hồi được.",
-      "confirm_delete": "Bạn có chắc chắn muốn xóa nhóm học tập này? Điều này không thể hoàn tác được."
-    },
-    "lms": {
-      "empty_title": "Chưa có nhóm học tập nào",
-      "empty_description": "Bạn chưa được ghi danh vào bất kỳ nhóm học tập nào."
-    },
-    "people": {
-      "invite": "Mời",
-      "invite_modal_title": "Mời thành viên",
-      "invite_modal_description": "Thêm người vào nhóm học tập này qua email.",
-      "email_label": "Email",
-      "role_label": "Vai trò",
-      "add_another": "Thêm cái khác",
-      "invite_submit": "Gửi lời mời",
-      "empty_title": "Chưa có thành viên nào",
-      "empty_description": "Mời mọi người tham gia nhóm học tập này."
-    },
-    "courses": {
-      "add": "Thêm khóa học",
-      "add_modal_title": "Thêm khóa học vào nhóm học tập",
-      "select_course": "Chọn một khóa học",
-      "select_placeholder": "Chọn một khóa học…",
-      "empty_title": "Chưa có khóa học nào",
-      "empty_description": "Thêm các khóa học vào nhóm học tập này.",
-      "select_courses": "Chọn khóa học",
-      "search_placeholder": "Tìm kiếm khóa học",
-      "no_available_courses": "Không có khóa học có sẵn để thêm.",
-      "no_matching_courses": "Không có khóa học phù hợp với tìm kiếm của bạn.",
-      "no_matching_cohort_courses": "Không có nhóm học tập khóa học phù hợp với tìm kiếm của bạn.",
-      "pagination_status": "Trang {page} trong tổng số {totalPages}",
-      "published_access_callout_title": "Quyền truy cập của sinh viên",
-      "published_access_callout_description": "Sinh viên chỉ có quyền truy cập vào các khóa học được xuất bản. Các khóa học có thể nằm trong nhóm này cho nhóm của bạn mặc dù vẫn chưa được xuất bản nhưng chúng vẫn bị ẩn với học sinh cho đến khi bạn xuất bản chúng.",
-      "empty_student_description": "Chưa có khóa học nào được xuất bản trong nhóm này."
-    },
-    "newsfeed": {
-      "post": "Bài đăng mới",
-      "post_placeholder": "Bạn đang nghĩ gì thế?",
-      "post_submit": "bài đăng",
-      "empty_title": "Chưa có bài viết nào",
-      "empty_description": "Hãy là người đầu tiên đăng một cái gì đó.",
-      "heading": "Bảng tin",
-      "make_a_post": "Tạo một bài đăng",
-      "edit_post": "Chỉnh sửa bài đăng",
-      "editor_placeholder": "Chia sẻ bản cập nhật với nhóm học tập của bạn",
-      "cancel": "Hủy bỏ",
-      "pinned": "Đã ghim",
-      "delete_feed_title": "Xóa bài đăng",
-      "delete_feed_description": "Bạn có chắc chắn muốn xóa bài đăng này?",
-      "confirm_delete": "Xóa",
-      "user_avatar_alt": "Hình đại diện của người dùng",
-      "comments": {
-        "comment": "bình luận",
-        "showing_of": "Đang hiển thị {shown} trong tổng số {total}",
-        "hide": "Ẩn bình luận",
-        "placeholder": "Thêm bình luận nhóm học tập",
-        "submit_aria": "Gửi bình luận",
-        "delete": "Xóa"
-      },
-      "card": {
-        "pin": "Ghim",
-        "unpin": "Bỏ ghim",
-        "edit": "Chỉnh sửa",
-        "delete": "Xóa"
-      }
-    },
-    "create_modal": {
-      "title": "Tạo nhóm học tập",
-      "description": "Thêm một nhóm học tập chứng nhận hoặc tuân thủ mới.",
-      "name_label": "Tên",
-      "name_placeholder": "ví dụ: Chứng nhận an toàn OSHA",
-      "description_label": "Mô tả",
-      "description_placeholder": "Nhóm học tập này nói về cái gì?",
-      "submit": "Tạo"
-    },
-    "sidebar": {
-      "newsfeed": "Bảng tin",
-      "courses": "Khóa học",
-      "people": "mọi người",
-      "settings": "Cài đặt"
-    },
-    "status": {
-      "active": "Đang hoạt động",
-      "inactive": "Không hoạt động",
-      "archived": "Đã lưu trữ"
-    },
-    "description": "Cấp cho một nhóm người quyền truy cập vào nhiều khóa học, chẳng hạn như một lớp học",
-    "search_placeholder": "Tìm kiếm nhóm học tập",
-    "multiple_added": "Đã thêm khóa học",
-    "no_matching_cohorts": "Không có nhóm học tập nào phù hợp với bộ lọc của bạn.",
-    "card": {
-      "courses": "Khóa học",
-      "students": "Sinh viên"
-    },
-    "table": {
-      "name": "Tên",
-      "courses": "Khóa học",
-      "students": "Sinh viên",
-      "status": "Trạng thái",
-      "description": "Mô tả"
-    },
-    "filters": {
-      "filter": "Lọc",
-      "clear_all": "Xóa tất cả",
-      "popover_title": "Bộ lọc",
-      "sort": "Sắp xếp",
-      "order": "Đặt hàng",
-      "status": "Trạng thái",
-      "ascending": "Tăng dần",
-      "descending": "Giảm dần",
-      "sort_name": "Tên",
-      "sort_courses": "Khóa học",
-      "sort_students": "Sinh viên",
-      "sort_status": "Trạng thái"
-    },
-    "invite_sent": "Đã gửi lời mời",
-    "goals": {
-      "heading": "Mục tiêu học tập",
-      "description": "Đặt các mục tiêu có thể đo lường được trải rộng trên nhiều khóa học cho mọi người trong nhóm học tập này.",
-      "add": "Mục tiêu mới",
-      "empty_title": "Chưa có mục tiêu nào",
-      "empty_description": "Tạo mục tiêu để theo dõi tiến độ của nhóm qua nhiều khóa học.",
-      "created": "Đã tạo mục tiêu",
-      "updated": "Đã cập nhật mục tiêu",
-      "deleted": "Đã xóa mục tiêu",
-      "delete_confirm": "Xóa mục tiêu này? Lịch sử trạng thái của mỗi học sinh sẽ bị xóa.",
-      "lms": {
-        "heading": "Mục tiêu của bạn",
-        "empty_title": "Không có mục tiêu nào được giao",
-        "empty_description": "Khi người hướng dẫn của bạn đặt mục tiêu, họ sẽ hiển thị ở đây.",
-        "due_in_days": "Đến hạn sau {days} ngày nữa",
-        "due_tomorrow": "Hạn chót vào ngày mai",
-        "due_today": "Hạn chót hôm nay",
-        "overdue": "Quá hạn",
-        "no_deadline": "Không có thời hạn"
-      },
-      "tile": {
-        "on_track": "đi đúng hướng",
-        "completed_short": "hoàn thành",
-        "overdue_short": "quá hạn",
-        "at_risk_short": "có nguy cơ"
-      },
-      "status": {
-        "completed": "Đã hoàn thành",
-        "in_progress": "Đang tiến hành",
-        "at_risk": "Có nguy cơ",
-        "overdue": "Quá hạn",
-        "not_started": "Chưa bắt đầu",
-        "waived": "Miễn trừ"
-      },
-      "deadline_kind": {
-        "absolute": "Ngày tuyệt đối",
-        "relative_to_join": "Liên quan đến việc sinh viên tham gia",
-        "recurring": "Định kỳ",
-        "none": "Không có thời hạn"
-      },
-      "type": {
-        "complete_all": "Hoàn thành tất cả các khóa học đã chọn",
-        "n_of_m": "Hoàn thành N trong số M khóa học đã chọn",
-        "score": "Đạt điểm trên ngưỡng trong mỗi khóa học",
-        "pass_rate": "Ngưỡng tỷ lệ đậu của đội",
-        "readiness": "Sẵn sàng (không có thời hạn)"
-      },
-      "modal": {
-        "create_title": "Mục tiêu mới",
-        "edit_title": "Chỉnh sửa mục tiêu",
-        "title_label": "Tiêu đề",
-        "title_placeholder": "ví dụ: Đoạn đường nối",
-        "description_label": "Mô tả",
-        "description_placeholder": "Bối cảnh tùy chọn cho nhóm",
-        "type_label": "Loại",
-        "courses_label": "Khóa học",
-        "required_count_label": "Số lượng khóa học yêu cầu",
-        "score_threshold_label": "Điểm đậu của mỗi học sinh (%)",
-        "team_pass_rate_label": "Tỷ lệ vượt qua của đội (%)",
-        "deadline_label": "Hạn chót",
-        "deadline_date_label": "Ngày hết hạn",
-        "relative_days_label": "Ngày kể từ khi học viên tham gia",
-        "recurring_months_label": "Lặp lại mỗi (tháng)",
-        "reminders_label": "Lời nhắc (ngày trước hạn)",
-        "reminders_helper": "Được phân tách bằng dấu phẩy. Ví dụ: 7, 3, 1",
-        "save": "Lưu",
-        "cancel": "Hủy bỏ"
-      }
     }
   },
   "celluloplast_navigation": {

@@ -6,7 +6,8 @@
       "label": "Несохраненные изменения"
     },
     "discard": "Отменить",
-    "save_changes": "Сохранить изменения"
+    "save_changes": "Сохранить изменения",
+    "reset": "Reset"
   },
   "validations": {
     "generic": {
@@ -472,17 +473,6 @@
     "in_progress": "Выставление оценок в процессе",
     "graded": "Оцененный",
     "lesson": "Урок"
-  },
-  "my_learning": {
-    "heading": "Мое обучение",
-    "progress": "В процессе",
-    "complete": "Завершить",
-    "search": "Поиск курсов",
-    "not_in_progress": "Курс не ведется",
-    "any_progress": "Здесь будет отображаться любой курс, который вы начинаете.",
-    "not_completed": "Ни один курс не завершен",
-    "any_course": "Здесь будут отображаться все пройденные вами курсы.",
-    "find_courses": "Найти курсы"
   },
   "certificates": {
     "heading": "Сертификаты",
@@ -2694,15 +2684,6 @@
     },
     "page_subtitle": "Здесь уроки превращаются в курсы, а курсы — в зачисления."
   },
-  "ai": {
-    "help_me": "Помогите мне написать",
-    "placeholder": "Помогите мне написать краткое описание.",
-    "text": "Начните печатать...",
-    "reset": "Сброс",
-    "rephrase": "Перефразировать",
-    "insert": "Вставить",
-    "can_you": "Не могли бы вы перефразировать это?"
-  },
   "dashboard": {
     "morning_heading": "Доброе утро",
     "afternoon_heading": "Добрый день",
@@ -2888,10 +2869,6 @@
       "interactive": "Создавайте интерактивные викторины с табло для своих учеников."
     }
   },
-  "markdown_editor": {
-    "write": "Написать",
-    "preview": "Предварительный просмотр"
-  },
   "navigation": {
     "goto": "Перейти к",
     "courses": "Курсы",
@@ -2909,73 +2886,6 @@
     "org_loading_state": "Отвезу вас в вашу организацию...",
     "add_organization": "+ Добавить организацию",
     "goto_dashboard": "Панель управления"
-  },
-  "add_org": {
-    "create_org": "Создать организацию",
-    "name": "Название организации",
-    "org_sitename": "Поддомен Академии",
-    "create": "Создать",
-    "sitename": "Поддомен Академии уже существует",
-    "error_organization": "Что-то пошло не так при создании этой организации. Пожалуйста, перезагрузите компьютер и попробуйте еще раз"
-  },
-  "setup": {
-    "your_checklist": "Ваш контрольный список",
-    "get_started": "Начать",
-    "description": "Выполните эти шаги, чтобы настроить свою учебную платформу.",
-    "progress": "Прогресс",
-    "completed": "завершено",
-    "done": "Готово",
-    "todo": "Задачи",
-    "publish_course": {
-      "title": "Опубликовать курс",
-      "desc": "Сделайте свой курс общедоступным и доступным для покупки",
-      "button_label": "Опубликовать курс"
-    },
-    "exercise": {
-      "title": "Создать упражнение",
-      "desc": "Протестируйте своих учеников, позвольте им продемонстрировать свое понимание предмета",
-      "button_label": "Создать задание"
-    },
-    "lesson": {
-      "title": "Создать урок",
-      "desc": "Разбейте курс на уроки, которые ваши ученики смогут легко понять.",
-      "button_label": "Создать урок"
-    },
-    "course": {
-      "title": "Создать курс",
-      "desc": "Создайте курс, которым вы поделитесь со своими учениками",
-      "button_label": "Создать курс"
-    },
-    "organization_profile": {
-      "title": "Обновить изображение профиля организации",
-      "desc": "Создайте профессиональный и узнаваемый имидж вашей организации.",
-      "button_label": "Обновить профиль организации"
-    },
-    "personal_profile": {
-      "title": "Загрузите изображение профиля и обновите имя пользователя.",
-      "desc": "Персонализируйте и добавляйте человеческий подход, делая взаимодействие более личным и запоминающимся.",
-      "button_label": "Обновить профиль"
-    }
-  },
-  "pricing": {
-    "modal": {
-      "heading": "План обновления",
-      "thanks": "Спасибо за вашу поддержку",
-      "plan": "Ваш план включает в себя интересные привилегии и преимущества, включая доступ ко всем будущим функциям, которые мы выпустим.",
-      "save": "Сэкономьте 2 месяца",
-      "close": "Закрыть",
-      "learn": "Узнать больше",
-      "month": "месяц",
-      "monthly": "Ежемесячно",
-      "annually": "Ежегодно",
-      "popular": "Популярный",
-      "per_org": "За организацию"
-    },
-    "plan_names": {
-      "free": "Бесплатно",
-      "early": "Ранний приверженец",
-      "enterprise": "Предприятие"
-    }
   },
   "org_navigation": {
     "platform": "Платформа",
@@ -3827,20 +3737,6 @@
       "personal_page_subtitle": "Выберите, какие уведомления по электронной почте вы получаете от ClassroomIO."
     }
   },
-  "profileMenu": {
-    "profile": "ПРОФИЛЬ",
-    "current_org": "ТЕКУЩАЯ ОРГАНИЗАЦИЯ",
-    "free_tools": "БЕСПЛАТНЫЕ ИНСТРУМЕНТЫ",
-    "progress": "Отчет о ходе работы",
-    "timer": "Таймер активности",
-    "tic_tac": "Крестики-палочки",
-    "see_more": "Посмотреть больше",
-    "whats_new": "Что нового",
-    "launch_week": "Неделя запуска",
-    "feedback": "Обратная связь",
-    "documentation": "Документация",
-    "need_help": "Нужна помощь?"
-  },
   "login": {
     "sign_in_to_continue": "Sign in to continue",
     "welcome": "С возвращением",
@@ -3906,7 +3802,16 @@
       }
     },
     "cancel": "Отмена",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "setup_error": {
+      "title": "Something went wrong",
+      "description": "We could not start the app. Reload the page, or contact your administrator if the problem persists.",
+      "reload": "Reload page"
+    },
+    "restricted": {
+      "title": "Restricted access",
+      "description": "This organization is not available for your account. Contact your administrator."
+    }
   },
   "welcome_modal": {
     "we_at": "Мы в",
@@ -3999,85 +3904,6 @@
     "seconds": "секунды",
     "snackbar_error": "ошибка при отправке кода"
   },
-  "public_courses": {
-    "page_title": "Курсы - ClassroomIO",
-    "heading": "Курсы",
-    "subtitle": "Просмотреть все опубликованные курсы",
-    "clear_filters": "Очистить фильтры",
-    "empty": {
-      "title": "Курсы не найдены",
-      "description": "Попробуйте очистить фильтры или зайдите позже."
-    },
-    "catalog_empty": {
-      "title": "Пока нет опубликованных курсов",
-      "description": "Загляните позже — скоро появятся новые курсы."
-    },
-    "filters": {
-      "title": "Фильтровать по тегам",
-      "help": "Выберите один или несколько тегов, чтобы отфильтровать курсы.",
-      "empty": "Тегов пока нет",
-      "tags_title": "Теги",
-      "types_title": "Типы",
-      "search_placeholder": "Искать курсы...",
-      "clear_search": "Очистить поиск",
-      "pricing_title": "Цены",
-      "pricing_free": "Бесплатно",
-      "pricing_paid": "Платный",
-      "selected": "Выбрано:",
-      "save_changes": "Сохранить изменения"
-    }
-  },
-  "tags_admin": {
-    "page_title": "Теги — ClassroomIO",
-    "heading": "Теги",
-    "create": "Создать",
-    "tag_modal": {
-      "create_title": "Создать тег",
-      "edit_title": "Изменить тег",
-      "name": "Имя тега",
-      "description": "Описание",
-      "description_placeholder": "Дополнительное описание",
-      "category": "Категория",
-      "color": "Цвет",
-      "color_help": "Выберите один из 10 цветов",
-      "select_category": "Выберите категорию",
-      "no_groups": "Прежде чем создавать теги, создайте группу тегов."
-    },
-    "group_modal": {
-      "create_title": "Создать группу тегов",
-      "edit_title": "Редактировать группу тегов",
-      "name": "Имя группы",
-      "description": "Описание",
-      "description_placeholder": "Дополнительное описание"
-    },
-    "empty": {
-      "title": "Групп тегов пока нет",
-      "description": "Сначала создайте группу тегов, а затем начинайте добавлять теги."
-    },
-    "table": {
-      "tag": "Тег",
-      "total_courses": "Всего курсов",
-      "course": "курс",
-      "courses": "курсы",
-      "description": "Описание",
-      "category": "Категория",
-      "action": "Действие",
-      "empty_group": "В этой группе пока нет тегов"
-    },
-    "actions": {
-      "create_tag": "Создать тег",
-      "create_group": "Создать группу тегов",
-      "edit_group": "Редактировать группу",
-      "edit_tag": "Изменить тег",
-      "save": "Сохранить",
-      "cancel": "Отмена",
-      "actions_menu": "Действия с тегами"
-    },
-    "common": {
-      "not_available": "Н/Д"
-    },
-    "page_subtitle": "Организуйте курсы с помощью меток, чтобы фильтры и списки было легко просматривать."
-  },
   "invite": {
     "organization": {
       "page_title": "Присоединяйтесь к {orgName} в ClassroomIO.",
@@ -4110,300 +3936,6 @@
       "join_failed": "Не удалось присоединиться к организации",
       "joined": "Присоединившаяся организация"
     }
-  },
-  "automation": {
-    "title": "Автоматизация",
-    "subtitle": "Подключите клиентов MCP прямо сейчас, используя Zapier и общедоступный API в одной и той же системе ключей на уровне организации.",
-    "coming_soon": "Скоро",
-    "mcp": {
-      "setup": {
-        "title": "Настройка клиента",
-        "description": "Используйте один ключ на уровне организации для каждой интеграции. Если ключ заменен или отозван, клиент перестает работать до тех пор, пока не будет настроен новый секрет.",
-        "claude_code_description": "Регистрирует `@classroomio/mcp` в Claude Code, используя сгенерированный ключ на уровне организации.",
-        "codex_description": "Добавляет сервер ClassroomIO MCP в Кодекс с тем же ключом на уровне организации.",
-        "cursor_description": "Вставьте это в `~/.cursor/mcp.json` или в конфигурацию MCP вашей рабочей области.",
-        "opencode_description": "Добавьте это в `opencode.json` в корне проекта или в `~/.config/opencode/opencode.json`."
-      },
-      "keys": {
-        "title": "Ключи MCP",
-        "description": "Эти ключи аутентифицируют текущую организацию, когда клиент MCP вызывает ClassroomIO через @classroomio/mcp.",
-        "generate": "Создать ключ MCP",
-        "secret_once": "Этот секрет раскрывается один раз. Скопируйте его в свой клиент MCP сейчас.",
-        "modal": {
-          "title": "Создать MCP-ключ",
-          "description": "Выберите имя для этого MCP-ключа перед его созданием.",
-          "name_label": "Имя ключа",
-          "name_placeholder": "ClassroomIO OpenCode",
-          "cancel": "Отмена",
-          "save": "Создать ключ"
-        }
-      },
-      "usage": {
-        "title": "Использование и ограничения",
-        "description": "MCP доступен в каждом плане. Использование контролируется лимитами ключей и лимитами запросов.",
-        "keys_title": "Активные ключи",
-        "keys_description": "Используйте один ключ MCP для каждой интеграции, чтобы можно было без проблем менять или отзывать доступ.",
-        "rate_limits_title": "Ограничения ставок",
-        "rate_limits_description": "Запросы на чтение/запись/публикацию разрешены в минуту.",
-        "used_label": "Использовано:"
-      },
-      "page_subtitle": "Подключайте ИИ-инструменты к ClassroomIO с помощью ключей организации, которые можно менять в любое время.",
-      "view_docs": "Документация"
-    },
-    "api": {
-      "subtitle": "Управляйте API-ключами для интеграции с публичным API ClassroomIO.",
-      "keys": {
-        "title": "API-ключи",
-        "description": "Эти ключи аутентифицируют текущую организацию при вызове публичного API ClassroomIO.",
-        "generate": "Сгенерировать API-ключ",
-        "secret_once": "Этот секрет показывается один раз. Скопируйте и сохраните его в надёжном месте.",
-        "empty_title": "API-ключей пока нет",
-        "empty_description": "Создайте первый API-ключ организации для использования публичного API ClassroomIO.",
-        "modal": {
-          "title": "Создать API-ключ",
-          "description": "Выберите имя для этого API-ключа перед его созданием.",
-          "name_label": "Имя ключа",
-          "name_placeholder": "Моя API-интеграция",
-          "cancel": "Отмена",
-          "save": "Создать ключ"
-        }
-      },
-      "setup": {
-        "title": "Быстрый старт",
-        "description": "Используйте ключ API как Bearer-токен в каждом запросе. Замените заполнитель ключом из списка выше или вставьте секрет сразу после генерации."
-      },
-      "view_docs": "Документация"
-    },
-    "keys": {
-      "active": "Активный",
-      "revoked": "Отозван",
-      "rotate": "Поворот",
-      "revoke": "Отозвать",
-      "empty_title": "Ключей MCP пока нет",
-      "empty_description": "Создайте первый ключ MCP на уровне организации для подключения Claude Code, Codex, Cursor или OpenCode.",
-      "created_at_label": "Создано:",
-      "last_used_label": "Последнее использование:",
-      "never_used": "Никогда",
-      "scopes_label": "Области применения:",
-      "revoke_confirm": "Отозвать этот ключ автоматизации?",
-      "rotate_confirm": "Повернуть этот ключ автоматизации?",
-      "table_key": "Ключ",
-      "table_status": "Статус",
-      "table_created": "Создано",
-      "table_last_used": "Последнее использование"
-    },
-    "clients": {
-      "claude_code": "Claude Code",
-      "codex": "Codex",
-      "cursor": "Cursor",
-      "opencode": "OpenCode",
-      "curl": "cURL",
-      "javascript": "JavaScript",
-      "python": "Python",
-      "go": "Go"
-    },
-    "tabs": {
-      "mcp": "MCP",
-      "zapier": "Zapier",
-      "api": "API"
-    },
-    "permissions": {
-      "disabled_title": "Доступ только для чтения",
-      "disabled_description": "Только администраторы организации могут создавать, менять или отзывать ключи автоматизации. Учителя могут ознакомиться с инструкциями по настройке здесь."
-    },
-    "zapier": {
-      "page_subtitle": "Автоматизируйте ClassroomIO с тысячами приложений через Zapier. Скоро."
-    }
-  },
-  "ai_assistant": {
-    "empty_state": "Попросите меня помочь с содержанием вашего курса: набросайте уроки, сформулируйте вопросы или спланируйте курс на основе документа.",
-    "input_placeholder": "Спросите ИИ-помощника...",
-    "quote_lesson_note": "Цитировать в помощнике",
-    "attach_document": "Прикрепите документ (PDF, DOCX, PPTX)",
-    "upgrade_to_upload": "Обновите, чтобы загружать документы",
-    "tokens_exhausted": "Достигнут месячный лимит токенов AI.",
-    "tokens_exhausted_buy_more": "Купить ещё",
-    "chat_history": "История чата",
-    "no_conversations": "Пока нет разговоров",
-    "untitled": "Без названия",
-    "new_chat": "Новый чат",
-    "tokens_label": "токены",
-    "implementing_course_plan": "Реализация плана курса",
-    "resume": "Продолжить",
-    "stopped_content_kept": "Остановился. Созданный контент сохранен.",
-    "mention_lesson": "Урок",
-    "mention_exercise": "Упражнение",
-    "mention_section": "Раздел",
-    "mention_no_results": "Нет подходящего контента",
-    "uploading_document": "Загрузка документа...",
-    "agent_running_warning": "Изменения появятся в курсе, как только агент завершит работу. Не перезагружайте страницу.",
-    "agent_running_warning_dismiss": "Закрыть",
-    "quick_action": {
-      "upload_document_course": "Загрузить документ для создания курса",
-      "draft_lesson": "Набросать урок",
-      "generate_questions_from_lesson": "Сгенерировать вопросы по этому уроку",
-      "summarize_lesson": "Суммировать этот урок",
-      "publish_course": "Помогите опубликовать этот курс"
-    },
-    "plan_applying_changes": "Применение изменений",
-    "plan_working": "Выполняется",
-    "plan_progress": "Выполнено шагов: {completed} / {total}",
-    "stop": "Остановить",
-    "copy_full_error": "Скопировать полный текст ошибки",
-    "resize_panel_aria_label": "Изменить размер панели ИИ-помощника",
-    "generic_working": "Выполняется",
-    "run_failed_after": "{action} не завершилось успешно.",
-    "tool": {
-      "pending": {
-        "working": "Выполняется",
-        "unknown_tool": "Выполняется {toolName}",
-        "get_course_structure": "Чтение структуры курса",
-        "get_lesson_content": "Чтение содержимого урока",
-        "get_exercise_details": "Чтение упражнения",
-        "create_section": "Создание раздела",
-        "update_section": "Обновление раздела",
-        "create_lesson": "Создание урока",
-        "update_lesson": "Обновление урока",
-        "update_lesson_content": "Запись содержимого урока",
-        "create_exercise": "Создание упражнения",
-        "create_exercise_section": "Создание раздела упражнений",
-        "update_exercise": "Обновление упражнения",
-        "update_exercise_section": "Обновление раздела упражнений",
-        "add_questions": "Добавление вопросов",
-        "update_questions": "Обновление вопросов",
-        "reorder_content": "Переупорядочивание содержимого",
-        "update_course_landing_page": "Обновление целевой страницы",
-        "check_course_go_live_readiness": "Проверка готовности к публикации",
-        "go_live_course": "Публикация курса",
-        "generate_course_plan": "Генерация плана курса",
-        "ask_template_questions": "Подготовка шаблонной формы",
-        "fetch_documentation_url": "Чтение страницы документации",
-        "fetch_documentation_url_with_url": "Чтение {url}"
-      },
-      "meta": {
-        "lesson_char_count": "({count, plural, one {# символ} other {# символов}})",
-        "landing_page_preview": "· Предпросмотр изменений",
-        "exercise_questions_added": "· {count, plural, one {добавлен # вопрос} other {добавлено # вопросов}}",
-        "exercise_questions_updated": "· {count, plural, one {обновлён # вопрос} other {обновлено # вопросов}}"
-      },
-      "done": {
-        "generic": "Готово",
-        "create_section": "Создан раздел: {title}",
-        "update_section": "Раздел обновлён: {title}",
-        "create_lesson": "Создан урок: {title}",
-        "update_lesson": "Урок обновлён: {title}",
-        "update_lesson_content_fallback": "Записано {count, plural, one {# символ} other {# символов}}",
-        "create_exercise": "Создано упражнение «{title}» · {count, plural, one {# вопрос} other {# вопросов}}",
-        "update_exercise": "Упражнение обновлено: {title}",
-        "update_exercise_section": "Раздел упражнений обновлён: {title}",
-        "add_questions_fallback": "{count, plural, one {Добавлен # вопрос} other {Добавлено # вопросов}}",
-        "update_questions_fallback": "{count, plural, one {Обновлён # вопрос} other {Обновлено # вопросов}}",
-        "create_exercise_section": "Создан раздел упражнений: {title}",
-        "get_course_structure": "Структура курса загружена",
-        "get_lesson_content": "Содержимое урока загружено",
-        "get_exercise_details": "Упражнение загружено",
-        "reorder_content": "Содержимое переупорядочено",
-        "update_course_landing_page": "Целевая страница обновлена: {title}",
-        "check_go_live_ready": "{warningCount, plural, =0{Готово к публикации} other{Готово к публикации — предупреждений: #}}",
-        "check_go_live_blocked": "{blockerCount, plural, one{# препятствие перед публикацией} other{# препятствий перед публикацией}}",
-        "go_live_published": "Курс опубликован: {title}",
-        "go_live_not_published": "Курс не был опубликован",
-        "generate_course_plan": "План курса сгенерирован",
-        "ask_template_questions": "Шаблон формы готов.",
-        "fetch_documentation_url": "Прочитать {url}"
-      }
-    },
-    "student_empty_state": "Спросите меня о чем-нибудь об этом курсе — получите объяснения, пройдите тест или подведите итог прочитанному.",
-    "messages_used_label": "сообщения в этом месяце",
-    "plan_thinking": "Обдумывая вашу просьбу…",
-    "plan_implement": "Реализация плана",
-    "plan_ask_changes_placeholder": "Подскажите, что изменить в плане…",
-    "plan_ask_changes_send_aria": "Отправить запрос на изменение",
-    "send": "Отправить",
-    "rename_chat_aria": "Переименовать беседу",
-    "rename_chat_input_aria": "Название беседы",
-    "rename_chat_placeholder": "Название беседы",
-    "rename_chat_failed": "Не удалось переименовать этот чат. Попробуйте еще раз.",
-    "error_rate_limit": "Служба AI временно занята. Пожалуйста, повторите попытку через минуту.",
-    "error_rate_limit_with_wait": "Служба AI временно занята. Повторите попытку через {seconds} сек.",
-    "error_context_too_long": "Разговор слишком длинный. Попробуйте начать новый чат или сократить сообщение.",
-    "error_network": "Ошибка сети. Пожалуйста, проверьте подключение и повторите попытку.",
-    "context_usage_tooltip": "{used} / {max} использовано токенов",
-    "context_full_title": "Контекстное окно заполнено",
-    "context_full_description": "Помощник автоматически сократит старые сообщения, чтобы вы могли продолжать работу в этом чате.",
-    "context_full_compact": "Компактный разговор",
-    "context_full_compacting": "Уплотнение...",
-    "context_full_new_chat": "Начать новый чат с кратким описанием",
-    "context_full_summarizing": "Создание сводки...",
-    "context_compacted_badge": "Разговор сжат (предыдущие сообщения: {count})",
-    "student_quick_action": {
-      "explain_lesson": "Объясните этот урок",
-      "quiz_me": "Протестируй меня",
-      "summarize_section": "Подведите итоги этого раздела",
-      "what_to_review": "Что мне следует проверить дальше?"
-    },
-    "run_running": "Генерация курса",
-    "run_completed": "Генерация курса завершена",
-    "run_failed": "Не удалось создать курс.",
-    "run_canceled": "Создание курса отменено.",
-    "run_waiting_for_worker": "Ожидание фонового работника",
-    "run_checkpoint": "Сохранение контрольной точки прогресса",
-    "retry": "Повторить попытку",
-    "run_monitor_aria": "Выполняется создание курса",
-    "run_summary": {
-      "completed": "Запуск завершен.",
-      "completed_with_counts": "Запуск завершен — создано {counts}.",
-      "failed": "Запуск не удался.",
-      "failed_with_reason": "Не удалось выполнить запуск — {reason}.",
-      "canceled": "Забег отменен.",
-      "canceled_with_counts": "Запуск отменен — перед остановкой создано {counts}.",
-      "paused": "Бег остановился. Возобновите, чтобы продолжить.",
-      "paused_with_counts": "Выполнение приостановлено — на данный момент создано {counts}. Возобновите, чтобы продолжить."
-    },
-    "changes_card": {
-      "summary_count": "Изменено элементов: {count}",
-      "expand": "Развернуть изменения",
-      "collapse": "Свернуть изменения",
-      "action": {
-        "created": "Создано",
-        "metadata_updated": "Метаданные обновлены.",
-        "content_written": "Содержание написано",
-        "questions_added": "+{count} вопросов",
-        "questions_updated": "Отредактировано {count} вопросов",
-        "section_added": "Блок добавлен",
-        "section_edited": "Блок изменен"
-      },
-      "status": {
-        "completed": "Завершено",
-        "failed": "Не удалось",
-        "canceled": "Отменено",
-        "paused": "Приостановлено"
-      }
-    },
-    "plan_view": {
-      "expand": "Развернуть план",
-      "collapse": "Свернуть план"
-    },
-    "run_monitor": {
-      "cancel": "Отменить запуск",
-      "dismiss": "Отклонить",
-      "now_doing": "Сейчас",
-      "input_disabled_hint": "Чат приостановлен, пока агент завершает создание курса. Отмените или дождитесь завершения.",
-      "dismiss_confirm": "Уйти",
-      "dismiss_cancel": "Продолжайте бежать",
-      "dismiss_confirm_body": "Уйти с отмененного забега? Кнопка «Возобновить» исчезнет — любой дальнейший чат начнется заново и не будет продолжать выполнение плана.",
-      "stuck_queued": {
-        "title": "Работник не отвечает",
-        "body": "Этот запуск ожидает более 30 секунд, а работник не подъезжает. Фоновый рабочий процесс может быть отключен или перезапущен."
-      }
-    },
-    "ask_ai": "Спросите ИИ",
-    "content_input_placeholder": "Спросите об этом контенте…",
-    "ask_ai_expand_aria": "Открыть вход Ask AI",
-    "ask_ai_input_aria": "Спросите ИИ об этом контенте",
-    "upload_error_file_too_large": "Файл слишком большой. Максимальный размер — 5 МБ.",
-    "upload_error_unsupported_type": "Тип файла не поддерживается. Загрузите файл PDF, DOCX, PPTX или ODT.",
-    "upload_error_generic": "Не удалось загрузить документ. Пожалуйста, попробуйте еще раз."
   },
   "widgets": {
     "heading": "Виджеты",
@@ -4678,29 +4210,6 @@
       "description": "Учитывается среди студентов на всех курсах соответствия."
     }
   },
-  "public_course": {
-    "exercise": {
-      "submit": "Проверьте мои ответы",
-      "try_again": "Попробуйте еще раз",
-      "practice_again": "Практикуйтесь снова",
-      "attempt_option": "Попытка {attemptNumber} – {correct}/{total}",
-      "attempts_select_aria": "Ваши попытки",
-      "privacy_hint": "Оценивается мгновенно в вашем браузере — ничего не отправляется.",
-      "summary_template": "Вы ответили [[правильно]] / [[всего]] правильно."
-    },
-    "powered_by": {
-      "label": "При поддержке",
-      "brand": "ClassroomIO"
-    },
-    "footer_nav": {
-      "previous": "Предыдущий",
-      "next": "Далее"
-    },
-    "header": {
-      "explore_courses": "Изучите курсы",
-      "sign_in": "Войти"
-    }
-  },
   "account": {
     "workspaces": {
       "page_title": "Рабочие пространства",
@@ -4729,119 +4238,6 @@
       "other_organizations": "Другие организации"
     }
   },
-  "aiTutor": {
-    "creditsPage": {
-      "tutorSummaryTitle": "Репетитор по искусственному интеллекту, добросовестное использование",
-      "atCap": "В кепке",
-      "approaching": "Приближаемся к шапке",
-      "totalActive": "Активные студенты в этом месяце",
-      "learnersHeading": "Студенты",
-      "headerLearner": "Студент",
-      "headerMessages": "Сообщения",
-      "headerTokens": "Токены",
-      "headerStatus": "Статус",
-      "statusUnder": "Под крышкой",
-      "statusApproaching": "Приближаясь",
-      "statusAtCap": "В кепке"
-    },
-    "takeABreak": {
-      "title": "Ваш преподаватель по искусственному интеллекту берет перерыв",
-      "learnerCap": "Вы исчерпали лимит сообщений репетитора в этом месяце. Ваши сообщения будут сброшены 1-го числа следующего месяца.",
-      "poolExhausted": "В этом месяце в вашем рабочем пространстве исчерпались возможности преподавателей искусственного интеллекта. Пожалуйста, зайдите позже или обратитесь к преподавателю.",
-      "disabled": "Репетитор искусственного интеллекта не включен для этой рабочей области."
-    },
-    "groundingScope": {
-      "course": "Весь курс",
-      "lesson": "Только текущий урок",
-      "workspace": "Все рабочее пространство"
-    },
-    "codePolicy": {
-      "hints_only": "Только подсказки",
-      "allowed": "Разрешить полные примеры кода",
-      "forbidden": "Нет кода в ответах"
-    },
-    "assessmentMode": {
-      "hint_only": "Только подсказки (без прямых ответов)",
-      "direct_answer": "Разрешить прямые ответы",
-      "block_during_exercise": "Блокировать помощь, пока учащийся выполняет упражнение"
-    },
-    "responseLength": {
-      "short": "Короткий (1–3 предложения)",
-      "medium": "Средний (1–2 коротких абзаца)",
-      "long": "Длинные (структурированные объяснения)"
-    },
-    "persona": {
-      "encouraging": "Поощрение",
-      "friendly": "Дружелюбный",
-      "formal": "Формальный",
-      "socratic": "Сократический",
-      "custom": "Пользовательский"
-    },
-    "field": {
-      "enabled": "Репетитор по искусственному интеллекту включен",
-      "persona": "Персона репетитора",
-      "customPersona": "Пользовательский персонаж",
-      "customPersona_description": "Опишите, как должен звучать преподаватель — тон, стиль обращения, что-то особенное для вашей аудитории.",
-      "responseLength": "Длина ответа",
-      "welcomeMessage": "Приветственное сообщение",
-      "welcomeMessage_description": "Отображается над первым ответом преподавателя в каждом новом разговоре.",
-      "disclaimerFooter": "Нижний колонтитул об отказе от ответственности",
-      "disclaimerFooter_description": "Прилагается к каждому ответу репетитора, чтобы учащиеся помнили, что репетитор — не человек.",
-      "thingsToSay": "Что сказать",
-      "thingsToSay_description": "Примеры: «Всегда напоминайте учащимся, чтобы они прочитали учебную программу до третьей недели». «Поощряйте учащихся подводить итоги урока своими словами».",
-      "thingsNotToSay": "Вещи, которые не следует говорить",
-      "thingsNotToSay_description": "Примеры: «Не раскрывайте ответы на выпускном экзамене». «Никогда не сообщайте студентам, какой отзыв вы написали».",
-      "forbiddenTopics": "Запрещенные темы",
-      "forbiddenTopics_description": "Список, разделенный запятыми. Преподаватель откажется обсуждать это.",
-      "forbiddenTopics_placeholder": "политика, религия, персональные медицинские консультации",
-      "blockOffTopic": "Блокировать вопросы не по теме",
-      "profanityFilter": "Фильтр ненормативной лексики и деликатного контента",
-      "assessmentMode": "Режим оценки",
-      "revealSolutionsAfterAttempts": "Выявить решения после N попыток",
-      "revealSolutionsAfterAttempts_description": "После многих неудачных попыток преподаватель может предложить проработанный пример. Установите значение 0, чтобы разрешить прямые ответы.",
-      "codePolicy": "Политика кода",
-      "groundingScope": "Объем заземления",
-      "requireCitations": "Требовать ссылки на материалы курса",
-      "escalationEnabled": "Предложите человеческую эскалацию",
-      "escalationEmail": "Контактный адрес электронной почты инструктора",
-      "inheritFromOrg": "Использовать настройки рабочей области по умолчанию"
-    },
-    "section": {
-      "availability": "Доступность",
-      "availability_description": "Включите или отключите репетитора по искусственному интеллекту для учащихся в этой рабочей области.",
-      "personality": "Личность",
-      "personality_description": "Как репетитор представляется и как долго он отвечает.",
-      "guidance": "Что сказать · чего не сказать",
-      "guidance_description": "Свободное текстовое руководство, которому преподаватель будет следовать в каждом ответе, а также дополнительный список запрещенных тем.",
-      "assessment": "Упражнения и оценки",
-      "assessment_description": "Как ведет себя репетитор, когда ученик просит помочь с упражнением.",
-      "grounding": "Обоснование и цитаты",
-      "grounding_description": "Ограничьте то, о чем может говорить преподаватель и цитирует ли он материалы курса.",
-      "escalation": "Эскалация",
-      "escalation_description": "Куда указать ученикам, когда им нужен настоящий человек.",
-      "inheritance": "Наследование курса",
-      "inheritance_description": "Наследуйте настройки рабочей области по умолчанию или установите переопределения для каждого курса."
-    },
-    "snackbar": {
-      "saved": "Настройки AI-репетитора сохранены."
-    },
-    "state": {
-      "loading": "Загрузка настроек AI-репетитора…"
-    },
-    "action": {
-      "save": "Сохранить изменения"
-    },
-    "page": {
-      "course": {
-        "title": "AI Tutor для этого курса",
-        "description": "Наследуйте настройки AI Tutor по умолчанию в вашей рабочей области или переопределите поведение преподавателя в этом курсе."
-      },
-      "org": {
-        "title": "Настройки AI Tutor",
-        "description": "Значения по умолчанию для каждого курса в этой рабочей области. Курсы могут наследовать их или переопределять."
-      }
-    }
-  },
   "hls_upload": {
     "rungs": {
       "p360": "360p",
@@ -4862,213 +4258,6 @@
       "finalizing": "Сохранение…",
       "done": "Готово",
       "failed": "Загрузка не удалась"
-    }
-  },
-  "cohorts": {
-    "heading": "Когорты",
-    "page_title": "Когорты",
-    "create": "Новая когорта",
-    "create_success": "Когорта создана",
-    "update_success": "Когорта обновлена",
-    "delete_success": "Когорта удалена",
-    "members_added": "Добавлены участники",
-    "member_removed": "Участник удален",
-    "course_added": "Курс добавлен",
-    "course_removed": "Курс удален.",
-    "empty_title": "Пока нет когорт",
-    "empty_description": "Создайте свою первую когорту сертификации или соответствия требованиям.",
-    "settings": {
-      "general": "Общий",
-      "name_label": "Имя",
-      "description_label": "Описание",
-      "status_label": "Статус",
-      "save": "Сохранить изменения",
-      "danger_zone": "Опасная зона",
-      "delete": "Удалить когорту",
-      "delete_description": "После удаления эту когорту и все ее данные невозможно восстановить.",
-      "confirm_delete": "Вы уверены, что хотите удалить эту когорту? Это невозможно отменить."
-    },
-    "lms": {
-      "empty_title": "Пока нет когорт",
-      "empty_description": "Вы не были зарегистрированы ни в одной когорте."
-    },
-    "people": {
-      "invite": "Пригласить",
-      "invite_modal_title": "Пригласить участников",
-      "invite_modal_description": "Добавляйте людей в эту когорту по электронной почте.",
-      "email_label": "Эл. почта",
-      "role_label": "Роль",
-      "add_another": "Добавить еще",
-      "invite_submit": "Отправить приглашения",
-      "empty_title": "Пока нет участников",
-      "empty_description": "Пригласите людей присоединиться к этой когорте."
-    },
-    "courses": {
-      "add": "Добавить курс",
-      "add_modal_title": "Добавить курс в когорту",
-      "select_course": "Выберите курс",
-      "select_placeholder": "Выбрать курс…",
-      "empty_title": "Курсов пока нет",
-      "empty_description": "Добавьте курсы в эту когорту.",
-      "select_courses": "Выберите курсы",
-      "search_placeholder": "Поиск курсов",
-      "no_available_courses": "Нет доступных курсов для добавления.",
-      "no_matching_courses": "Нет курсов, соответствующих вашему запросу.",
-      "no_matching_cohort_courses": "Никакие курсы когорты не соответствуют вашему запросу.",
-      "pagination_status": "Страница {page} из {totalPages}",
-      "published_access_callout_title": "Доступ для студентов",
-      "published_access_callout_description": "Студенты имеют доступ только к опубликованным курсам. Курсы могут находиться в этой когорте для вашей команды, пока они еще не опубликованы, но они остаются скрытыми от учащихся, пока вы их не опубликуете.",
-      "empty_student_description": "В этой группе пока нет опубликованных курсов."
-    },
-    "newsfeed": {
-      "post": "Новое сообщение",
-      "post_placeholder": "Что у тебя на уме?",
-      "post_submit": "Сообщение",
-      "empty_title": "Пока нет сообщений",
-      "empty_description": "Будьте первым, кто опубликует что-либо.",
-      "heading": "Лента новостей",
-      "make_a_post": "Сделать публикацию",
-      "edit_post": "Редактировать сообщение",
-      "editor_placeholder": "Поделитесь обновлением со своей когортой",
-      "cancel": "Отмена",
-      "pinned": "Закреплено",
-      "delete_feed_title": "Удалить сообщение",
-      "delete_feed_description": "Вы уверены, что хотите удалить этот пост?",
-      "confirm_delete": "Удалить",
-      "user_avatar_alt": "Аватар пользователя",
-      "comments": {
-        "comment": "комментарий",
-        "showing_of": "Показаны {shown} из {total}",
-        "hide": "Скрыть комментарии",
-        "placeholder": "Добавить комментарий к когорте",
-        "submit_aria": "Отправить комментарий",
-        "delete": "Удалить"
-      },
-      "card": {
-        "pin": "Закрепить",
-        "unpin": "Открепить",
-        "edit": "Редактировать",
-        "delete": "Удалить"
-      }
-    },
-    "create_modal": {
-      "title": "Создать когорту",
-      "description": "Добавьте новую когорту сертификации или соответствия.",
-      "name_label": "Имя",
-      "name_placeholder": "например Сертификация безопасности OSHA",
-      "description_label": "Описание",
-      "description_placeholder": "О чем эта когорта?",
-      "submit": "Создать"
-    },
-    "sidebar": {
-      "newsfeed": "Лента новостей",
-      "courses": "Курсы",
-      "people": "Люди",
-      "settings": "Настройки"
-    },
-    "status": {
-      "active": "Активный",
-      "inactive": "Неактивный",
-      "archived": "В архиве"
-    },
-    "description": "Предоставьте группе людей доступ к нескольким курсам, например к классу.",
-    "search_placeholder": "Поиск когорт",
-    "multiple_added": "Курсы добавлены",
-    "no_matching_cohorts": "Ни одна когорта не соответствует вашим фильтрам.",
-    "card": {
-      "courses": "Курсы",
-      "students": "Студенты"
-    },
-    "table": {
-      "name": "Имя",
-      "courses": "Курсы",
-      "students": "Студенты",
-      "status": "Статус",
-      "description": "Описание"
-    },
-    "filters": {
-      "filter": "Фильтр",
-      "clear_all": "Очистить все",
-      "popover_title": "Фильтры",
-      "sort": "Сортировать",
-      "order": "Заказать",
-      "status": "Статус",
-      "ascending": "По возр.",
-      "descending": "По убыв.",
-      "sort_name": "Имя",
-      "sort_courses": "Курсы",
-      "sort_students": "Студенты",
-      "sort_status": "Статус"
-    },
-    "invite_sent": "Приглашения отправлены",
-    "goals": {
-      "heading": "Цели обучения",
-      "description": "Установите измеримые цели, охватывающие несколько курсов для всех участников этой когорты.",
-      "add": "Новая цель",
-      "empty_title": "Целей пока нет",
-      "empty_description": "Создайте цель для отслеживания прогресса команды на нескольких курсах.",
-      "created": "Цель создана",
-      "updated": "Цель обновлена",
-      "deleted": "Цель удалена",
-      "delete_confirm": "Удалить эту цель? История статуса каждого учащегося будет удалена.",
-      "lms": {
-        "heading": "Ваши цели",
-        "empty_title": "Цели не назначены",
-        "empty_description": "Когда ваши преподаватели поставят цели, они появятся здесь.",
-        "due_in_days": "Срок оплаты: {days} дн.",
-        "due_tomorrow": "Срок завтра",
-        "due_today": "Срок оплаты сегодня",
-        "overdue": "Просрочено",
-        "no_deadline": "Нет срока"
-      },
-      "tile": {
-        "on_track": "на ходу",
-        "completed_short": "завершено",
-        "overdue_short": "просроченный",
-        "at_risk_short": "в опасности"
-      },
-      "status": {
-        "completed": "Завершено",
-        "in_progress": "В процессе",
-        "at_risk": "В зоне риска",
-        "overdue": "Просрочено",
-        "not_started": "Не запущено",
-        "waived": "Отказано"
-      },
-      "deadline_kind": {
-        "absolute": "Абсолютная дата",
-        "relative_to_join": "Относительно присоединения студента",
-        "recurring": "повторяющийся",
-        "none": "Нет срока"
-      },
-      "type": {
-        "complete_all": "Завершить все выбранные курсы",
-        "n_of_m": "Завершить выбранные курсы N из M",
-        "score": "Оценка выше порога на каждом курсе",
-        "pass_rate": "Порог проходимости команды",
-        "readiness": "Готовность (без сроков)"
-      },
-      "modal": {
-        "create_title": "Новая цель",
-        "edit_title": "Изменить цель",
-        "title_label": "Название",
-        "title_placeholder": "например Посадочная рампа",
-        "description_label": "Описание",
-        "description_placeholder": "Дополнительный контекст для команды",
-        "type_label": "Тип",
-        "courses_label": "Курсы",
-        "required_count_label": "Необходимое количество курсов",
-        "score_threshold_label": "Проходной балл на одного учащегося (%)",
-        "team_pass_rate_label": "Процент проходов команды (%)",
-        "deadline_label": "Срок",
-        "deadline_date_label": "Крайний срок",
-        "relative_days_label": "Дни с момента присоединения студента",
-        "recurring_months_label": "Повторять каждые (месяцев)",
-        "reminders_label": "Напоминания (за несколько дней до наступления срока)",
-        "reminders_helper": "Через запятую. Пример: 7, 3, 1",
-        "save": "Сохранить",
-        "cancel": "Отмена"
-      }
     }
   },
   "celluloplast_navigation": {

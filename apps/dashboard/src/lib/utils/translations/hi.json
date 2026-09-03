@@ -6,7 +6,8 @@
       "label": "सहेजे नहीं गए परिवर्तन"
     },
     "discard": "त्यागें",
-    "save_changes": "परिवर्तन सहेजें"
+    "save_changes": "परिवर्तन सहेजें",
+    "reset": "Reset"
   },
   "validations": {
     "generic": {
@@ -472,17 +473,6 @@
     "in_progress": "ग्रेडिंग प्रगति पर है",
     "graded": "श्रेणीबद्ध",
     "lesson": "पाठ"
-  },
-  "my_learning": {
-    "heading": "मेरी सीख",
-    "progress": "प्रगति पर है",
-    "complete": "पूर्ण",
-    "search": "पाठ्यक्रम खोजें",
-    "not_in_progress": "कोई पाठ्यक्रम प्रगति पर नहीं है",
-    "any_progress": "आपके द्वारा शुरू किया गया कोई भी कोर्स यहां प्रदर्शित किया जाएगा",
-    "not_completed": "कोई कोर्स पूरा नहीं हुआ",
-    "any_course": "आपके द्वारा पूरा किया गया कोई भी पाठ्यक्रम यहां प्रदर्शित किया जाएगा",
-    "find_courses": "पाठ्यक्रम खोजें"
   },
   "certificates": {
     "heading": "प्रमाणपत्र",
@@ -2694,15 +2684,6 @@
     },
     "page_subtitle": "जहाँ पाठ पाठ्यक्रम बनते हैं और पाठ्यक्रम नामांकन बनते हैं।"
   },
-  "ai": {
-    "help_me": "मुझे लिखने में मदद करें",
-    "placeholder": "एक संक्षिप्त विवरण लिखने में मेरी सहायता करें",
-    "text": "टाइप करना प्रारंभ करें...",
-    "reset": "रीसेट करें",
-    "rephrase": "दोबारा लिखना",
-    "insert": "सम्मिलित करें",
-    "can_you": "क्या आप कृपया इसे दोबारा लिख सकते हैं?"
-  },
   "dashboard": {
     "morning_heading": "सुप्रभात",
     "afternoon_heading": "शुभ दोपहर",
@@ -2888,10 +2869,6 @@
       "interactive": "अपने छात्रों के लिए स्कोरबोर्ड के साथ इंटरैक्टिव क्विज़ बनाएं।"
     }
   },
-  "markdown_editor": {
-    "write": "लिखो",
-    "preview": "पूर्वावलोकन"
-  },
   "navigation": {
     "goto": "पर जाएँ",
     "courses": "पाठ्यक्रम",
@@ -2909,73 +2886,6 @@
     "org_loading_state": "आपको आपके संगठन में ले जा रहा हूँ...",
     "add_organization": "+ संगठन जोड़ें",
     "goto_dashboard": "डैशबोर्ड"
-  },
-  "add_org": {
-    "create_org": "संगठन बनाएं",
-    "name": "संगठन का नाम",
-    "org_sitename": "अकादमी उपडोमेन",
-    "create": "बनाएँ",
-    "sitename": "अकादमी उपडोमेन पहले से मौजूद है",
-    "error_organization": "इस संगठन को बनाते समय कुछ गलत हो गया. कृपया पुनः लोड करें और पुनः प्रयास करें"
-  },
-  "setup": {
-    "your_checklist": "आपकी चेकलिस्ट",
-    "get_started": "आरंभ करें",
-    "description": "अपना शिक्षण मंच स्थापित करने के लिए इन चरणों को पूरा करें",
-    "progress": "प्रगति",
-    "completed": "पूरा हुआ",
-    "done": "हो गया",
-    "todo": "टोडो",
-    "publish_course": {
-      "title": "एक पाठ्यक्रम प्रकाशित करें",
-      "desc": "अपने पाठ्यक्रम को सार्वजनिक और क्रय योग्य बनाएं",
-      "button_label": "पाठ्यक्रम प्रकाशित करें"
-    },
-    "exercise": {
-      "title": "एक व्यायाम बनाएँ",
-      "desc": "अपने विद्यार्थियों का परीक्षण करें, जिससे उन्हें विषय वस्तु के बारे में अपनी समझ प्रदर्शित करने का मौका मिले",
-      "button_label": "असाइनमेंट बनाएं"
-    },
-    "lesson": {
-      "title": "एक पाठ बनाएँ",
-      "desc": "अपने पाठ्यक्रम को ऐसे पाठों में विभाजित करें जिन्हें आपके छात्र आसानी से समझ सकें",
-      "button_label": "पाठ बनाएँ"
-    },
-    "course": {
-      "title": "पाठ्यक्रम बनाएं",
-      "desc": "एक पाठ्यक्रम बनाएं जिसे आप अपने छात्रों के साथ साझा करेंगे",
-      "button_label": "पाठ्यक्रम बनाएं"
-    },
-    "organization_profile": {
-      "title": "संगठन प्रोफ़ाइल चित्र अपडेट करें",
-      "desc": "अपने संगठन के लिए एक पेशेवर और पहचानने योग्य पहचान स्थापित करें",
-      "button_label": "संगठन प्रोफ़ाइल अपडेट करें"
-    },
-    "personal_profile": {
-      "title": "प्रोफ़ाइल चित्र अपलोड करें और उपयोगकर्ता नाम अपडेट करें",
-      "desc": "वैयक्तिकृत करें और मानवीय स्पर्श जोड़ें जिससे बातचीत अधिक व्यक्तिगत और यादगार बन जाए",
-      "button_label": "प्रोफ़ाइल अपडेट करें"
-    }
-  },
-  "pricing": {
-    "modal": {
-      "heading": "उन्नयन योजना",
-      "thanks": "आपके समर्थन के लिए धन्यवाद",
-      "plan": "आपकी योजना हमारे द्वारा जारी की जाने वाली सभी भविष्य की सुविधाओं तक पहुंच सहित शानदार सुविधाओं और लाभों के साथ आती है।",
-      "save": "2 महीने बचाएं",
-      "close": "बंद करें",
-      "learn": "और जानें",
-      "month": "महीना",
-      "monthly": "मासिक",
-      "annually": "वार्षिक रूप से",
-      "popular": "लोकप्रिय",
-      "per_org": "प्रति संगठन"
-    },
-    "plan_names": {
-      "free": "निःशुल्क",
-      "early": "शीघ्र अपनाने वाला",
-      "enterprise": "उद्यम"
-    }
   },
   "org_navigation": {
     "platform": "मंच",
@@ -3827,20 +3737,6 @@
       "personal_page_subtitle": "चुनें कि आप ClassroomIO से कौन सी ईमेल सूचनाएँ प्राप्त करते हैं।"
     }
   },
-  "profileMenu": {
-    "profile": "प्रोफ़ाइल",
-    "current_org": "वर्तमान संगठन",
-    "free_tools": "मुफ़्त उपकरण",
-    "progress": "प्रगति रिपोर्ट",
-    "timer": "गतिविधि टाइमर",
-    "tic_tac": "टिकटैक पैर की अंगुली",
-    "see_more": "और देखें",
-    "whats_new": "नया क्या है",
-    "launch_week": "लॉन्च सप्ताह",
-    "feedback": "प्रतिक्रिया",
-    "documentation": "दस्तावेज़ीकरण",
-    "need_help": "मदद चाहिए?"
-  },
   "login": {
     "sign_in_to_continue": "Sign in to continue",
     "welcome": "पुनः स्वागत है",
@@ -3906,7 +3802,16 @@
       }
     },
     "cancel": "रद्द करें",
-    "save": "सहेजें"
+    "save": "सहेजें",
+    "setup_error": {
+      "title": "Something went wrong",
+      "description": "We could not start the app. Reload the page, or contact your administrator if the problem persists.",
+      "reload": "Reload page"
+    },
+    "restricted": {
+      "title": "Restricted access",
+      "description": "This organization is not available for your account. Contact your administrator."
+    }
   },
   "welcome_modal": {
     "we_at": "हम पर",
@@ -3999,85 +3904,6 @@
     "seconds": "सेकंड",
     "snackbar_error": "कोड भेजते समय त्रुटि"
   },
-  "public_courses": {
-    "page_title": "पाठ्यक्रम - क्लासरूमआईओ",
-    "heading": "पाठ्यक्रम",
-    "subtitle": "सभी प्रकाशित पाठ्यक्रम ब्राउज़ करें",
-    "clear_filters": "फ़िल्टर साफ़ करें",
-    "empty": {
-      "title": "कोई पाठ्यक्रम नहीं मिला",
-      "description": "अपने फ़िल्टर साफ़ करने का प्रयास करें या बाद में दोबारा जाँचें।"
-    },
-    "catalog_empty": {
-      "title": "अभी तक कोई पाठ्यक्रम प्रकाशित नहीं हुआ",
-      "description": "नए पाठ्यक्रमों के लिए जल्द ही वापस आएँ।"
-    },
-    "filters": {
-      "title": "टैग द्वारा फ़िल्टर करें",
-      "help": "पाठ्यक्रमों को फ़िल्टर करने के लिए एक या अधिक टैग चुनें",
-      "empty": "अभी तक कोई टैग उपलब्ध नहीं है",
-      "tags_title": "टैग",
-      "types_title": "प्रकार",
-      "search_placeholder": "पाठ्यक्रम खोजें...",
-      "clear_search": "खोज साफ़ करें",
-      "pricing_title": "मूल्य निर्धारण",
-      "pricing_free": "निःशुल्क",
-      "pricing_paid": "भुगतान किया गया",
-      "selected": "चयनित:",
-      "save_changes": "परिवर्तन सहेजें"
-    }
-  },
-  "tags_admin": {
-    "page_title": "टैग - क्लासरूमआईओ",
-    "heading": "टैग",
-    "create": "बनाएँ",
-    "tag_modal": {
-      "create_title": "टैग बनाएं",
-      "edit_title": "टैग संपादित करें",
-      "name": "टैग नाम",
-      "description": "विवरण",
-      "description_placeholder": "वैकल्पिक विवरण",
-      "category": "श्रेणी",
-      "color": "रंग",
-      "color_help": "10 रंगों में से एक चुनें",
-      "select_category": "एक श्रेणी चुनें",
-      "no_groups": "टैग बनाने से पहले एक टैग समूह बनाएं"
-    },
-    "group_modal": {
-      "create_title": "टैग समूह बनाएं",
-      "edit_title": "टैग समूह संपादित करें",
-      "name": "समूह का नाम",
-      "description": "विवरण",
-      "description_placeholder": "वैकल्पिक विवरण"
-    },
-    "empty": {
-      "title": "अभी तक कोई टैग समूह नहीं",
-      "description": "पहले एक टैग समूह बनाएं, फिर टैग जोड़ना शुरू करें।"
-    },
-    "table": {
-      "tag": "टैग",
-      "total_courses": "कुल पाठ्यक्रम",
-      "course": "पाठ्यक्रम",
-      "courses": "पाठ्यक्रम",
-      "description": "विवरण",
-      "category": "श्रेणी",
-      "action": "कार्रवाई",
-      "empty_group": "इस समूह में अभी तक कोई टैग नहीं है"
-    },
-    "actions": {
-      "create_tag": "टैग बनाएं",
-      "create_group": "टैग समूह बनाएं",
-      "edit_group": "समूह संपादित करें",
-      "edit_tag": "टैग संपादित करें",
-      "save": "सहेजें",
-      "cancel": "रद्द करें",
-      "actions_menu": "क्रियाएँ टैग करें"
-    },
-    "common": {
-      "not_available": "एन/ए"
-    },
-    "page_subtitle": "फ़िल्टर और सूचियों को आसानी से स्कैन करने योग्य रखने के लिए लेबल से पाठ्यक्रम व्यवस्थित करें।"
-  },
   "invite": {
     "organization": {
       "page_title": "ClassroomIO पर {orgName} से जुड़ें",
@@ -4110,300 +3936,6 @@
       "join_failed": "संगठन में शामिल होने में विफल",
       "joined": "संगठन से जुड़े"
     }
-  },
-  "automation": {
-    "title": "स्वचालन",
-    "subtitle": "एक ही ऑर्ग-स्कोप्ड कुंजी सिस्टम पर जैपियर और सार्वजनिक एपीआई के साथ अब एमसीपी क्लाइंट को कनेक्ट करें।",
-    "coming_soon": "जल्द आ रहा है",
-    "mcp": {
-      "setup": {
-        "title": "क्लाइंट सेटअप",
-        "description": "प्रति एकीकरण एक ऑर्ग-स्कोप्ड कुंजी का उपयोग करें। यदि कोई कुंजी घुमाई जाती है या निरस्त की जाती है, तो क्लाइंट नया रहस्य कॉन्फ़िगर होने तक काम करना बंद कर देता है।",
-        "claude_code_description": "उत्पन्न ऑर्ग-स्कोप्ड कुंजी का उपयोग करके क्लाउड कोड के साथ `@classroomio/mcp` को पंजीकृत करता है।",
-        "codex_description": "समान ऑर्ग-स्कोप्ड कुंजी के साथ क्लासरूमआईओ एमसीपी सर्वर को कोडेक्स में जोड़ता है।",
-        "cursor_description": "इसे `~/.cursor/mcp.json` या अपने कार्यक्षेत्र MCP कॉन्फ़िगरेशन में पेस्ट करें।",
-        "opencode_description": "इसे अपने प्रोजेक्ट रूट के `opencode.json` या `~/.config/opencode/opencode.json` में जोड़ें।"
-      },
-      "keys": {
-        "title": "एमसीपी कुंजी",
-        "description": "जब कोई MCP क्लाइंट `@classroomio/mcp` के माध्यम से ClassroomIO को कॉल करता है तो ये कुंजियाँ वर्तमान संगठन को प्रमाणित करती हैं।",
-        "generate": "MCP कुंजी जनरेट करें",
-        "secret_once": "यह रहस्य एक बार दिखाया गया है। अब इसे अपने MCP क्लाइंट में कॉपी करें।",
-        "modal": {
-          "title": "MCP कुंजी बनाएं",
-          "description": "इस MCP कुंजी को बनाने से पहले इसका नाम चुनें।",
-          "name_label": "कुंजी का नाम",
-          "name_placeholder": "ClassroomIO OpenCode",
-          "cancel": "रद्द करें",
-          "save": "कुंजी बनाएं"
-        }
-      },
-      "usage": {
-        "title": "उपयोग और सीमाएँ",
-        "description": "एमसीपी हर योजना पर उपलब्ध है। उपयोग कुंजी सीमाओं और दर सीमाओं से नियंत्रित होता है।",
-        "keys_title": "सक्रिय कुंजियाँ",
-        "keys_description": "प्रति एकीकरण एक एमसीपी कुंजी का उपयोग करें ताकि पहुंच को घुमाया जा सके या सफाई से रद्द किया जा सके।",
-        "rate_limits_title": "दर सीमा",
-        "rate_limits_description": "प्रति मिनट पढ़ने/लिखने/प्रकाशित करने के अनुरोधों की अनुमति है।",
-        "used_label": "प्रयुक्त:"
-      },
-      "page_subtitle": "किसी भी समय घुमाने योग्य संगठन-स्तरीय कुंजियों के साथ AI टूल्स को ClassroomIO से कनेक्ट करें।",
-      "view_docs": "दस्तावेज़ देखें"
-    },
-    "api": {
-      "subtitle": "ClassroomIO सार्वजनिक API के साथ एकीकृत करने के लिए API कुंजियाँ प्रबंधित करें।",
-      "keys": {
-        "title": "API कुंजियाँ",
-        "description": "ये कुंजियाँ ClassroomIO सार्वजनिक API को कॉल करते समय वर्तमान संगठन को प्रमाणित करती हैं।",
-        "generate": "API कुंजी बनाएं",
-        "secret_once": "यह गुप्त कुंजी केवल एक बार दिखाई जाती है। इसे कॉपी करें और सुरक्षित रूप से संग्रहीत करें।",
-        "empty_title": "अभी तक कोई API कुंजी नहीं",
-        "empty_description": "ClassroomIO सार्वजनिक API का उपयोग करने के लिए पहली संगठन-स्तरीय API कुंजी बनाएं।",
-        "modal": {
-          "title": "API कुंजी बनाएं",
-          "description": "इस API कुंजी को बनाने से पहले इसका नाम चुनें।",
-          "name_label": "कुंजी का नाम",
-          "name_placeholder": "मेरा API एकीकरण",
-          "cancel": "रद्द करें",
-          "save": "कुंजी बनाएं"
-        }
-      },
-      "setup": {
-        "title": "त्वरित शुरुआत",
-        "description": "हर अनुरोध पर अपनी API कुंजी को Bearer टोकन के रूप में उपयोग करें। प्लेसहोल्डर को ऊपर की कुंजी से बदलें, या कुंजी बनाने के तुरंत बाद सीक्रेट पेस्ट करें।"
-      },
-      "view_docs": "दस्तावेज़ देखें"
-    },
-    "keys": {
-      "active": "सक्रिय",
-      "revoked": "निरस्त किया गया",
-      "rotate": "घुमाएँ",
-      "revoke": "निरस्त करें",
-      "empty_title": "अभी तक कोई MCP कुंजी नहीं है",
-      "empty_description": "क्लाउड कोड, कोडेक्स, कर्सर, या OpenCode को कनेक्ट करने के लिए पहली ऑर्ग-स्कोप्ड एमसीपी कुंजी बनाएं।",
-      "created_at_label": "बनाया गया:",
-      "last_used_label": "अंतिम बार उपयोग किया गया:",
-      "never_used": "कभी नहीं",
-      "scopes_label": "दायरा:",
-      "revoke_confirm": "इस स्वचालन कुंजी को निरस्त करें?",
-      "rotate_confirm": "इस स्वचालन कुंजी को घुमाएँ?",
-      "table_key": "कुंजी",
-      "table_status": "स्थिति",
-      "table_created": "बनाया गया",
-      "table_last_used": "अंतिम बार उपयोग किया गया"
-    },
-    "clients": {
-      "claude_code": "क्लाउड कोड",
-      "codex": "कोडेक्स",
-      "cursor": "कर्सर",
-      "opencode": "OpenCode",
-      "curl": "cURL",
-      "javascript": "JavaScript",
-      "python": "Python",
-      "go": "Go"
-    },
-    "tabs": {
-      "mcp": "एम.सी.पी",
-      "zapier": "जैपियर",
-      "api": "एपीआई"
-    },
-    "permissions": {
-      "disabled_title": "केवल पढ़ने योग्य पहुंच",
-      "disabled_description": "केवल संगठन व्यवस्थापक ही स्वचालन कुंजियाँ बना सकते हैं, घुमा सकते हैं या निरस्त कर सकते हैं। शिक्षक यहां सेटअप निर्देशों की समीक्षा कर सकते हैं।"
-    },
-    "zapier": {
-      "page_subtitle": "Zapier के माध्यम से हज़ारों ऐप्स के साथ ClassroomIO को स्वचालित करें। जल्द आ रहा है।"
-    }
-  },
-  "ai_assistant": {
-    "empty_state": "मुझसे अपने पाठ्यक्रम की सामग्री में मदद करने के लिए कहें - पाठों का मसौदा तैयार करें, प्रश्न तैयार करें, या किसी दस्तावेज़ से पाठ्यक्रम की योजना बनाएं।",
-    "input_placeholder": "एआई सहायक से पूछें...",
-    "quote_lesson_note": "सहायक में उद्धृत करें",
-    "attach_document": "एक दस्तावेज़ संलग्न करें (पीडीएफ, DOCX, PPTX)",
-    "upgrade_to_upload": "दस्तावेज़ अपलोड करने के लिए अपग्रेड करें",
-    "tokens_exhausted": "मासिक एआई टोकन सीमा पूरी हो गई।",
-    "tokens_exhausted_buy_more": "और खरीदें",
-    "chat_history": "चैट इतिहास",
-    "no_conversations": "अभी तक कोई बातचीत नहीं",
-    "untitled": "शीर्षकहीन",
-    "new_chat": "नई चैट",
-    "tokens_label": "टोकन",
-    "implementing_course_plan": "पाठ्यक्रम योजना का कार्यान्वयन",
-    "resume": "जारी रखें",
-    "stopped_content_kept": "रुक गया. निर्मित सामग्री रखी गई है.",
-    "mention_lesson": "पाठ",
-    "mention_exercise": "अभ्यास",
-    "mention_section": "धारा",
-    "mention_no_results": "कोई मेल खाती सामग्री नहीं",
-    "uploading_document": "दस्तावेज़ अपलोड हो रहा है...",
-    "agent_running_warning": "एजेंट का कार्य पूरा होते ही पाठ्यक्रम में परिवर्तन दिखाई देंगे। पृष्ठ पुनः लोड न करें.",
-    "agent_running_warning_dismiss": "बंद करें",
-    "quick_action": {
-      "upload_document_course": "पाठ्यक्रम बनाने के लिए एक दस्तावेज़ अपलोड करें",
-      "draft_lesson": "एक पाठ का मसौदा तैयार करें",
-      "generate_questions_from_lesson": "इस पाठ से प्रश्न बनाएं",
-      "summarize_lesson": "इस पाठ का सारांश बनाएं",
-      "publish_course": "इस पाठ्यक्रम को प्रकाशित करने में मदद करें"
-    },
-    "plan_applying_changes": "परिवर्तन लागू किए जा रहे हैं",
-    "plan_working": "काम जारी है",
-    "plan_progress": "{completed} / {total} चरण पूर्ण",
-    "stop": "रोकें",
-    "copy_full_error": "पूरी त्रुटि कॉपी करें",
-    "resize_panel_aria_label": "AI सहायक पैनल का आकार बदलें",
-    "generic_working": "काम जारी है",
-    "run_failed_after": "{action} सफलतापूर्वक पूरा नहीं हुआ।",
-    "tool": {
-      "pending": {
-        "working": "काम जारी है",
-        "unknown_tool": "{toolName} चलाया जा रहा है",
-        "get_course_structure": "पाठ्यक्रम संरचना पढ़ी जा रही है",
-        "get_lesson_content": "पाठ सामग्री पढ़ी जा रही है",
-        "get_exercise_details": "अभ्यास पढ़ा जा रहा है",
-        "create_section": "अनुभाग बनाया जा रहा है",
-        "update_section": "अनुभाग अपडेट किया जा रहा है",
-        "create_lesson": "पाठ बनाया जा रहा है",
-        "update_lesson": "पाठ अपडेट किया जा रहा है",
-        "update_lesson_content": "पाठ सामग्री लिखी जा रही है",
-        "create_exercise": "अभ्यास बनाया जा रहा है",
-        "create_exercise_section": "अभ्यास अनुभाग बनाया जा रहा है",
-        "update_exercise": "अभ्यास अपडेट किया जा रहा है",
-        "update_exercise_section": "अभ्यास अनुभाग अपडेट किया जा रहा है",
-        "add_questions": "प्रश्न जोड़े जा रहे हैं",
-        "update_questions": "प्रश्न अपडेट किए जा रहे हैं",
-        "reorder_content": "सामग्री का क्रम बदला जा रहा है",
-        "update_course_landing_page": "लैंडिंग पेज अपडेट किया जा रहा है",
-        "check_course_go_live_readiness": "लाइव होने की तैयारी जाँची जा रही है",
-        "go_live_course": "पाठ्यक्रम प्रकाशित किया जा रहा है",
-        "generate_course_plan": "पाठ्यक्रम योजना बनाई जा रही है",
-        "ask_template_questions": "टेम्प्लेट फॉर्म तैयार किया जा रहा है",
-        "fetch_documentation_url": "दस्तावेज़ पृष्ठ पढ़ना",
-        "fetch_documentation_url_with_url": "पढ़ना {url}"
-      },
-      "meta": {
-        "lesson_char_count": "({count, plural, one {# अक्षर} other {# अक्षर}})",
-        "landing_page_preview": "· परिवर्तनों का पूर्वावलोकन",
-        "exercise_questions_added": "· {count, plural, one {# प्रश्न जोड़ा गया} other {# प्रश्न जोड़े गए}}",
-        "exercise_questions_updated": "· {count, plural, one {# प्रश्न अपडेट किया गया} other {# प्रश्न अपडेट किए गए}}"
-      },
-      "done": {
-        "generic": "पूर्ण",
-        "create_section": "अनुभाग बनाया गया: {title}",
-        "update_section": "अनुभाग अपडेट किया गया: {title}",
-        "create_lesson": "पाठ बनाया गया: {title}",
-        "update_lesson": "पाठ अपडेट किया गया: {title}",
-        "update_lesson_content_fallback": "{count, plural, one {# अक्षर लिखा गया} other {# अक्षर लिखे गए}}",
-        "create_exercise": "अभ्यास «{title}» बनाया गया · {count, plural, one {# प्रश्न} other {# प्रश्न}}",
-        "update_exercise": "अभ्यास अपडेट किया गया: {title}",
-        "update_exercise_section": "अभ्यास अनुभाग अपडेट किया गया: {title}",
-        "add_questions_fallback": "{count, plural, one {# प्रश्न जोड़ा गया} other {# प्रश्न जोड़े गए}}",
-        "update_questions_fallback": "{count, plural, one {# प्रश्न अपडेट किया गया} other {# प्रश्न अपडेट किए गए}}",
-        "create_exercise_section": "अभ्यास अनुभाग बनाया गया: {title}",
-        "get_course_structure": "पाठ्यक्रम संरचना लोड की गई",
-        "get_lesson_content": "पाठ सामग्री लोड की गई",
-        "get_exercise_details": "अभ्यास लोड किया गया",
-        "reorder_content": "सामग्री का क्रम बदला गया",
-        "update_course_landing_page": "लैंडिंग पेज अपडेट किया गया: {title}",
-        "check_go_live_ready": "{warningCount, plural, =0{लाइव होने के लिए तैयार} other{लाइव होने के लिए तैयार — # चेतावनियाँ}}",
-        "check_go_live_blocked": "{blockerCount, plural, one{लाइव होने से पहले # बाधा} other{लाइव होने से पहले # बाधाएँ}}",
-        "go_live_published": "पाठ्यक्रम प्रकाशित: {title}",
-        "go_live_not_published": "पाठ्यक्रम प्रकाशित नहीं किया गया",
-        "generate_course_plan": "पाठ्यक्रम योजना बनाई गई",
-        "ask_template_questions": "टेम्प्लेट फॉर्म तैयार",
-        "fetch_documentation_url": "पढ़ें {url}"
-      }
-    },
-    "student_empty_state": "इस पाठ्यक्रम के बारे में मुझसे कुछ भी पूछें - स्पष्टीकरण प्राप्त करें, स्वयं प्रश्नोत्तरी करें, या आप जो पढ़ रहे हैं उसे संक्षेप में प्रस्तुत करें।",
-    "messages_used_label": "इस महीने संदेश",
-    "plan_thinking": "आपके अनुरोध पर विचार कर रहा हूँ...",
-    "plan_implement": "योजना क्रियान्वित करें",
-    "plan_ask_changes_placeholder": "मुझे बताएं कि योजना में क्या बदलाव करना है...",
-    "plan_ask_changes_send_aria": "परिवर्तन अनुरोध भेजें",
-    "send": "भेजें",
-    "rename_chat_aria": "बातचीत का नाम बदलें",
-    "rename_chat_input_aria": "बातचीत का शीर्षक",
-    "rename_chat_placeholder": "बातचीत का शीर्षक",
-    "rename_chat_failed": "इस वार्तालाप का नाम नहीं बदला जा सका. पुनः प्रयास करें।",
-    "error_rate_limit": "AI सेवा अस्थायी रूप से व्यस्त है. कृपया एक क्षण में पुनः प्रयास करें.",
-    "error_rate_limit_with_wait": "AI सेवा अस्थायी रूप से व्यस्त है. कृपया {seconds} सेकंड में पुनः प्रयास करें।",
-    "error_context_too_long": "बातचीत बहुत लंबी है. एक नई चैट शुरू करने या अपना संदेश छोटा करने का प्रयास करें।",
-    "error_network": "नेटवर्क त्रुटि। अपने कनेक्शन की जांच करें और पुन: प्रयास करें।",
-    "context_usage_tooltip": "{used} / {max} टोकन का उपयोग किया गया",
-    "context_full_title": "प्रसंग विंडो भरी हुई है",
-    "context_full_description": "सहायक पुराने संदेशों का स्वचालित रूप से सारांश बनाएगा ताकि आप इस चैट में काम जारी रख सकें।",
-    "context_full_compact": "संक्षिप्त बातचीत",
-    "context_full_compacting": "संघनन...",
-    "context_full_new_chat": "सारांश के साथ नई चैट प्रारंभ करें",
-    "context_full_summarizing": "सारांश बनाया जा रहा है...",
-    "context_compacted_badge": "बातचीत संक्षिप्त ({count} पहले के संदेश)",
-    "student_quick_action": {
-      "explain_lesson": "इस पाठ को स्पष्ट करें",
-      "quiz_me": "इस पर मुझसे प्रश्नोत्तरी करें",
-      "summarize_section": "इस अनुभाग को सारांशित करें",
-      "what_to_review": "मुझे आगे क्या समीक्षा करनी चाहिए?"
-    },
-    "run_running": "जनरेटिंग कोर्स",
-    "run_completed": "पाठ्यक्रम निर्माण पूर्ण",
-    "run_failed": "पाठ्यक्रम निर्माण विफल रहा",
-    "run_canceled": "पाठ्यक्रम निर्माण रद्द कर दिया गया",
-    "run_waiting_for_worker": "पृष्ठभूमि कार्यकर्ता की प्रतीक्षा की जा रही है",
-    "run_checkpoint": "प्रगति चेकप्वाइंट सहेजा जा रहा है",
-    "retry": "पुनः प्रयास करें",
-    "run_monitor_aria": "पाठ्यक्रम सृजन प्रगति पर है",
-    "run_summary": {
-      "completed": "रन पूरा हुआ.",
-      "completed_with_counts": "रन पूरा हुआ - {counts} बनाई गई।",
-      "failed": "रन विफल.",
-      "failed_with_reason": "रन विफल - {reason}।",
-      "canceled": "चलाना रद्द कर दिया गया.",
-      "canceled_with_counts": "दौड़ रद्द कर दी गई - रुकने से पहले {counts} बनाई गई।",
-      "paused": "रन रुका हुआ. जारी रखने के लिए फिर से शुरू करें.",
-      "paused_with_counts": "रन रोका गया - अब तक {counts} बनाई गई। जारी रखने के लिए फिर से शुरू करें."
-    },
-    "changes_card": {
-      "summary_count": "{count} आइटम बदल गए",
-      "expand": "परिवर्तनों का विस्तार करें",
-      "collapse": "परिवर्तन संक्षिप्त करें",
-      "action": {
-        "created": "बनाया गया",
-        "metadata_updated": "मेटाडेटा अपडेट किया गया",
-        "content_written": "सामग्री लिखी गई",
-        "questions_added": "+{count} प्रश्न",
-        "questions_updated": "{count} प्रश्न संपादित",
-        "section_added": "ब्लॉक जोड़ा गया",
-        "section_edited": "ब्लॉक संपादित"
-      },
-      "status": {
-        "completed": "पूरा हुआ",
-        "failed": "असफल",
-        "canceled": "रद्द कर दिया गया",
-        "paused": "रुका हुआ"
-      }
-    },
-    "plan_view": {
-      "expand": "योजना का विस्तार करें",
-      "collapse": "संक्षिप्त योजना"
-    },
-    "run_monitor": {
-      "cancel": "चलाएँ रद्द करें",
-      "dismiss": "ख़ारिज करें",
-      "now_doing": "अभी",
-      "input_disabled_hint": "जब एजेंट पाठ्यक्रम का निर्माण पूरा कर लेता है तो चैट रोक दी जाती है। रद्द करें या इसके पूरा होने तक प्रतीक्षा करें।",
-      "dismiss_confirm": "चले जाओ",
-      "dismiss_cancel": "भागते रहो",
-      "dismiss_confirm_body": "इस रद्द किए गए रन से दूर चले जाएं? बायोडाटा बटन गायब हो जाएगा - आगे की कोई भी बातचीत नए सिरे से शुरू होगी और योजना जारी नहीं रहेगी।",
-      "stuck_queued": {
-        "title": "कर्मी जवाब नहीं दे रहा है",
-        "body": "इस रन के लिए 30 सेकंड से अधिक समय से प्रतीक्षा की जा रही है और कोई कर्मचारी पिकअप नहीं कर रहा है। बैकग्राउंड वर्कर डाउन या रीस्टार्ट हो सकता है।"
-      }
-    },
-    "ask_ai": "एआई से पूछें",
-    "content_input_placeholder": "इस सामग्री के बारे में पूछें...",
-    "ask_ai_expand_aria": "एआई इनपुट पूछें खोलें",
-    "ask_ai_input_aria": "इस सामग्री के बारे में AI से पूछें",
-    "upload_error_file_too_large": "फ़ाइल बहुत बड़ी है। अधिकतम आकार 5 एमबी है.",
-    "upload_error_unsupported_type": "फ़ाइल प्रकार समर्थित नहीं है. कृपया एक PDF, DOCX, PPTX, या ODT फ़ाइल अपलोड करें।",
-    "upload_error_generic": "दस्तावेज़ अपलोड करने में विफल. कृपया पुन: प्रयास करें।"
   },
   "widgets": {
     "heading": "विजेट्स",
@@ -4678,29 +4210,6 @@
       "description": "सभी अनुपालन पाठ्यक्रमों में छात्रों की गिनती होती है।"
     }
   },
-  "public_course": {
-    "exercise": {
-      "submit": "मेरे उत्तर जांचें",
-      "try_again": "पुनः प्रयास करें",
-      "practice_again": "पुनः अभ्यास करें",
-      "attempt_option": "प्रयास {attemptNumber} - {correct}/{total}",
-      "attempts_select_aria": "आपके प्रयास",
-      "privacy_hint": "आपके ब्राउज़र में तुरंत ग्रेड किया गया - कुछ भी सबमिट नहीं किया गया है।",
-      "summary_template": "आपको [[सही]] / [[कुल]] सही मिला।"
-    },
-    "powered_by": {
-      "label": "द्वारा संचालित",
-      "brand": "ClassroomIO"
-    },
-    "footer_nav": {
-      "previous": "पिछला",
-      "next": "अगला"
-    },
-    "header": {
-      "explore_courses": "पाठ्यक्रमों का अन्वेषण करें",
-      "sign_in": "साइन इन करें"
-    }
-  },
   "account": {
     "workspaces": {
       "page_title": "कार्यस्थान",
@@ -4729,119 +4238,6 @@
       "other_organizations": "अन्य संगठन"
     }
   },
-  "aiTutor": {
-    "creditsPage": {
-      "tutorSummaryTitle": "एआई ट्यूटर उचित उपयोग",
-      "atCap": "टोपी पर",
-      "approaching": "निकट आ रही टोपी",
-      "totalActive": "इस महीने सक्रिय छात्र",
-      "learnersHeading": "छात्र",
-      "headerLearner": "छात्र",
-      "headerMessages": "संदेश",
-      "headerTokens": "टोकन",
-      "headerStatus": "स्थिति",
-      "statusUnder": "टोपी के नीचे",
-      "statusApproaching": "निकट आ रहा है",
-      "statusAtCap": "टोपी पर"
-    },
-    "takeABreak": {
-      "title": "आपका एआई ट्यूटर छुट्टी ले रहा है",
-      "learnerCap": "आप इस महीने की ट्यूटर संदेश सीमा तक पहुंच गए हैं। आपके संदेश अगले महीने की पहली तारीख को रीसेट हो जाएंगे।",
-      "poolExhausted": "इस महीने आपके कार्यक्षेत्र में AI ट्यूटर की क्षमता ख़त्म हो गई है। कृपया बाद में दोबारा जाँचें या अपने प्रशिक्षक से संपर्क करें।",
-      "disabled": "इस कार्यक्षेत्र के लिए AI ट्यूटर सक्षम नहीं है।"
-    },
-    "groundingScope": {
-      "course": "पूरा कोर्स",
-      "lesson": "केवल वर्तमान पाठ",
-      "workspace": "संपूर्ण कार्यक्षेत्र"
-    },
-    "codePolicy": {
-      "hints_only": "केवल संकेत",
-      "allowed": "पूर्ण कोड उदाहरणों की अनुमति दें",
-      "forbidden": "उत्तरों में कोई कोड नहीं"
-    },
-    "assessmentMode": {
-      "hint_only": "केवल संकेत (कोई सीधा उत्तर नहीं)",
-      "direct_answer": "सीधे उत्तर की अनुमति दें",
-      "block_during_exercise": "जब छात्र व्यायाम कर रहा हो तो सहायता रोकें"
-    },
-    "responseLength": {
-      "short": "लघु (1-3 वाक्य)",
-      "medium": "मध्यम (1-2 छोटे अनुच्छेद)",
-      "long": "लंबी (संरचित स्पष्टीकरण)"
-    },
-    "persona": {
-      "encouraging": "उत्साहवर्द्धक",
-      "friendly": "मिलनसार",
-      "formal": "औपचारिक",
-      "socratic": "सुकराती",
-      "custom": "कस्टम"
-    },
-    "field": {
-      "enabled": "एआई ट्यूटर सक्षम",
-      "persona": "शिक्षक व्यक्तित्व",
-      "customPersona": "कस्टम व्यक्तित्व",
-      "customPersona_description": "वर्णन करें कि ट्यूटर को कैसा बोलना चाहिए - स्वर, संबोधन शैली, आपके दर्शकों के लिए विशिष्ट कुछ भी।",
-      "responseLength": "प्रतिक्रिया की लंबाई",
-      "welcomeMessage": "स्वागत संदेश",
-      "welcomeMessage_description": "प्रत्येक नई बातचीत में पहले शिक्षक का उत्तर ऊपर दिखाया गया है।",
-      "disclaimerFooter": "अस्वीकरण पाद लेख",
-      "disclaimerFooter_description": "प्रत्येक ट्यूटर उत्तर के साथ जोड़ा गया ताकि छात्रों को याद रहे कि ट्यूटर कोई व्यक्ति नहीं है।",
-      "thingsToSay": "कहने को बातें",
-      "thingsToSay_description": "उदाहरण: \"छात्रों को हमेशा सप्ताह 3 से पहले पाठ्यक्रम पढ़ने की याद दिलाएँ।\" \"छात्रों को पाठों को अपने शब्दों में सारांशित करने के लिए प्रोत्साहित करें।\"",
-      "thingsNotToSay": "न कहने लायक बातें",
-      "thingsNotToSay_description": "उदाहरण: \"अंतिम परीक्षा के उत्तर प्रकट न करें।\" \"छात्रों को यह कभी न बताएं कि आपने कौन सी समीक्षा लिखी है।\"",
-      "forbiddenTopics": "निषिद्ध विषय",
-      "forbiddenTopics_description": "अल्पविराम से अलग की गई सूची. शिक्षक इन पर चर्चा करने से इंकार कर देंगे।",
-      "forbiddenTopics_placeholder": "राजनीति, धर्म, व्यक्तिगत चिकित्सा सलाह",
-      "blockOffTopic": "विषय से हटकर प्रश्नों को ब्लॉक करें",
-      "profanityFilter": "अपवित्रता और संवेदनशील-सामग्री फ़िल्टर",
-      "assessmentMode": "मूल्यांकन मोड",
-      "revealSolutionsAfterAttempts": "एन प्रयासों के बाद समाधान प्रकट करें",
-      "revealSolutionsAfterAttempts_description": "इतने सारे असफल प्रयासों के बाद, शिक्षक एक कारगर उदाहरण प्रस्तुत कर सकता है। सीधे उत्तर देने के लिए 0 पर सेट करें।",
-      "codePolicy": "कोड नीति",
-      "groundingScope": "ग्राउंडिंग का दायरा",
-      "requireCitations": "पाठ्यक्रम सामग्री के लिए उद्धरणों की आवश्यकता है",
-      "escalationEnabled": "मानवीय वृद्धि की पेशकश करें",
-      "escalationEmail": "प्रशिक्षक संपर्क ईमेल",
-      "inheritFromOrg": "कार्यस्थान डिफ़ॉल्ट का उपयोग करें"
-    },
-    "section": {
-      "availability": "उपलब्धता",
-      "availability_description": "इस कार्यक्षेत्र में छात्रों के लिए एआई ट्यूटर को चालू या बंद करें।",
-      "personality": "व्यक्तित्व",
-      "personality_description": "ट्यूटर अपना परिचय कैसे देता है और उसके उत्तर कितने लंबे होते हैं।",
-      "guidance": "कहने योग्य बातें · न कहने योग्य बातें",
-      "guidance_description": "ट्यूटर प्रत्येक उत्तर में निःशुल्क-पाठ मार्गदर्शन का पालन करेगा, साथ ही सीमा से बाहर विषयों की एक वैकल्पिक सूची भी।",
-      "assessment": "अभ्यास एवं आकलन",
-      "assessment_description": "जब कोई छात्र किसी अभ्यास में मदद मांगता है तो शिक्षक कैसा व्यवहार करता है।",
-      "grounding": "ग्राउंडिंग और उद्धरण",
-      "grounding_description": "इस बात को सीमित करें कि शिक्षक किस बारे में बात कर सकता है और क्या वह पाठ्यक्रम सामग्री का हवाला देता है।",
-      "escalation": "वृद्धि",
-      "escalation_description": "जब छात्रों को एक वास्तविक इंसान की आवश्यकता हो तो उन्हें कहां इंगित करना चाहिए।",
-      "inheritance": "पाठ्यक्रम विरासत",
-      "inheritance_description": "कार्यस्थान डिफ़ॉल्ट को इनहेरिट करें या प्रति-कोर्स ओवरराइड सेट करें।"
-    },
-    "snackbar": {
-      "saved": "एआई ट्यूटर सेटिंग्स सहेजी गईं"
-    },
-    "state": {
-      "loading": "एआई ट्यूटर सेटिंग लोड हो रही है..."
-    },
-    "action": {
-      "save": "परिवर्तन सहेजें"
-    },
-    "page": {
-      "course": {
-        "title": "इस कोर्स के लिए एआई ट्यूटर",
-        "description": "अपने कार्यक्षेत्र AI ट्यूटर डिफ़ॉल्ट को इनहेरिट करें, या इस पाठ्यक्रम में ट्यूटर कैसे व्यवहार करता है, उसे ओवरराइड करें।"
-      },
-      "org": {
-        "title": "एआई ट्यूटर सेटिंग्स",
-        "description": "इस कार्यक्षेत्र में प्रत्येक पाठ्यक्रम के लिए डिफ़ॉल्ट. पाठ्यक्रम इन्हें विरासत में प्राप्त कर सकते हैं या उन्हें ओवरराइड कर सकते हैं।"
-      }
-    }
-  },
   "hls_upload": {
     "rungs": {
       "p360": "360पी",
@@ -4862,213 +4258,6 @@
       "finalizing": "सहेजा जा रहा है...",
       "done": "तैयार",
       "failed": "अपलोड विफल रहा"
-    }
-  },
-  "cohorts": {
-    "heading": "कोहोर्ट",
-    "page_title": "कोहोर्ट",
-    "create": "नया कोहोर्ट",
-    "create_success": "कोहोर्ट बनाया गया",
-    "update_success": "कोहोर्ट अद्यतन किया गया",
-    "delete_success": "कोहोर्ट हटा दिया गया",
-    "members_added": "सदस्य जोड़े गए",
-    "member_removed": "सदस्य हटा दिया गया",
-    "course_added": "पाठ्यक्रम जोड़ा गया",
-    "course_removed": "पाठ्यक्रम हटा दिया गया",
-    "empty_title": "अभी तक कोई कोहोर्ट नहीं",
-    "empty_description": "अपना पहला प्रमाणन या अनुपालन कोहोर्ट बनाएं।",
-    "settings": {
-      "general": "सामान्य",
-      "name_label": "नाम",
-      "description_label": "विवरण",
-      "status_label": "स्थिति",
-      "save": "परिवर्तन सहेजें",
-      "danger_zone": "ख़तरे का क्षेत्र",
-      "delete": "कोहोर्ट हटाएँ",
-      "delete_description": "एक बार डिलीट होने के बाद, यह कोहोर्ट और इसका सारा डेटा पुनर्प्राप्त नहीं किया जा सकता है।",
-      "confirm_delete": "क्या आप वाकई इस कोहोर्ट को हटाना चाहते हैं? इसे असंपादित नहीं किया जा सकता है।"
-    },
-    "lms": {
-      "empty_title": "अभी तक कोई कोहोर्ट नहीं",
-      "empty_description": "आपको किसी भी कोहोर्ट में नामांकित नहीं किया गया है."
-    },
-    "people": {
-      "invite": "आमंत्रित करें",
-      "invite_modal_title": "सदस्यों को आमंत्रित करें",
-      "invite_modal_description": "लोगों को ईमेल द्वारा इस कोहोर्ट में जोड़ें.",
-      "email_label": "ईमेल",
-      "role_label": "भूमिका",
-      "add_another": "दूसरा जोड़ें",
-      "invite_submit": "निमंत्रण भेजें",
-      "empty_title": "अभी तक कोई सदस्य नहीं",
-      "empty_description": "लोगों को इस कोहोर्ट में शामिल होने के लिए आमंत्रित करें."
-    },
-    "courses": {
-      "add": "पाठ्यक्रम जोड़ें",
-      "add_modal_title": "कोहोर्ट में पाठ्यक्रम जोड़ें",
-      "select_course": "एक पाठ्यक्रम चुनें",
-      "select_placeholder": "एक कोर्स चुनें...",
-      "empty_title": "अभी तक कोई पाठ्यक्रम नहीं",
-      "empty_description": "इस कोहोर्ट में पाठ्यक्रम जोड़ें.",
-      "select_courses": "पाठ्यक्रम चुनें",
-      "search_placeholder": "पाठ्यक्रम खोजें",
-      "no_available_courses": "जोड़ने के लिए कोई पाठ्यक्रम उपलब्ध नहीं है.",
-      "no_matching_courses": "कोई भी पाठ्यक्रम आपकी खोज से मेल नहीं खाता.",
-      "no_matching_cohort_courses": "कोई भी कोहोर्ट पाठ्यक्रम आपकी खोज से मेल नहीं खाता।",
-      "pagination_status": "{page} का पेज {totalPages}",
-      "published_access_callout_title": "छात्र प्रवेश",
-      "published_access_callout_description": "छात्रों को केवल प्रकाशित पाठ्यक्रमों तक ही पहुंच है। पाठ्यक्रम अप्रकाशित रहते हुए भी आपकी टीम के लिए इस समूह में हो सकते हैं, लेकिन जब तक आप उन्हें प्रकाशित नहीं करते तब तक वे छात्रों से छिपे रहते हैं।",
-      "empty_student_description": "इस समूह में अभी तक कोई प्रकाशित पाठ्यक्रम नहीं है।"
-    },
-    "newsfeed": {
-      "post": "नई पोस्ट",
-      "post_placeholder": "आपके मन में क्या है?",
-      "post_submit": "पोस्ट",
-      "empty_title": "अभी तक कोई पोस्ट नहीं",
-      "empty_description": "कुछ पोस्ट करने वाले पहले व्यक्ति बनें.",
-      "heading": "न्यूज़फीड",
-      "make_a_post": "एक पोस्ट बनाएं",
-      "edit_post": "पोस्ट संपादित करें",
-      "editor_placeholder": "अपने कोहोर्ट के साथ एक अपडेट साझा करें",
-      "cancel": "रद्द करें",
-      "pinned": "पिन किया गया",
-      "delete_feed_title": "पोस्ट हटाएं",
-      "delete_feed_description": "क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?",
-      "confirm_delete": "हटाएँ",
-      "user_avatar_alt": "उपयोगकर्ता अवतार",
-      "comments": {
-        "comment": "टिप्पणी",
-        "showing_of": "{shown} में से {total}",
-        "hide": "टिप्पणियाँ छिपाएँ",
-        "placeholder": "कोहोर्ट टिप्पणी जोड़ें",
-        "submit_aria": "टिप्पणी सबमिट करें",
-        "delete": "हटाएँ"
-      },
-      "card": {
-        "pin": "पिन",
-        "unpin": "अनपिन करें",
-        "edit": "संपादित करें",
-        "delete": "हटाएँ"
-      }
-    },
-    "create_modal": {
-      "title": "कोहोर्ट बनाएं",
-      "description": "एक नया प्रमाणन या अनुपालन कोहोर्ट जोड़ें.",
-      "name_label": "नाम",
-      "name_placeholder": "जैसे OSHA सुरक्षा प्रमाणन",
-      "description_label": "विवरण",
-      "description_placeholder": "यह कोहोर्ट किस बारे में है?",
-      "submit": "बनाएँ"
-    },
-    "sidebar": {
-      "newsfeed": "न्यूज़फीड",
-      "courses": "पाठ्यक्रम",
-      "people": "लोग",
-      "settings": "सेटिंग्स"
-    },
-    "status": {
-      "active": "सक्रिय",
-      "inactive": "निष्क्रिय",
-      "archived": "संग्रहीत"
-    },
-    "description": "लोगों के एक समूह को एक कक्षा जैसे कई पाठ्यक्रमों तक पहुंच प्रदान करें",
-    "search_placeholder": "कोहोर्ट खोजें",
-    "multiple_added": "पाठ्यक्रम जोड़े गए",
-    "no_matching_cohorts": "कोई भी कोहोर्ट आपके फ़िल्टर से मेल नहीं खाता.",
-    "card": {
-      "courses": "पाठ्यक्रम",
-      "students": "छात्र"
-    },
-    "table": {
-      "name": "नाम",
-      "courses": "पाठ्यक्रम",
-      "students": "छात्र",
-      "status": "स्थिति",
-      "description": "विवरण"
-    },
-    "filters": {
-      "filter": "फ़िल्टर करें",
-      "clear_all": "सब साफ़ करें",
-      "popover_title": "फिल्टर",
-      "sort": "क्रमबद्ध करें",
-      "order": "आदेश",
-      "status": "स्थिति",
-      "ascending": "ए.एस.सी",
-      "descending": "वर्णन",
-      "sort_name": "नाम",
-      "sort_courses": "पाठ्यक्रम",
-      "sort_students": "छात्र",
-      "sort_status": "स्थिति"
-    },
-    "invite_sent": "निमंत्रण भेजा गया",
-    "goals": {
-      "heading": "सीखने के लक्ष्य",
-      "description": "मापने योग्य लक्ष्य निर्धारित करें जो इस कोहोर्ट में सभी के लिए कई पाठ्यक्रमों तक फैले हों।",
-      "add": "नया लक्ष्य",
-      "empty_title": "अभी तक कोई लक्ष्य नहीं",
-      "empty_description": "अनेक पाठ्यक्रमों में टीम की प्रगति को ट्रैक करने के लिए एक लक्ष्य बनाएं।",
-      "created": "लक्ष्य बनाया गया",
-      "updated": "लक्ष्य अद्यतन किया गया",
-      "deleted": "लक्ष्य हटा दिया गया",
-      "delete_confirm": "यह लक्ष्य हटाएं? प्रति-छात्र स्थिति इतिहास हटा दिया जाएगा.",
-      "lms": {
-        "heading": "आपके लक्ष्य",
-        "empty_title": "कोई लक्ष्य नहीं सौंपा गया",
-        "empty_description": "जब आपके प्रशिक्षक लक्ष्य निर्धारित करेंगे, तो वे यहां दिखाई देंगे।",
-        "due_in_days": "{days} दिनों में देय",
-        "due_tomorrow": "कल देय",
-        "due_today": "आज देय",
-        "overdue": "अतिदेय",
-        "no_deadline": "कोई समयसीमा नहीं"
-      },
-      "tile": {
-        "on_track": "ट्रैक पर",
-        "completed_short": "पूरा हुआ",
-        "overdue_short": "अतिदेय",
-        "at_risk_short": "ख़तरे में"
-      },
-      "status": {
-        "completed": "पूरा हुआ",
-        "in_progress": "प्रगति पर है",
-        "at_risk": "ख़तरे में",
-        "overdue": "अतिदेय",
-        "not_started": "शुरू नहीं हुआ",
-        "waived": "माफ़ कर दिया गया"
-      },
-      "deadline_kind": {
-        "absolute": "पूर्ण तिथि",
-        "relative_to_join": "विद्यार्थियों के शामिल होने के संबंध में",
-        "recurring": "आवर्ती",
-        "none": "कोई समयसीमा नहीं"
-      },
-      "type": {
-        "complete_all": "सभी चयनित पाठ्यक्रम पूर्ण करें",
-        "n_of_m": "एम चयनित पाठ्यक्रमों का एन पूरा करें",
-        "score": "प्रत्येक पाठ्यक्रम पर सीमा से अधिक अंक प्राप्त करें",
-        "pass_rate": "टीम पास-रेट सीमा",
-        "readiness": "तैयारी (कोई समय सीमा नहीं)"
-      },
-      "modal": {
-        "create_title": "नया लक्ष्य",
-        "edit_title": "लक्ष्य संपादित करें",
-        "title_label": "शीर्षक",
-        "title_placeholder": "जैसे ऑनबोर्डिंग रैंप",
-        "description_label": "विवरण",
-        "description_placeholder": "टीम के लिए वैकल्पिक संदर्भ",
-        "type_label": "प्रकार",
-        "courses_label": "पाठ्यक्रम",
-        "required_count_label": "आवश्यक पाठ्यक्रमों की संख्या",
-        "score_threshold_label": "प्रति छात्र उत्तीर्णांक (%)",
-        "team_pass_rate_label": "टीम पास दर (%)",
-        "deadline_label": "समयसीमा",
-        "deadline_date_label": "अंतिम तिथि",
-        "relative_days_label": "छात्र के शामिल होने के दिन से दिन",
-        "recurring_months_label": "प्रत्येक (महीने) दोहराएँ",
-        "reminders_label": "अनुस्मारक (नियत तिथि से कुछ दिन पहले)",
-        "reminders_helper": "अल्पविराम से अलग किया गया. उदाहरण: 7, 3, 1",
-        "save": "सहेजें",
-        "cancel": "रद्द करें"
-      }
     }
   },
   "celluloplast_navigation": {
