@@ -9,7 +9,7 @@
 
   import { Chip } from '@cio/ui/custom/chip';
   import * as Avatar from '@cio/ui/base/avatar';
-  import { ComingSoon, RoleBasedSecurity, UpgradeBanner } from '$features/ui';
+  import { ComingSoon, RoleBasedSecurity } from '$features/ui';
   import InvitationModal from '$features/course/components/people/invitation-modal.svelte';
   import GrantAccessModal from '$features/course/components/people/grant-access-modal.svelte';
   import DeleteConfirmation from '$features/course/components/people/delete-confirmation.svelte';
@@ -129,9 +129,7 @@
 <InvitationModal />
 <GrantAccessModal />
 
-{#if $isStudentLimitReached}
-  <UpgradeBanner className="mb-2">{$t('course.navItem.people.invite_modal.student_limit_reached')}</UpgradeBanner>
-{/if}
+{#if $isStudentLimitReached}{/if}
 
 {#if !isSimplified || CELLULOPLAST_PEOPLE.showMemberRemoval}
   <DeleteConfirmation email={member.email || (member.profile && member.profile.email)} {deletePerson} />

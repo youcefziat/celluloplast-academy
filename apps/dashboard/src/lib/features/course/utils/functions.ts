@@ -39,17 +39,12 @@ export function getActiveCourseNavKey(pathname: string, courseId: string): strin
   const rest = pathname.slice(base.length).replace(/^\//, '');
   const segment = rest.split('/')[0];
 
-  if (!segment) return 'course.navItems.nav_news_feed';
+  if (!segment) return 'course.navItems.nav_content';
   if (segment === ROUTES.LESSONS || segment === 'exercises') return 'course.navItems.nav_content';
-  if (segment === 'analytics') return 'course.navItems.nav_analytics';
-  if (segment === 'attendance') return 'course.navItems.nav_attendance';
   if (segment === 'submissions') return 'course.navItems.nav_submissions';
   if (segment === 'marks') return 'course.navItems.nav_marks';
-  if (segment === 'compliance') return 'course.navItems.nav_compliance';
   if (segment === 'certificates') return 'course.navItems.nav_certificates';
-  if (segment === 'landingpage') return 'course.navItems.nav_landing_page';
   if (segment === 'people') return 'course.navItems.nav_people';
-  if (segment === 'ai-tutor') return 'course.navItems.nav_ai_tutor';
   if (segment === 'settings') return 'course.navItems.nav_settings';
 
   return null;

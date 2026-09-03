@@ -13,15 +13,8 @@
   import { courseApi } from '$features/course/api';
   import ContentCreateModal from '$features/course/components/content/content-create-modal.svelte';
   import CourseCompletionModal from '$features/course/components/ceritficate/course-completion-modal.svelte';
-  import { aiAssistantPanelDefinition, ContentAskAiBar, AI_ASSISTANT_PANEL_ID } from '$features/ai-assistant';
-  import {
-    getContentAskAiBarWidthClass,
-    isCourseContentLockedForStudent
-  } from '$features/ai-assistant/utils/content-ask-ai-bar';
-  import { initialChatPrompt, openAiAssistant } from '$features/ai-assistant/utils/store';
   import { sidePanel, SidePanelRail } from '$features/side-panel';
   import { transcriptPanelDefinition } from '$features/course/components/lesson/video/transcript-panel-definition';
-  import { get } from 'svelte/store';
   import { page } from '$app/state';
   import { profile } from '$lib/utils/store/user';
   import { isOrgAdmin } from '$lib/utils/store/org';
@@ -31,7 +24,6 @@
   import { getCourseProgress } from '$features/course/utils/content';
   import { isCourseMobileBottomNavVisible } from '$features/course/utils/mobile-bottom-nav';
   import { t } from '$lib/utils/functions/translations';
-  import { ContentType } from '@cio/utils/constants/content';
   import type { CourseMember } from '$features/course/utils/types';
   import {
     COURSE_SIDEBAR_DEFAULT_WIDTH,
@@ -39,11 +31,7 @@
     COURSE_SIDEBAR_MIN_WIDTH,
     COURSE_SIDEBAR_STORAGE_KEY
   } from '$features/course/components/sidebar/constants';
-  import { isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
 
-  if (isCelluloplastAiUiEnabled()) {
-    sidePanel.register(aiAssistantPanelDefinition);
-  }
   sidePanel.register(transcriptPanelDefinition);
 
   interface Props {
@@ -96,25 +84,6 @@
   const lessonId = $derived(page.params.lessonId as string | undefined);
   const exerciseId = $derived((page.params.exerciseId as string | undefined) ?? data.exerciseId);
   const isLessonOrExercisePage = $derived(Boolean(lessonId || exerciseId));
-  const isLessonEditMode = $derived(page.url.searchParams.get('mode') === 'edit');
-
-  const contentAskAiWidthClass = $derived(getContentAskAiBarWidthClass({ lessonId, isLessonEditMode }));
-
-  const isContentLockedForStudent = $derived(
-    isCourseContentLockedForStudent(
-      courseApi.course,
-      lessonId ?? exerciseId,
-      lessonId ? ContentType.Lesson : exerciseId ? ContentType.Exercise : null
-    )
-  );
-
-  const showContentAskAiBar = $derived(
-    isCelluloplastAiUiEnabled() &&
-      isCourseReady &&
-      isLessonOrExercisePage &&
-      !($isCourseLearnerView && isContentLockedForStudent) &&
-      sidePanel.activePanelId !== AI_ASSISTANT_PANEL_ID
-  );
 
   const courseProgress = $derived(getCourseProgress(courseApi.course));
   const showMobileBottomNav = $derived(
@@ -125,8 +94,6 @@
       courseProgress
     })
   );
-
-  const contentAskAiBarBottomClass = $derived(showMobileBottomNav ? 'bottom-16' : 'bottom-4');
 
   function clampSidebarWidth(width: number) {
     return Math.min(COURSE_SIDEBAR_MAX_WIDTH, Math.max(COURSE_SIDEBAR_MIN_WIDTH, width));
@@ -158,10 +125,6 @@
     }
 
     hasLoadedSidebarWidth = true;
-
-    if (get(initialChatPrompt)) {
-      openAiAssistant();
-    }
   });
 
   $effect(() => {
@@ -241,10 +204,6 @@
       {/if}
 
       {@render children?.()}
-
-      {#if showContentAskAiBar}
-        <ContentAskAiBar class={contentAskAiWidthClass} bottomClass={contentAskAiBarBottomClass} />
-      {/if}
 
       {#if showMobileBottomNav}
         <CourseMobileBottomNav courseId={data.courseId} path={currentPath} />

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Progress } from '@cio/ui/base/progress';
-  import { UpgradeBanner } from '$features/ui';
   import { lessonVideoUpload, cancelVideoUpload } from '$features/course/components/lesson/store';
   import { lessonApi } from '$features/course/api';
   import { isFreePlan } from '$lib/utils/store/org';
@@ -376,10 +375,6 @@
     return `${stageLabel} ${hp.percent}%`;
   });
 </script>
-
-<UpgradeBanner className="mb-3" onClick={() => ($lessonVideoUpload.isModalOpen = false)}>
-  {$t(`${ADD_VIDEO}.upgrade`)}
-</UpgradeBanner>
 
 {#if !isLoaded}
   {#if $lessonVideoUpload.isUploading}

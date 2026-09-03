@@ -1,22 +1,6 @@
-import {
-  ApiIcon,
-  ChartColumnIcon,
-  AttachmentIcon,
-  CommunityIcon,
-  CourseIcon,
-  DashboardIcon,
-  GoalIcon,
-  HomeIcon,
-  LandingPageIcon,
-  PeopleIcon,
-  SettingsIcon,
-  SetupIcon,
-  TagIcon,
-  ZapIcon
-} from '@cio/ui/custom/moving-icons';
+import { CourseIcon, DashboardIcon, PeopleIcon, SettingsIcon } from '@cio/ui/custom/moving-icons';
 
 import type { AccountOrg } from '$features/app/types';
-import BotIcon from '@lucide/svelte/icons/bot';
 import type { Component } from 'svelte';
 import { isActive } from '$lib/utils/functions/app';
 import type { PlanLimitResource } from '@cio/utils/plans';
@@ -73,46 +57,10 @@ export interface NestedRouteConfig {
 const upstreamNavConfig: NavItemConfig[] = [
   {
     group: 'home',
-    titleKey: 'org_navigation.home',
-    path: '',
-    icon: HomeIcon,
-    matchPattern: '^/org/[^/]+/?$'
-  },
-  {
-    group: 'home',
     titleKey: 'org_navigation.dashboard',
     path: '/dash',
     icon: DashboardIcon,
     matchPattern: '^/org/[^/]+/dash(/.*)?$'
-  },
-  {
-    group: 'home',
-    titleKey: 'org_navigation.stats',
-    path: '/stats',
-    icon: ChartColumnIcon,
-    useHashUrl: true,
-    matchPattern: '^/org/[^/]+/(analytics|compliance)(/.*)?$',
-    items: [
-      {
-        titleKey: 'org_navigation.analytics',
-        path: '/analytics',
-        matchPattern: '^/org/[^/]+/analytics(/.*)?$'
-      },
-      {
-        titleKey: 'org_navigation.compliance',
-        path: '/compliance',
-        requiresAdmin: true,
-        matchPattern: '^/org/[^/]+/compliance(/.*)?$'
-      }
-    ]
-  },
-  {
-    group: 'home',
-    titleKey: 'org_navigation.setup',
-    path: '/setup',
-    icon: SetupIcon,
-    requiresAdmin: true,
-    matchPattern: '^/org/[^/]+/setup(/.*)?$'
   },
   {
     group: 'content',
@@ -122,82 +70,12 @@ const upstreamNavConfig: NavItemConfig[] = [
     matchPattern: '^/org/[^/]+/courses(/.*)?$' // Matches nested routes
   },
   {
-    group: 'content',
-    titleKey: 'org_navigation.cohorts',
-    path: '/cohorts',
-    icon: GoalIcon,
-    matchPattern: '^/org/[^/]+/cohorts(/.*)?$'
-  },
-  {
-    group: 'content',
-    titleKey: 'org_navigation.media',
-    path: '/media',
-    icon: AttachmentIcon,
-    matchPattern: '^/org/[^/]+/media(/.*)?$'
-  },
-  {
-    group: 'content',
-    titleKey: 'org_navigation.tags',
-    path: '/tags',
-    icon: TagIcon,
-    requiresAdmin: true,
-    matchPattern: '^/org/[^/]+/tags(/.*)?$'
-  },
-  {
-    group: 'content',
-    titleKey: 'org_navigation.widgets',
-    path: '/widgets',
-    icon: LandingPageIcon,
-    matchPattern: '^(/org/[^/]+/widgets(/.*)?|/widgets/[^/]+(/.*)?)$'
-  },
-  {
-    group: 'people',
-    titleKey: 'org_navigation.community',
-    path: '/community',
-    icon: CommunityIcon,
-    supportsDynamicSegment: true, // Supports /community/[slug]
-    matchPattern: '^/org/[^/]+/community(/.*)?$', // Matches nested routes
-    nestedRoutes: [
-      {
-        path: 'ask',
-        titleKey: 'Ask Question' // Could be translated
-      }
-    ]
-  },
-  {
     group: 'people',
     titleKey: 'org_navigation.audience',
     path: '/audience',
     icon: PeopleIcon,
     upgradeResource: 'students',
     matchPattern: '^/org/[^/]+/audience(/.*)?$' // Matches nested routes
-  },
-  {
-    group: 'automation',
-    titleKey: 'automation.tabs.mcp',
-    path: '/mcp',
-    icon: BotIcon,
-    requiresAdmin: true,
-    disableWhenNotAdmin: true,
-    matchPattern: '^/org/[^/]+/mcp(/.*)?$'
-  },
-  {
-    group: 'automation',
-    titleKey: 'automation.tabs.api',
-    path: '/api',
-    icon: ApiIcon,
-    requiresAdmin: true,
-    disableWhenNotAdmin: true,
-    matchPattern: '^/org/[^/]+/api(/.*)?$'
-  },
-  {
-    group: 'automation',
-    titleKey: 'automation.tabs.zapier',
-    path: '/zapier',
-    icon: ZapIcon,
-    requiresAdmin: true,
-    disableWhenNotAdmin: true,
-    matchPattern: '^/org/[^/]+/zapier(/.*)?$'
   },
   {
     titleKey: 'org_navigation.settings',
@@ -219,12 +97,8 @@ const upstreamNavConfig: NavItemConfig[] = [
       {
         titleKey: 'settings.tabs.organization_tab',
         path: '/settings/org',
-        matchPattern: '^/org/[^/]+/settings/(org|customize-lms|domains|teams)(/.*)?$',
+        matchPattern: '^/org/[^/]+/settings/(org|customize-lms|teams)(/.*)?$',
         nestedRoutes: [
-          {
-            path: 'domains',
-            titleKey: 'settings.organization.organization_profile.custom_domain.heading'
-          },
           {
             path: 'teams',
             titleKey: 'settings.organization.organization_profile.team.heading'
@@ -234,28 +108,6 @@ const upstreamNavConfig: NavItemConfig[] = [
             titleKey: 'settings.tabs.customize_lms_tab'
           }
         ]
-      },
-      {
-        titleKey: 'settings.tabs.landing_page_tab',
-        path: '/settings/landingpage'
-      },
-      {
-        titleKey: 'settings.tabs.billing_tab',
-        path: '/settings/billing'
-      },
-      {
-        titleKey: 'settings.tabs.ai_credits_tab',
-        path: '/settings/ai-credits'
-      },
-      {
-        titleKey: 'settings.tabs.ai_tutor_tab',
-        path: '/settings/ai-tutor'
-      },
-      {
-        titleKey: 'settings.tabs.auth_tab',
-        matchPattern: '^/org/[^/]+/settings/auth(/.*)?$',
-        path: '/settings/auth',
-        isPaid: true
       },
       {
         titleKey: 'celluloplast_navigation.positions',
@@ -279,24 +131,8 @@ const upstreamNavConfig: NavItemConfig[] = [
         titleKey: 'settings.tabs.notifications_tab'
       },
       {
-        path: 'billing',
-        titleKey: 'settings.tabs.billing_tab'
-      },
-      {
-        path: 'ai-credits',
-        titleKey: 'settings.tabs.ai_credits_tab'
-      },
-      {
-        path: 'ai-tutor',
-        titleKey: 'settings.tabs.ai_tutor_tab'
-      },
-      {
         path: 'customize-lms',
         titleKey: 'settings.tabs.customize_lms_tab'
-      },
-      {
-        path: 'domains',
-        titleKey: 'settings.tabs.domains_tab'
       },
       {
         path: 'teams',
@@ -313,18 +149,6 @@ const upstreamNavConfig: NavItemConfig[] = [
       {
         path: 'certificates',
         titleKey: 'celluloplast_navigation.certificates'
-      },
-      {
-        path: 'auth',
-        titleKey: 'settings.tabs.auth_tab'
-      },
-      {
-        path: 'auth/sso',
-        titleKey: 'settings.tabs.sso_tab'
-      },
-      {
-        path: 'auth/token-auth',
-        titleKey: 'settings.tabs.token_auth_tab'
       }
     ]
   }
@@ -419,7 +243,6 @@ const GROUP_ORDER: Array<{ key: string | null; labelKey: string | null }> = [
   { key: 'home', labelKey: 'org_navigation.home' },
   { key: 'content', labelKey: 'org_navigation.content' },
   { key: 'people', labelKey: 'org_navigation.people' },
-  { key: 'automation', labelKey: 'org_navigation.automation' },
   { key: null, labelKey: null }
 ];
 

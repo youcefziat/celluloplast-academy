@@ -13,7 +13,6 @@
   import { profile } from '$lib/utils/store/user';
   import type { StepperState, StepperActions, BaseStepperProps } from './types';
   import { EXERCISE_STEPPER_DEFAULT_STATE, EXERCISE_CREATE_TYPE } from './constants';
-  import { isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
 
   interface Props extends BaseStepperProps {
     stepperState: StepperState;
@@ -42,18 +41,7 @@
       description: $t('course.navItem.lessons.exercises.new_exercise_modal.options.use_template_subtitle'),
       type: EXERCISE_CREATE_TYPE.TEMPLATE,
       isDisabled: false
-    },
-    ...(isCelluloplastAiUiEnabled()
-      ? [
-          {
-            id: 'exercise-ai',
-            title: $t('course.navItem.lessons.exercises.new_exercise_modal.options.use_ai'),
-            description: $t('course.navItem.lessons.exercises.new_exercise_modal.options.use_ai_subtitle'),
-            type: EXERCISE_CREATE_TYPE.AI,
-            isDisabled: true
-          }
-        ]
-      : [])
+    }
   ];
 
   const radioOptions = $derived(

@@ -17,7 +17,6 @@
   import type { OrgTeamMember } from '$lib/utils/types/org';
   import type { OrgStudent, Tutor } from '$features/people/utils/types';
   import { TutorSelectSection, ExistingStudentsSection, BulkEmailSection } from '$features/people/components';
-  import { UpgradeBanner } from '$features/ui';
   import { CELLULOPLAST_PEOPLE, isCelluloplastPeopleSimplified } from '$lib/celluloplast/people';
 
   let tutors = $state<Tutor[]>([]);
@@ -211,9 +210,7 @@
           selectAtLeastOneKey="celluloplast_people.select_at_least_one"
         />
 
-        {#if $isStudentLimitReached}
-          <UpgradeBanner removeParams={['add']}>{$t(`${INVITE_MODAL}.student_limit_reached`)}</UpgradeBanner>
-        {/if}
+        {#if $isStudentLimitReached}{/if}
 
         <div class="flex justify-end gap-2">
           <Button variant="outline" onclick={closeModal}>
@@ -258,9 +255,7 @@
               onAssign={assignExistingStudents}
             />
 
-            {#if $isStudentLimitReached}
-              <UpgradeBanner removeParams={['add']}>{$t(`${INVITE_MODAL}.student_limit_reached`)}</UpgradeBanner>
-            {/if}
+            {#if $isStudentLimitReached}{/if}
 
             <BulkEmailSection onInvite={inviteNewStudents} disabled={$isStudentLimitReached} />
           </div>

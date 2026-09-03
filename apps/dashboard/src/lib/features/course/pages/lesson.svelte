@@ -16,11 +16,11 @@
 
   import MODES from '$lib/utils/constants/mode';
   import { profile } from '$lib/utils/store/user';
-  import { isCourseLearnerView, isStudentExperience } from '$lib/utils/store/app';
+  import { isCourseLearnerView } from '$lib/utils/store/app';
   import { isMobileStore } from '@cio/ui/hooks/is-mobile.svelte';
   import { getCourseProgress } from '$features/course/utils/content';
   import { isCourseMobileBottomNavVisible } from '$features/course/utils/mobile-bottom-nav';
-  import { getStudentContentLockReason } from '$features/ai-assistant/utils/content-ask-ai-bar';
+  import { getStudentContentLockReason } from '$features/course/utils/content-lock-utils';
   import { currentOrg } from '$lib/utils/store/org';
   import { snackbar } from '$features/ui/snackbar/store';
   import { RefreshPageData, UnsavedChanges } from '$features/ui';
@@ -51,8 +51,7 @@
     Document,
     AddVideoModal,
     AddDocumentModal,
-    LessonSettingsTab,
-    LessonMaterialActions
+    LessonSettingsTab
   } from '$features/course/components/lesson';
 
   import type { TLocale } from '@cio/db/types';
@@ -206,13 +205,10 @@
   const viewModeComponents = $derived(getViewModeComponents(tabs));
 
   const isMaterialsEmpty = $derived(tabs.every((tab) => tab.badgeValue === 0));
-  const hasLessonVideos = $derived((lessonApi.lesson?.videos?.length ?? 0) > 0);
 
   let timeoutId: NodeJS.Timeout | undefined;
 
   let isLoading = writable(false);
-
-  function callAI(_type = '') {}
 
   const getValue = (label: string) => {
     const tabValue = tabs.find((tab) => tab.label === label)?.value;
@@ -526,10 +522,6 @@
         {:else if lessonApi.lesson && !isMaterialsEmpty}
           {#key lessonId}
             <div class="mb-20 flex w-full flex-col" in:fade={{ delay: 500 }} out:fade>
-              {#if !hasLessonVideos}
-                <LessonMaterialActions showSummarize {lessonId} alignWithNote />
-              {/if}
-
               {#each viewModeComponents as Component, index (index)}
                 <Component {mode} {lessonId} {courseId} />
               {/each}
@@ -578,7 +570,7 @@
 
           <!-- Note Tab -->
           <UnderlineTabs.Content value={String(getValue('course.navItem.lessons.materials.tabs.note.title') || '')}>
-            <Note {mode} {lessonId} {isLoading} {callAI} />
+            <Note {mode} {lessonId} />
           </UnderlineTabs.Content>
           <!-- End Note Tab -->
 
@@ -609,10 +601,6 @@
       {:else if lessonApi.lesson && !isMaterialsEmpty}
         {#key lessonId}
           <div class="mb-20 flex w-full flex-col" in:fade={{ delay: 500 }} out:fade>
-            {#if !hasLessonVideos}
-              <LessonMaterialActions showSummarize {lessonId} alignWithNote />
-            {/if}
-
             {#each viewModeComponents as Component, index (index)}
               <Component {mode} {lessonId} {courseId} />
             {/each}

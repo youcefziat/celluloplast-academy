@@ -102,12 +102,7 @@
         </div>
       {/each}
 
-      <LessonMaterialActions
-        showTranscript={hasTranscript}
-        showSummarize={videos.length > 0}
-        {lessonId}
-        onTranscript={openTranscriptPanel}
-      />
+      <LessonMaterialActions showTranscript={hasTranscript} onTranscript={openTranscriptPanel} />
     </div>
   {/if}
 {/if}

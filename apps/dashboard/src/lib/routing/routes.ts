@@ -1,15 +1,13 @@
 export enum ROUTE_NAME {
   COURSE = 'COURSE',
   COURSE_SETTINGS = 'COURSE_SETTINGS',
-  COURSE_CERTIFICATE = 'COURSE_CERTIFICATE',
-  COURSE_AI_TUTOR = 'COURSE_AI_TUTOR'
+  COURSE_CERTIFICATE = 'COURSE_CERTIFICATE'
 }
 
 export const ROUTE_PATHS = {
   [ROUTE_NAME.COURSE]: '/courses/[id]',
   [ROUTE_NAME.COURSE_SETTINGS]: '/courses/[id]/settings',
-  [ROUTE_NAME.COURSE_CERTIFICATE]: '/courses/[id]/certificates',
-  [ROUTE_NAME.COURSE_AI_TUTOR]: '/courses/[id]/ai-tutor'
+  [ROUTE_NAME.COURSE_CERTIFICATE]: '/courses/[id]/certificates'
 } as const;
 
 export const ROUTE_SECTIONS = {
@@ -22,11 +20,6 @@ export const ROUTE_SECTIONS = {
     THRESHOLD: 'cert-threshold',
     CERT_DEADLINE: 'cert-deadline',
     CERT_EMAIL_MESSAGE: 'cert-email-message'
-  },
-
-  [ROUTE_NAME.COURSE_AI_TUTOR]: {
-    INHERITANCE: 'inheritance',
-    TUTOR_SETTINGS: 'tutor-settings'
   }
 } as const;
 

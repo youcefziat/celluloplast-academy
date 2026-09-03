@@ -4,7 +4,6 @@ export { default as CourseCardLoader } from './card-loader.svelte';
 export { default as CopyCourseModal } from './copy-course-modal.svelte';
 export { default as CourseHeader } from './course-header.svelte';
 export { default as CourseFilterPopover } from './course-filter-popover.svelte';
-export { default as CourseTagPicker } from './course-tag-picker.svelte';
 export { default as CreateCourseButton } from './create-course-button.svelte';
 export { default as CourseList } from './list.svelte';
 export { default as CourseListRow } from './course-list-row.svelte';

@@ -16,7 +16,7 @@
   import { CELLULOPLAST_AUTHORING } from '$lib/celluloplast/course-authoring';
   import { snackbar } from '$features/ui/snackbar/store';
   import { t } from '$lib/utils/functions/translations';
-  import { handleOpenWidget } from '$features/ui/course-landing-page/store';
+  import { handleOpenWidget } from '$features/ui/upload-widget/store';
   import { currentOrgPath, isFreePlan } from '$lib/utils/store/org';
   import type { Course } from '../utils/types';
 

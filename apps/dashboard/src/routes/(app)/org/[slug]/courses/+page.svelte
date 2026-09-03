@@ -12,7 +12,6 @@
     parseCourseSortValue
   } from '$features/course/utils/constants';
   import { browser } from '$app/environment';
-  import { SvelteSet } from 'svelte/reactivity';
   import { t } from '$lib/utils/functions/translations';
   import { onMount } from 'svelte';
   import * as Page from '@cio/ui/base/page';
@@ -21,13 +20,11 @@
   import { CELLULOPLAST_COURSE_TYPES } from '$lib/celluloplast/course-authoring';
 
   let { data } = $props();
-  const getInitialSelectedTags = () => data.activeTags ?? [];
 
   let searchValue = $state('');
   let sortKey: CourseSortBy = $state(DEFAULT_COURSE_SORT);
   let selectedOrder = $state<CourseSortOrder>(DEFAULT_SORT_ORDER);
 
-  let selectedTags = $state<string[]>(getInitialSelectedTags());
   let courseType = $state<string>('all');
 
   const courseTypeLabelKeys: Record<string, string> = {
@@ -61,12 +58,6 @@
     }
 
     const nextUrl = new URL(window.location.href);
-
-    if (selectedTags.length > 0) {
-      nextUrl.searchParams.set('tags', selectedTags.join(','));
-    } else {
-      nextUrl.searchParams.delete('tags');
-    }
 
     if (sortKey !== DEFAULT_COURSE_SORT) {
       nextUrl.searchParams.set('sort', sortKey);
@@ -106,40 +97,11 @@
     updateFiltersUrl();
   });
 
-  async function applyTagFilters(nextTags: string[]) {
-    selectedTags = nextTags;
-    updateFiltersUrl();
-    isFiltering = true;
-    try {
-      await coursesApi.getOrgCourses(nextTags);
-    } finally {
-      isFiltering = false;
-    }
-  }
-
-  function toggleTag(tagSlug: string, checked: boolean) {
-    const next = new SvelteSet(selectedTags);
-
-    if (checked) {
-      next.add(tagSlug);
-    } else {
-      next.delete(tagSlug);
-    }
-
-    void applyTagFilters(Array.from(next));
-  }
-
-  async function clearFilters() {
+  function clearFilters() {
     sortKey = DEFAULT_COURSE_SORT;
     selectedOrder = DEFAULT_SORT_ORDER;
     courseType = 'all';
-
-    if (selectedTags.length === 0) {
-      updateFiltersUrl();
-      return;
-    }
-
-    await applyTagFilters([]);
+    updateFiltersUrl();
   }
 
   function setCourseType(nextType: string) {
@@ -242,10 +204,7 @@
             bind:selectedOrder
             bind:courseType
             {courseTypeOptions}
-            {selectedTags}
-            tagGroups={data.tagGroups}
             {isFiltering}
-            onToggleTag={toggleTag}
             onCourseTypeChange={setCourseType}
             onClearFilters={clearFilters}
           />

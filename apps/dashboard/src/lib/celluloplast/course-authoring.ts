@@ -6,8 +6,6 @@
  * this module centralizes defaults, content filters, and UI gates.
  */
 
-import { CELLULOPLAST_V1 } from './features';
-import { NAV_IDS } from '$features/course/components/sidebar/constants';
 import { ContentType } from '@cio/utils/constants/content';
 import type { TCourseType } from '@cio/db/types';
 
@@ -53,19 +51,6 @@ export const CELLULOPLAST_AUTHORING = {
     deletion: true
   }
 } as const;
-
-/** Course sidebar tabs hidden in V1. */
-export const CELLULOPLAST_HIDDEN_COURSE_NAV_IDS: string[] = [
-  NAV_IDS.AI_ASSISTANT,
-  NAV_IDS.LANDING_PAGE,
-  // Newsfeed is social; community is out of V1.
-  NAV_IDS.NEWS_FEED
-];
-
-/** True when any AI authoring/assistant UI may render. */
-export function isCelluloplastAiUiEnabled(): boolean {
-  return CELLULOPLAST_V1.ai;
-}
 
 export function isCelluloplastCourseTypeAllowed(type: TCourseType): boolean {
   return (CELLULOPLAST_COURSE_TYPES as readonly string[]).includes(type);

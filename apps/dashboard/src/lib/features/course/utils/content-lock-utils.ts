@@ -1,9 +1,56 @@
 import { ContentType } from '@cio/utils/constants/content';
-import type { StudentContentLockReason } from '$features/ai-assistant/utils/content-ask-ai-bar';
-import type { Course } from './types';
+import type { Course, CourseContentItem } from './types';
 import { getCourseContent } from './content';
 
+export type StudentContentLockReason = 'teacher_locked' | 'progression_locked';
+
 export type LockedContentItem = { id: string; type: ContentType.Lesson | ContentType.Exercise };
+
+function findContentItem(
+  course: Course | null,
+  contentId: string,
+  contentType: typeof ContentType.Lesson | typeof ContentType.Exercise
+): CourseContentItem | undefined {
+  const content = getCourseContent(course);
+  const items = content.grouped ? content.sections.flatMap((section) => section.items) : content.items;
+
+  return items.find((item) => item.id === contentId && item.type === contentType);
+}
+
+/** Why a learner cannot open this lesson/exercise yet, or null when it is available. */
+export function getStudentContentLockReason(
+  course: Course | null,
+  contentId: string | undefined,
+  contentType: typeof ContentType.Lesson | typeof ContentType.Exercise | null
+): StudentContentLockReason | null {
+  if (!contentId || !contentType) {
+    return null;
+  }
+
+  const item = findContentItem(course, contentId, contentType);
+
+  if (!item) {
+    return null;
+  }
+
+  if ((item.isUnlocked ?? true) === false) {
+    return 'teacher_locked';
+  }
+
+  if (item.accessible === false) {
+    return 'progression_locked';
+  }
+
+  return null;
+}
+
+export function isCourseContentLockedForStudent(
+  course: Course | null,
+  contentId: string | undefined,
+  contentType: typeof ContentType.Lesson | typeof ContentType.Exercise | null
+): boolean {
+  return getStudentContentLockReason(course, contentId, contentType) !== null;
+}
 
 export function collectLockedContentItems(course: Course | null): LockedContentItem[] {
   const content = getCourseContent(course);

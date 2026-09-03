@@ -5,7 +5,6 @@
   import { orgApi } from '$features/org/api/org.svelte';
   import { t } from '$lib/utils/functions/translations';
   import { Empty } from '@cio/ui/custom/empty';
-  import { UpgradeBanner } from '$features/ui';
   import { currentOrgMaxAudience, isOrgAdmin } from '$lib/utils/store/org';
   import type {
     OrganizationAudience,
@@ -217,9 +216,7 @@
   }
 </script>
 
-{#if totalCount >= $currentOrgMaxAudience}
-  <UpgradeBanner>{$t('audience.upgrade')}</UpgradeBanner>
-{/if}
+{#if totalCount >= $currentOrgMaxAudience}{/if}
 
 <AudienceTableToolbar
   {hasSelection}

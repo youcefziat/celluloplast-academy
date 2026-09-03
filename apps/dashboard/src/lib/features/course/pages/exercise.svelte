@@ -51,8 +51,6 @@
   } from '$features/ui';
   import { isSelfPacedLikeCourse } from '$features/course/utils/compliance-utils';
   import { getOrderedNavigableContent } from '$features/course/utils/content';
-  import { saveExerciseDraft } from '$features/course/utils/exercise-draft';
-  import { onUpgradeCheckoutHandoff } from '$lib/utils/store/upgrade-modal';
   import {
     hydrateExercisePageData
     // , refreshExercisePageData
@@ -476,19 +474,6 @@
   onMount(() => {
     selectedTab = normalizeExerciseTab(page.url.searchParams.get('tab'));
   });
-
-  // Upgrading from a premium question type sends the browser to an external checkout. Stash the
-  // editor so it can be restored on the way back, and stand the leave guard down — with the work
-  // persisted there is nothing to warn about.
-  onMount(() =>
-    onUpgradeCheckoutHandoff(() => {
-      const courseId = courseApi.course?.id;
-      if ($isOrgStudent || !courseId || !hasDirtyQuestionnaire()) return;
-
-      saveExerciseDraft(courseId, exerciseId, $questionnaire);
-      hasUnsavedChanges = false;
-    })
-  );
 
   $effect(() => {
     const nextTab = normalizeExerciseTab(page.url.searchParams.get('tab'));

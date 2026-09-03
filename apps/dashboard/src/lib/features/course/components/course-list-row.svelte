@@ -77,17 +77,13 @@
 
   const bannerImage = $derived(logo?.trim() ? logo : '/images/classroomio-course-img-template.jpg');
 
-  const showPublicCourseLinks = $derived(isPublished && type === 'PUBLIC' && slug.trim().length > 0);
-
   const hidden = $derived(new Set<string>(hiddenColumns));
 
   const MAX_VISIBLE_TAGS = 3;
   const visibleTags = $derived(tags.slice(0, MAX_VISIBLE_TAGS));
   const remainingTagCount = $derived(Math.max(0, tags.length - MAX_VISIBLE_TAGS));
 
-  const showActionsColumn = $derived(
-    !hidden.has('actions') && (!isLMS || (isLMS && showPublicCourseLinks) || (isLMS && isExplore))
-  );
+  const showActionsColumn = $derived(!hidden.has('actions') && (!isLMS || isExplore));
 
   const gridTemplateColumns = $derived(
     COLUMN_TRACKS.filter(([key]) => {
@@ -314,28 +310,14 @@
               {/snippet}
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="end">
-              {#if isLMS}
-                <CourseContextMenuContent
-                  {id}
-                  {title}
-                  {description}
-                  {isPublished}
-                  courseType={type}
-                  {slug}
-                  lmsPublicQuickOnly={true}
-                />
-              {:else}
-                <CourseContextMenuContent
-                  {id}
-                  {title}
-                  {description}
-                  {isPublished}
-                  courseType={type}
-                  {slug}
-                  includeOpen={true}
-                  hideOrgActions={false}
-                />
-              {/if}
+              <CourseContextMenuContent
+                {id}
+                {title}
+                {description}
+                {isPublished}
+                includeOpen={true}
+                hideOrgActions={false}
+              />
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         {/if}

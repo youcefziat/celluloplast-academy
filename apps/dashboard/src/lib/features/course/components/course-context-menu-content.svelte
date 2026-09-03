@@ -4,8 +4,6 @@
   import { goto } from '$app/navigation';
   import { resolve } from '$app/paths';
   import { copyCourseModal, deleteCourseModal } from '$features/course/utils/store';
-  import { copyPublicCoursePageUrl, openCoursePreview } from '$features/course/utils/course-preview';
-  import { currentOrgDomain } from '$lib/utils/store/org';
   import { t } from '$lib/utils/functions/translations';
   import { goAndHighlight } from '$lib/routing/go-and-highlight';
   import { ROUTE_NAME, ROUTE_SECTIONS } from '$lib/routing/routes';
@@ -15,10 +13,6 @@
     title: string;
     description: string;
     isPublished?: boolean;
-    courseType?: string | null;
-    slug?: string;
-    /** Compact menu for LMS course cards */
-    lmsPublicQuickOnly?: boolean;
     /** Include "View as student" (course header menu) */
     includeViewAsStudent?: boolean;
     onViewAsStudent?: () => void;
@@ -33,16 +27,12 @@
     title,
     description,
     isPublished = false,
-    courseType = null,
-    slug = '',
-    lmsPublicQuickOnly = false,
     includeViewAsStudent = false,
     onViewAsStudent,
     includeOpen = false,
     hideOrgActions = false
   }: Props = $props();
 
-  const showPublicCourseLinks = $derived(isPublished && courseType === 'PUBLIC' && slug.trim().length > 0);
   const courseSettingsPath = $derived(resolve(`/courses/${id}/settings`, {}));
 
   function redirect(url: string) {
@@ -51,15 +41,6 @@
 
   function scrollToSettingsSection(sectionId: string) {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function handleShareCourse() {
-    if (page.url.pathname === courseSettingsPath) {
-      scrollToSettingsSection('share');
-      return;
-    }
-
-    redirect(`/courses/${id}/settings#share`);
   }
 
   function handleInvite() {
@@ -97,75 +78,39 @@
   function handleOpenCourse() {
     redirect(`/courses/${id}`);
   }
-
-  function handleViewCourseSite() {
-    openCoursePreview({
-      courseId: id,
-      courseSlug: slug,
-      currentOrgDomain: $currentOrgDomain
-    });
-  }
-
-  async function handleCopyCourseUrl() {
-    await copyPublicCoursePageUrl(slug, $currentOrgDomain);
-  }
 </script>
 
-{#if lmsPublicQuickOnly}
-  <DropdownMenu.Item onclick={handleViewCourseSite}>
-    {$t('courses.course_card.context_menu.view_course_site')}
+{#if includeViewAsStudent}
+  <DropdownMenu.Item onclick={() => onViewAsStudent?.()}>
+    {$t('course.header.view_as_student')}
   </DropdownMenu.Item>
-  <DropdownMenu.Item onclick={() => void handleCopyCourseUrl()}>
-    {$t('courses.course_card.context_menu.copy_course_url')}
+  <DropdownMenu.Separator />
+{/if}
+
+{#if !isPublished}
+  <DropdownMenu.Item onclick={handlePublishCourse}>
+    {$t('courses.course_card.context_menu.publish_course')}
   </DropdownMenu.Item>
-{:else}
-  {#if includeViewAsStudent}
-    <DropdownMenu.Item onclick={() => onViewAsStudent?.()}>
-      {$t('course.header.view_as_student')}
-    </DropdownMenu.Item>
+  {#if !hideOrgActions || includeOpen}
     <DropdownMenu.Separator />
   {/if}
+{/if}
 
-  {#if isPublished}
-    <DropdownMenu.Item onclick={handleViewCourseSite}>
-      {$t('courses.course_card.context_menu.view_course_site')}
-    </DropdownMenu.Item>
-    {#if showPublicCourseLinks}
-      <DropdownMenu.Item onclick={() => void handleCopyCourseUrl()}>
-        {$t('courses.course_card.context_menu.copy_course_url')}
-      </DropdownMenu.Item>
-    {/if}
-    {#if !hideOrgActions || includeOpen}
-      <DropdownMenu.Separator />
-    {/if}
-  {:else}
-    <DropdownMenu.Item onclick={handlePublishCourse}>
-      {$t('courses.course_card.context_menu.publish_course')}
-    </DropdownMenu.Item>
-    {#if !hideOrgActions || includeOpen}
-      <DropdownMenu.Separator />
-    {/if}
-  {/if}
+{#if includeOpen}
+  <DropdownMenu.Item onclick={handleOpenCourse}>
+    {$t('courses.course_card.context_menu.open')}
+  </DropdownMenu.Item>
+{/if}
 
-  {#if includeOpen}
-    <DropdownMenu.Item onclick={handleOpenCourse}>
-      {$t('courses.course_card.context_menu.open')}
-    </DropdownMenu.Item>
-  {/if}
-
-  {#if !hideOrgActions}
-    <DropdownMenu.Item onclick={handleCloneCourse}>
-      {$t('courses.course_card.context_menu.clone')}
-    </DropdownMenu.Item>
-    <DropdownMenu.Item onclick={handleShareCourse}>
-      {$t('courses.course_card.context_menu.share')}
-    </DropdownMenu.Item>
-    <DropdownMenu.Item onclick={handleInvite}>
-      {$t('courses.course_card.context_menu.invite')}
-    </DropdownMenu.Item>
-    <DropdownMenu.Separator />
-    <DropdownMenu.Item class="text-red-600" onclick={handleDeleteCourse}>
-      {$t('courses.course_card.context_menu.delete')}
-    </DropdownMenu.Item>
-  {/if}
+{#if !hideOrgActions}
+  <DropdownMenu.Item onclick={handleCloneCourse}>
+    {$t('courses.course_card.context_menu.clone')}
+  </DropdownMenu.Item>
+  <DropdownMenu.Item onclick={handleInvite}>
+    {$t('courses.course_card.context_menu.invite')}
+  </DropdownMenu.Item>
+  <DropdownMenu.Separator />
+  <DropdownMenu.Item class="text-red-600" onclick={handleDeleteCourse}>
+    {$t('courses.course_card.context_menu.delete')}
+  </DropdownMenu.Item>
 {/if}

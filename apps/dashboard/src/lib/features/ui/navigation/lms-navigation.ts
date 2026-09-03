@@ -1,19 +1,8 @@
-import {
-  CertificateIcon,
-  CommunityIcon,
-  CourseIcon,
-  ExerciseIcon,
-  ExploreIcon,
-  GoalIcon,
-  HomeIcon,
-  SettingsIcon
-} from '@cio/ui/custom/moving-icons';
+import { CertificateIcon, CourseIcon, HomeIcon, SettingsIcon } from '@cio/ui/custom/moving-icons';
 
 import type { AccountOrg } from '$features/app/types';
 import type { Component } from 'svelte';
 import { isActive } from '$lib/utils/functions/app';
-import { isOrgOnFreePlan } from '@cio/utils/plans';
-import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
 import { applyLmsNavPolicy } from '$lib/celluloplast/navigation';
 
 export interface NavItem {
@@ -65,46 +54,7 @@ const upstreamNavConfig: NavItemConfig[] = [
     titleKey: 'lms_navigation.certificates',
     path: '/certificates',
     icon: CertificateIcon,
-    matchPattern: '^/lms/certificates(/.*)?$',
-    show: (currentOrg) =>
-      !isOrgOnFreePlan({
-        plans: currentOrg?.plans,
-        isSelfHosted: PUBLIC_IS_SELFHOSTED === 'true',
-        orgId: currentOrg?.id
-      })
-  },
-  {
-    titleKey: 'lms_navigation.explore',
-    path: '/explore',
-    icon: ExploreIcon,
-    matchPattern: '^/lms/explore(/.*)?$'
-  },
-  {
-    titleKey: 'lms_navigation.cohorts',
-    path: '/cohorts',
-    icon: GoalIcon,
-    matchPattern: '^/lms/cohorts(/.*)?$'
-  },
-  {
-    titleKey: 'lms_navigation.exercise',
-    path: '/exercises',
-    icon: ExerciseIcon,
-    matchPattern: '^/lms/exercises(/.*)?$',
-    show: (currentOrg) => currentOrg?.customization?.dashboard?.exercise === true
-  },
-  {
-    titleKey: 'lms_navigation.community',
-    path: '/community',
-    icon: CommunityIcon,
-    matchPattern: '^/lms/community(/.*)?$',
-    show: (currentOrg) => currentOrg?.customization?.dashboard?.community === true,
-    supportsDynamicSegment: true,
-    nestedRoutes: [
-      {
-        path: 'ask',
-        titleKey: 'Ask Question'
-      }
-    ]
+    matchPattern: '^/lms/certificates(/.*)?$'
   },
   {
     titleKey: 'lms_navigation.settings',
@@ -120,20 +70,12 @@ const upstreamNavConfig: NavItemConfig[] = [
       {
         titleKey: 'Notifications',
         path: '/settings/notifications'
-      },
-      {
-        titleKey: 'Integrations',
-        path: '/settings/integrations'
       }
     ],
     nestedRoutes: [
       {
         path: 'notifications',
         titleKey: 'settings.tabs.notifications_tab'
-      },
-      {
-        path: 'integrations',
-        titleKey: 'settings.tabs.integrations_tab'
       }
     ]
   }

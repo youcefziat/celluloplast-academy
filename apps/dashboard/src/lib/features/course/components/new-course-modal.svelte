@@ -11,7 +11,7 @@
   import { t } from '$lib/utils/functions/translations';
   import { snackbar } from '$features/ui/snackbar/store';
   import { courseApi } from '../api';
-  import { CELLULOPLAST_AUTHORING, isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
+  import { CELLULOPLAST_AUTHORING } from '$lib/celluloplast/course-authoring';
 
   function onClose(redirectTo: string) {
     goto(redirectTo);
@@ -85,7 +85,6 @@
         className="mb-2"
         isRequired={true}
         errorMessage={courseApi.errors.description}
-        isAIEnabled={isCelluloplastAiUiEnabled()}
       />
 
       <Dialog.Footer>

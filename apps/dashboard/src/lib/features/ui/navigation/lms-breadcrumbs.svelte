@@ -9,22 +9,10 @@
   import { t } from '$lib/utils/functions/translations';
   import { getLmsNavigationItems } from './lms-navigation';
   import { generateLmsBreadcrumbs } from './lms-breadcrumb';
-  import { currentCommunityQuestion } from '$features/community/utils/store';
 
   const navItems = $derived(getLmsNavigationItems($currentOrg, $t, page.url.pathname));
 
-  // Get breadcrumb title from store for LMS community posts
-  const breadcrumbTitle = $derived($currentCommunityQuestion.title);
-
-  const breadcrumbs = $derived(
-    generateLmsBreadcrumbs(
-      page.url.pathname,
-      page.url.search,
-      navItems,
-      $t,
-      breadcrumbTitle ? { breadcrumb: breadcrumbTitle } : undefined
-    )
-  );
+  const breadcrumbs = $derived(generateLmsBreadcrumbs(page.url.pathname, page.url.search, navItems, $t));
 
   let open = $state(false);
 

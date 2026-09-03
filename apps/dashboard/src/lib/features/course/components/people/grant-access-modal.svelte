@@ -9,7 +9,6 @@
   import { orgApi } from '$features/org/api/org.svelte';
   import { profile } from '$lib/utils/store/user';
   import { isStudentLimitReached } from '$lib/utils/store/org';
-  import { UpgradeBanner } from '$features/ui';
 
   const GRANT_ACCESS_PARAM = 'grantAccess';
 
@@ -67,11 +66,7 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    {#if $isStudentLimitReached}
-      <UpgradeBanner removeParams={[GRANT_ACCESS_PARAM]}>
-        {$t('course.navItem.people.invite_modal.student_limit_reached')}
-      </UpgradeBanner>
-    {/if}
+    {#if $isStudentLimitReached}{/if}
 
     <div class="flex justify-end gap-2">
       <Button type="button" variant="outline" onclick={closeModal} disabled={isSubmitting}>

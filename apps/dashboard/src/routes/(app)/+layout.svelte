@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
 
-  import { UpgradeModal, PageLoadProgress, PageRestricted } from '$features/ui';
+  import { PageLoadProgress, PageRestricted } from '$features/ui';
   import { VerifyEmailModal } from '$features/onboarding/components';
   import { CommandPalette, KeyboardShortcutListener } from '$features/search';
   import { isPublicRoute } from '$lib/utils/functions/routes/isPublicRoute';
@@ -42,7 +42,6 @@
   });
 </script>
 
-<UpgradeModal />
 <VerifyEmailModal />
 <CommandPalette />
 <KeyboardShortcutListener />

@@ -3,24 +3,17 @@
   import * as Sidebar from '@cio/ui/base/sidebar';
   import * as ButtonGroup from '@cio/ui/base/button-group';
   import * as DropdownMenu from '@cio/ui/base/dropdown-menu';
-  import ExternalLinkIcon from '@lucide/svelte/icons/external-link';
   import EllipsisVerticalIcon from '@lucide/svelte/icons/ellipsis-vertical';
   import { Button } from '@cio/ui/base/button';
-  import { Waves } from '@cio/ui/custom/animation';
   import { page } from '$app/state';
-  import { currentOrg, currentOrgDomain } from '$lib/utils/store/org';
+  import { currentOrgDomain } from '$lib/utils/store/org';
   import { isStudentExperience, isCourseLearnerView } from '$lib/utils/store/app';
   import { isMobileStore } from '@cio/ui/hooks/is-mobile.svelte';
   import { getCourseProgress } from '$features/course/utils/content';
   import { isCourseMobileBottomNavVisible } from '$features/course/utils/mobile-bottom-nav';
-  import SparklesIcon from '@lucide/svelte/icons/sparkles';
-  import { setupProgressApi } from '$features/setup/api/setup-progress.svelte';
   import { courseApi } from '$features/course/api';
   import { getActiveCourseNavKey } from '$features/course/utils/functions';
-  import { toggleAiAssistant } from '$features/ai-assistant/utils/store';
-  import { isCelluloplastAiUiEnabled } from '$lib/celluloplast/course-authoring';
   import { CELLULOPLAST_AUTHORING } from '$lib/celluloplast/course-authoring';
-  import { openCoursePreview } from '$features/course/utils/course-preview';
   import { t } from '$lib/utils/functions/translations';
   import UsersIcon from '@lucide/svelte/icons/users';
   import CourseProgressPopover from './course-progress-popover.svelte';
@@ -28,9 +21,7 @@
   import CoursePublicBadge from './course-public-badge.svelte';
   import CourseContextMenuContent from './course-context-menu-content.svelte';
   import ViewAsStudentModal from './view-as-student-modal.svelte';
-  import ViewCourseSiteUnpublishedModal from './view-course-site-unpublished-modal.svelte';
 
-  const siteName = $derived($currentOrg.siteName);
   const showCoursePublishBadge = $derived(!$isStudentExperience);
   const isPublicCourse = $derived(courseApi.course?.type === 'PUBLIC');
   const activeNavKey = $derived(getActiveCourseNavKey(page.url.pathname, courseApi.course?.id ?? ''));
@@ -47,31 +38,6 @@
   );
 
   let viewAsStudentOpen = $state(false);
-  let viewCourseSiteUnpublishedOpen = $state(false);
-
-  $effect(() => {
-    if (!siteName) return;
-
-    setupProgressApi.fetchSetupProgress(siteName);
-  });
-
-  function handleViewCourseSite() {
-    const course = courseApi.course;
-    if (!course?.id) {
-      return;
-    }
-
-    if (!isPublished) {
-      viewCourseSiteUnpublishedOpen = true;
-      return;
-    }
-
-    openCoursePreview({
-      courseId: course.id,
-      courseSlug: course.slug,
-      currentOrgDomain: $currentOrgDomain
-    });
-  }
 </script>
 
 <header
@@ -119,40 +85,8 @@
       {/if}
     {/if}
 
-    {#if isCelluloplastAiUiEnabled()}
-      <Button
-        size="sm"
-        onclick={toggleAiAssistant}
-        class="ui:bg-primary ui:text-primary-foreground relative overflow-hidden border-0"
-      >
-        <Waves
-          lineColor="rgba(255,255,255,0.55)"
-          xGap={8}
-          yGap={12}
-          waveAmpX={18}
-          waveAmpY={9}
-          waveSpeedX={0.04}
-          waveSpeedY={0.02}
-        />
-        <SparklesIcon size={14} class="relative z-10" />
-        <span class="relative z-10">{$t('course.navItems.nav_ai_assistant')}</span>
-      </Button>
-    {/if}
-
     {#if !$isStudentExperience}
       <ButtonGroup.Root>
-        {#if isCelluloplastAiUiEnabled()}
-          <Button
-            variant="outline"
-            size="sm"
-            onclick={handleViewCourseSite}
-            disabled={!courseApi.course?.id}
-            aria-label={$t('course.header.view_course_site')}
-          >
-            <ExternalLinkIcon size={14} />
-            <span class="hidden sm:inline">{$t('course.header.view_course_site')}</span>
-          </Button>
-        {/if}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             {#snippet child({ props })}
@@ -190,8 +124,5 @@
 <ViewAsStudentModal
   bind:open={viewAsStudentOpen}
   courseId={courseApi.course?.id}
-  courseSlug={courseApi.course?.slug}
   currentOrgDomain={$currentOrgDomain}
 />
-
-<ViewCourseSiteUnpublishedModal bind:open={viewCourseSiteUnpublishedOpen} currentOrgDomain={$currentOrgDomain} />

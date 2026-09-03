@@ -8,11 +8,8 @@
   import { isOrgStudent } from '$lib/utils/store/app';
   import { appInitApi } from '$features/app/init.svelte';
   import { AppHeader } from '$features/ui';
-  import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
 
   import { OrgSidebar } from '$features/ui/sidebar/org-sidebar';
-  import { AddOrgModal } from '$features/org';
-  import { CELLULOPLAST_V1 } from '$lib/celluloplast/features';
 
   let { data, children } = $props();
 
@@ -35,11 +32,6 @@
     }
   });
 </script>
-
-<!-- Celluloplast V1 runs one internal organization: never offer to create another. -->
-{#if PUBLIC_IS_SELFHOSTED !== 'true' && CELLULOPLAST_V1.multiOrganization}
-  <AddOrgModal />
-{/if}
 
 <Sidebar.Provider>
   <OrgSidebar />

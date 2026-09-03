@@ -6,7 +6,7 @@
   import FileTextIcon from '@lucide/svelte/icons/file-text';
   import { DocumentUploader } from '$lib/utils/services/courses/presign';
   import { onDestroy, untrack } from 'svelte';
-  import { UpgradeBanner, CloseButton } from '$features/ui';
+  import { CloseButton } from '$features/ui';
   import { isFreePlan } from '$lib/utils/store/org';
   import { lessonApi } from '$features/course/api';
   import { mediaApi } from '$features/media/api';
@@ -318,9 +318,6 @@
     <Dialog.Header>
       <Dialog.Title>{$t(titleKey)}</Dialog.Title>
     </Dialog.Header>
-    <UpgradeBanner className="mb-3" onClick={() => ($lessonDocUpload.isModalOpen = false)}>
-      {$t('course.navItem.lessons.materials.tabs.document.upgrade')}
-    </UpgradeBanner>
 
     <div class="p-6">
       <!-- File Upload Area -->

@@ -1,8 +1,7 @@
 /**
  * Celluloplast Academy V1 navigation policy (fork layer).
  *
- * Upstream ClassroomIO exposes every surface it ships (community, AI, widgets, automation,
- * billing, cohorts…). The internal academy only needs three role journeys:
+ * The internal academy has three role journeys:
  *
  * | ADMIN          | TUTOR          | STUDENT         |
  * |----------------|----------------|-----------------|
@@ -13,11 +12,12 @@
  * | Certifications | Certifications |                 |
  * | Administration |                |                 |
  *
- * Instead of editing the upstream configs (which would conflict on every rebase), this module
- * takes them as input and returns the V1 allowlist: entries are reused from upstream by `path`
- * so their `matchPattern`, `nestedRoutes` and sub-items keep working, and only the label, icon
- * and role gate are overridden here. Anything not listed is hidden — including from the
- * breadcrumbs and the command palette, which read the same configs.
+ * This module takes the upstream nav configs as input and returns the V1 allowlist: entries are
+ * reused from upstream by `path` so their `matchPattern`, `nestedRoutes` and sub-items keep
+ * working, and only the label, icon and role gate are overridden here. Anything not listed is
+ * hidden — including from the breadcrumbs and the command palette, which read the same configs.
+ * It stays the single place that decides what a role sees, even now that the out-of-scope routes
+ * themselves are deleted.
  *
  * Role gating reuses upstream's `requiresAdmin` flag; no new role system is introduced.
  */
@@ -25,7 +25,6 @@
 import type { NavItemConfig as LmsNavItemConfig } from '$features/ui/navigation/lms-navigation';
 import type { NavItemConfig as OrgNavItemConfig } from '$features/ui/navigation/org-navigation';
 import { CertificateIcon, ChartColumnIcon, HomeIcon } from '@cio/ui/custom/moving-icons';
-import { CELLULOPLAST_HIDDEN_COURSE_NAV_IDS } from './course-authoring';
 
 interface KeptSubItem {
   /** Path of the upstream sub-item to keep. */
@@ -227,9 +226,4 @@ export function applyLmsNavPolicy(upstream: LmsNavItemConfig[]): LmsNavItemConfi
 /** True when an org settings tab is part of V1. */
 export function isOrgSettingsTabVisible(href: string): boolean {
   return ORG_SETTINGS_TABS_V1.includes(href);
-}
-
-/** True when a course workspace tab is part of V1. */
-export function isCourseNavItemVisible(id: string): boolean {
-  return !CELLULOPLAST_HIDDEN_COURSE_NAV_IDS.includes(id);
 }

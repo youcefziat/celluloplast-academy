@@ -2,8 +2,6 @@
   import * as UnderlineTabs from '@cio/ui/custom/underline-tabs';
   import { t } from '$lib/utils/functions/translations';
 
-  import { UpgradeBanner } from '$features/ui';
-
   import CertificateDesign from './certificate-design.svelte';
   import CertificateSettings from './certificate-settings.svelte';
 
@@ -15,8 +13,6 @@
 
   let { errors, activeTab = 'design', onActiveTabChange }: Props = $props();
 </script>
-
-<UpgradeBanner>{$t('upgrade.certificate')}</UpgradeBanner>
 
 <main class="px-2 md:-mr-3 md:-ml-3">
   <UnderlineTabs.Root value={activeTab} onValueChange={(value) => onActiveTabChange?.(value)} class="w-full">

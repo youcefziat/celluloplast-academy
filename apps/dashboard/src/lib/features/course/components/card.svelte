@@ -190,8 +190,6 @@
       : undefined
   );
 
-  const showLmsPublicCourseMenu = $derived(isLMS && type === 'PUBLIC' && !!slug?.trim() && isPublished);
-
   const complianceStatusKey = $derived(
     isLMS && type === 'COMPLIANCE' && !isExplore
       ? getStudentCourseComplianceStatusKey(course as UserEnrolledCourses[number])
@@ -266,9 +264,7 @@
       {@render actions()}
     {:else if !isOnLandingPage}
       {#if !isLMS}
-        <CardDropdown {id} {title} {description} {isPublished} courseType={type} {slug} />
-      {:else if showLmsPublicCourseMenu}
-        <CardDropdown {id} {title} {description} {isPublished} courseType={type} {slug} lmsPublicQuickOnly={true} />
+        <CardDropdown {id} {title} {description} {isPublished} />
       {/if}
     {/if}
   {/snippet}

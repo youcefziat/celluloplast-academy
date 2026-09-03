@@ -3,7 +3,7 @@ import { getHasCioCookies } from '$lib/utils/functions/cookies';
 import { applyCspExtensions } from '$lib/utils/csp';
 import { proxyRequestToApi, shouldForwardToApi } from '$lib/utils/proxy-api-request';
 import { type Handle, type HandleServerError, redirect } from '@sveltejs/kit';
-import { isPublicApiRoute, isPublicRoute } from '$lib/utils/functions/routes/isPublicRoute';
+import { isPublicRoute } from '$lib/utils/functions/routes/isPublicRoute';
 import { ROUTE } from '$lib/utils/constants/routes';
 
 export const handleError: HandleServerError = ({ error, event, status, message }) => {
@@ -22,14 +22,14 @@ export const handleError: HandleServerError = ({ error, event, status, message }
 const ANALYTICS_SESSION_COOKIE = 'cio_aid';
 const ANALYTICS_SESSION_MAX_AGE = 60 * 60 * 24 * 90;
 
-function ensureAnalyticsSessionCookie(cookies: Parameters<Handle>[0]['event']['cookies']) {
+function ensureAnalyticsSessionCookie(cookies: Parameters<Handle>[0]['event']['cookies'], isSecure: boolean) {
   if (cookies.get(ANALYTICS_SESSION_COOKIE)) return;
 
   cookies.set(ANALYTICS_SESSION_COOKIE, crypto.randomUUID(), {
     path: '/',
     httpOnly: false,
     sameSite: 'lax',
-    secure: true,
+    secure: isSecure,
     maxAge: ANALYTICS_SESSION_MAX_AGE
   });
 }
@@ -51,16 +51,11 @@ export const handle: Handle = async (args) => {
   }
 
   if (!event.url.pathname.includes('/api')) {
-    ensureAnalyticsSessionCookie(event.cookies);
+    ensureAnalyticsSessionCookie(event.cookies, event.url.protocol === 'https:');
   }
 
-  let response: Response;
-
-  if (event.url.pathname.includes('/api')) {
-    response = await handleAPIRoutes(args);
-  } else {
-    response = await handlePagesRoutes(args);
-  }
+  // `/api/auth/*` and the API proxy are handled above; everything else is a page route.
+  const response = await handlePagesRoutes(args);
 
   // Prevent Cloudflare/CDN from caching HTML pages — stale HTML references old
   // hashed JS/CSS bundles after a deploy, causing the app to hang on deep links.
@@ -89,20 +84,6 @@ const handlePagesRoutes: Handle = async ({ event, resolve }) => {
       : ROUTE.LOGIN;
 
     return redirect(303, redirectPath);
-  }
-
-  return resolve(event);
-};
-
-const handleAPIRoutes: Handle = async ({ event, resolve }) => {
-  const { pathname } = event.url;
-
-  if (isPublicApiRoute(pathname)) {
-    return resolve(event);
-  }
-
-  if (!event.locals.user) {
-    redirect(303, '/login');
   }
 
   return resolve(event);

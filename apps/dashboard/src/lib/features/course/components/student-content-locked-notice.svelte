@@ -3,7 +3,7 @@
   import { Empty } from '@cio/ui/custom/empty';
   import { ContentType } from '@cio/utils/constants/content';
   import { t } from '$lib/utils/functions/translations';
-  import type { StudentContentLockReason } from '$features/ai-assistant/utils/content-ask-ai-bar';
+  import type { StudentContentLockReason } from '$features/course/utils/content-lock-utils';
   import {
     getStudentContentLockDescriptionKey,
     getStudentContentLockTitleKey

@@ -9,7 +9,7 @@
   import { PercentRingProgress } from '@cio/ui/custom/percent-ring-progress';
   import { get } from 'svelte/store';
   import { isCourseLearnerView } from '$lib/utils/store/app';
-  import { getStudentContentLockReason } from '$features/ai-assistant/utils/content-ask-ai-bar';
+  import { getStudentContentLockReason } from '$features/course/utils/content-lock-utils';
   import { getStudentContentLockTitleKey } from '$features/course/utils/content-lock-utils';
   import { t } from '$lib/utils/functions/translations';
   import { courseApi, lessonApi } from '$features/course/api';

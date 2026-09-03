@@ -16,7 +16,7 @@
   import { Badge } from '@cio/ui/base/badge';
   import { Input } from '@cio/ui/base/input';
   import { Button } from '@cio/ui/base/button';
-  import { ComingSoon, UpgradeBanner } from '$features/ui';
+  import { ComingSoon } from '$features/ui';
   import * as Field from '@cio/ui/base/field';
 
   let emailsStr = $state('');
@@ -101,8 +101,6 @@
     orgApi.getOrgTeam();
   });
 </script>
-
-<UpgradeBanner>{$t('upgrade.team')}</UpgradeBanner>
 
 <Field.Group class="w-full max-w-3xl! px-2">
   <Field.Set>

@@ -11,7 +11,7 @@
     getPreviousNavigableContent,
     resolveActiveNavigableContentIndex
   } from '$features/course/utils/content-navigation';
-  import { getStudentContentLockReason } from '$features/ai-assistant/utils/content-ask-ai-bar';
+  import { getStudentContentLockReason } from '$features/course/utils/content-lock-utils';
   import { getStudentContentLockTitleKey } from '$features/course/utils/content-lock-utils';
   import { ContentType } from '@cio/utils/constants/content';
   import { t } from '$lib/utils/functions/translations';

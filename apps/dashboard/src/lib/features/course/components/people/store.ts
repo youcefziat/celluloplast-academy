@@ -5,8 +5,6 @@ export const deleteMemberModal = writable({
   open: false
 });
 
-export const qrInviteNodeStore = writable<HTMLElement | null>(null);
-
 export interface InviteSettingsState {
   preset: InvitePreset;
   customExpiresAt: string;

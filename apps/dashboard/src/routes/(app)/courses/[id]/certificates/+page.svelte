@@ -7,13 +7,12 @@
   import { t } from '$lib/utils/functions/translations';
   import { courseApi } from '$features/course/api';
   import type { Course } from '$features/course/utils/types';
-  import { isFreePlan, isOrgAdmin } from '$lib/utils/store/org';
+  import { isOrgAdmin } from '$lib/utils/store/org';
   import { profile } from '$lib/utils/store/user';
   import { RefreshPageData, UnsavedChanges } from '$features/ui';
   import { ZCourseUpdate } from '@cio/utils/validation/course/course';
   import { validateWithTranslation } from '$lib/utils/validation';
   import { snackbar } from '$features/ui/snackbar/store';
-  import { openUpgradeModal } from '$lib/utils/store/upgrade-modal';
 
   let errors = $state<Record<string, string>>({});
 
@@ -88,12 +87,6 @@
 
   async function saveCertificate() {
     if (!courseApi.course) return;
-
-    if ($isFreePlan) {
-      errors = {};
-      openUpgradeModal();
-      return;
-    }
 
     const updatePayload = {
       description: courseApi.course.description ?? '',

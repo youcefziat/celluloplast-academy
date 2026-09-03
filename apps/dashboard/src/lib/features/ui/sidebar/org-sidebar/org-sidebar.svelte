@@ -23,7 +23,6 @@
       <NavMain />
     </Sidebar.Content>
 
-    <!-- Celluloplast V1 hides billing: upgrade-trigger.svelte stays in the tree, unused. -->
     <Sidebar.Footer class="gap-4!">
       <SidebarFooterMenu />
     </Sidebar.Footer>
