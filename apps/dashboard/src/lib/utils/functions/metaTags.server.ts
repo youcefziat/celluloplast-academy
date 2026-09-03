@@ -4,13 +4,13 @@ import { APP_DISPLAY_NAME } from '$lib/celluloplast/brand';
 import { PUBLIC_IS_SELFHOSTED } from '$env/static/public';
 import { env as publicEnv } from '$env/dynamic/public';
 import { buildOrgSiteTitle, extractOrgSiteMetaCopy } from '$lib/utils/functions/org-site-meta';
-import { resolveOrgSiteOgImageUrl } from '$lib/utils/functions/org-site-og-url';
 
 const isSelfHosted = PUBLIC_IS_SELFHOSTED === 'true';
 
 const DEFAULT_TITLE = `${APP_DISPLAY_NAME} | Plateforme de formation interne`;
 const DEFAULT_DESCRIPTION = 'Plateforme de formation interne Celluloplast — parcours, progression et certifications.';
-const CLOUD_OG_IMAGE = 'https://brand.cdn.clsrio.com/og/classroomio-opengraph.jpg';
+/** Image de partage par défaut, servie depuis `static/`. */
+const DEFAULT_OG_IMAGE = '/logo-512.png';
 const ORG_OG_WIDTH = 1200;
 const ORG_OG_HEIGHT = 630;
 
@@ -20,23 +20,10 @@ async function resolveOgImageUrl(url: URL, orgSiteInfo: OrgSiteInfo): Promise<st
     return envUrl;
   }
 
-  if (orgSiteInfo.isOrgSite && orgSiteInfo.org?.siteName) {
-    const dynamicOgUrl = await resolveOrgSiteOgImageUrl({
-      siteName: orgSiteInfo.org.siteName,
-      pageOrigin: url.origin,
-      isSelfHosted,
-      mediaCdnUrl: publicEnv.PUBLIC_MEDIA_CDN_URL,
-      publicServerUrl: publicEnv.PUBLIC_SERVER_URL
-    });
-    if (dynamicOgUrl) {
-      return dynamicOgUrl;
-    }
-  }
-
   if (isSelfHosted) {
     const org = orgSiteInfo.org;
     if (!org) {
-      return CLOUD_OG_IMAGE;
+      return DEFAULT_OG_IMAGE;
     }
 
     const orgImage =
@@ -52,7 +39,7 @@ async function resolveOgImageUrl(url: URL, orgSiteInfo: OrgSiteInfo): Promise<st
     }
   }
 
-  return CLOUD_OG_IMAGE;
+  return DEFAULT_OG_IMAGE;
 }
 
 function buildOrgOpenGraphImages(ogImageUrl: string, orgName: string) {
@@ -116,25 +103,17 @@ export async function getBaseMetaTags(url: URL, orgSiteInfo: OrgSiteInfo): Promi
     : [
         {
           url: ogImageUrl,
-          alt: `${siteName} platform for customer, partner, and employee education`,
+          alt: `${siteName} — plateforme de formation interne`,
           width: 1920,
           height: 1080,
           secureUrl: ogImageUrl.startsWith('https://') ? ogImageUrl : undefined,
-          type: 'image/jpeg'
-        },
-        {
-          url: 'https://brand.cdn.clsrio.com/og/classroomio-opengraph.webp',
-          alt: `${siteName} platform for customer, partner, and employee education`,
-          width: 1920,
-          height: 1080,
-          secureUrl: 'https://brand.cdn.clsrio.com/og/classroomio-opengraph.webp',
-          type: 'image/webp'
+          type: 'image/png'
         }
       ];
 
   const imageAlt = usesDynamicOrgOg
-    ? `${siteName} learning platform`
-    : `${siteName} platform for customer, partner, and employee education`;
+    ? `${siteName} — plateforme de formation`
+    : `${siteName} — plateforme de formation interne`;
 
   return Object.freeze({
     title,
@@ -150,8 +129,6 @@ export async function getBaseMetaTags(url: URL, orgSiteInfo: OrgSiteInfo): Promi
       images: openGraphImages
     },
     twitter: {
-      handle: '@classroomio',
-      site: '@classroomio',
       cardType: 'summary_large_image' as const,
       title,
       description,
