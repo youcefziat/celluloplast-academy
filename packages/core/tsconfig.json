@@ -26,7 +26,7 @@
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "tsconfig.tsbuildinfo"],
-  "references": [{ "path": "../db" }, { "path": "../utils" }, { "path": "../ai-assistant" }, { "path": "../jobs" }],
+  "references": [{ "path": "../db" }, { "path": "../utils" }, { "path": "../jobs" }],
   "tsc-alias": {
     "resolveFullPaths": true,
     "verbose": false

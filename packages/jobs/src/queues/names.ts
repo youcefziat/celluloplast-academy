@@ -9,7 +9,6 @@ export const QUEUE_NAMES = {
   notifications: 'notifications',
   webhooks: 'webhooks',
   courseImports: 'course-imports',
-  agentCourseGeneration: 'agent-course-generation',
   onboardingBootstrap: 'onboarding-bootstrap',
   maintenance: 'maintenance'
 } as const;
@@ -41,9 +40,6 @@ export const JOB_NAMES = {
   },
   webhooks: {
     deliver: 'deliver'
-  },
-  agentCourseGeneration: {
-    run: 'run'
   },
   maintenance: {
     retentionCompact: 'retention-compact',
