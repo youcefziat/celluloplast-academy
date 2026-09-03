@@ -110,6 +110,14 @@ services:
   # starts by accident where it is not wanted (e.g. docker-compose.vps.yaml, which
   # does not activate that profile). Local dev keeps it: this repo's local .env sets
   # COMPOSE_PROFILES=mail. See docs/celluloplast/LOCAL_EMAIL_TESTING.md.
+  #
+  # `api` and `jobs` must NOT declare a `depends_on: mailhog` entry, not even with
+  # `required: false`: per the Compose Specification, a dependency on a profiled
+  # service auto-activates that profile to satisfy the dependency, and older Compose
+  # CLI builds ignore `required: false` entirely and always force it. Nodemailer
+  # connects to SMTP lazily on first send (see packages/email), so nothing needs
+  # mailhog to be up at container start — it's a manual dev convenience only.
+  #
   # Override SMTP_* in .env for real providers; do not ship these defaults to
   # production compose files (Coolify / images).
   mailhog:
@@ -135,9 +143,6 @@ services:
         condition: service_healthy
       minio-init:
         condition: service_completed_successfully
-      mailhog:
-        condition: service_started
-        required: false
     healthcheck:
       test:
         [
@@ -238,9 +243,6 @@ services:
         condition: service_healthy
       minio-init:
         condition: service_completed_successfully
-      mailhog:
-        condition: service_started
-        required: false
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379
