@@ -19,8 +19,6 @@ import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { getPersistedLocale, handleLocaleChange } from '$lib/utils/functions/translations';
 import { resolveProfileLocale } from '$lib/celluloplast/brand';
-import { identifyPosthogUser } from '$lib/utils/services/posthog';
-import { identifyUserJotUser } from '$lib/utils/services/userjot';
 import { isOrgStudent, globalStore } from '$lib/utils/store/app';
 import { isPublicRoute } from '$lib/utils/functions/routes/isPublicRoute';
 import { licenseApi } from '$features/license/api/license.svelte';
@@ -29,7 +27,6 @@ import { page } from '$app/state';
 import { resolve } from '$app/paths';
 import { setSentryUser } from '$lib/utils/services/sentry';
 import { setTheme } from '$lib/utils/functions/theme';
-import { setupAnalyticsBasedOnLicense } from '$lib/utils/functions/appSetup';
 import shouldRedirectOnAuth from '$lib/utils/functions/routes/shouldRedirectOnAuth';
 import { ROLE } from '@cio/utils/constants';
 import {
@@ -148,11 +145,6 @@ class AppInitApi extends BaseApi {
     this.data = accountData;
     this.setupStores(params);
     licenseApi.syncFromAccount(accountData.licenseFeatures, get(currentOrg));
-    setupAnalyticsBasedOnLicense(
-      accountData.profile?.id
-        ? { id: accountData.profile.id, email: accountData.profile.email, name: accountData.profile.fullname }
-        : undefined
-    );
     this.setUserAnalytics();
     this.routeUserToNextPage(params);
   }
@@ -526,18 +518,6 @@ class AppInitApi extends BaseApi {
       username: profileStore.username,
       email: profileStore.email,
       fullname: profileStore.fullname
-    });
-
-    identifyPosthogUser(profileStore.id, {
-      email: profileStore.email,
-      name: profileStore.fullname
-    });
-
-    identifyUserJotUser({
-      id: profileStore.id,
-      email: profileStore.email,
-      fullname: profileStore.fullname,
-      avatarUrl: profileStore.avatarUrl
     });
   }
 

@@ -7,7 +7,6 @@
   import { authClient } from '$lib/utils/services/auth/client';
   import { page } from '$app/state';
   import { resolve } from '$app/paths';
-  import { capturePosthogEvent } from '$lib/utils/services/posthog';
   import { globalStore } from '$lib/utils/store/app';
   import * as Field from '@cio/ui/base/field';
   import { Input } from '@cio/ui/base/input';
@@ -97,16 +96,6 @@
         },
         {
           onSuccess: () => {
-            capturePosthogEvent('login', {
-              email: fields.email
-            });
-
-            if ($globalStore.isOrgSite) {
-              capturePosthogEvent('student_login', {
-                email: fields.email
-              });
-            }
-
             const redirect = redirectUrl || '/';
             window.location.href = redirect.startsWith('/') ? redirect : `/?redirect=${encodeURIComponent(redirect)}`;
           }

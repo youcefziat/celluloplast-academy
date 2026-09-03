@@ -1,11 +1,10 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { AuthUI, SenjaEmbed } from '$features/ui';
+  import { AuthUI } from '$features/ui';
   import { SIGNUP_FIELDS } from '$lib/utils/constants/authentication';
   import { t } from '$lib/utils/functions/translations';
   import { authValidation, getConfirmPasswordError, getDisableSubmit } from '$lib/utils/functions/validator';
   import { page } from '$app/state';
-  import { capturePosthogEvent } from '$lib/utils/services/posthog';
   import { globalStore } from '$lib/utils/store/app';
   import { currentOrg, isFreePlan } from '$lib/utils/store/org';
   import { authClient } from '$lib/utils/services/auth/client';
@@ -130,21 +129,8 @@
         },
         {
           headers,
-          onSuccess: (ctx) => {
+          onSuccess: () => {
             console.log('Signup successful');
-            capturePosthogEvent('user_signed_up', {
-              distinct_id: ctx.data.user.id || '',
-              email: ctx.data.user.email,
-              username: name
-            });
-
-            if ($globalStore.isOrgSite) {
-              capturePosthogEvent('student_signed_up', {
-                distinct_id: ctx.data.user.id || '',
-                email: ctx.data.user.email,
-                username: name
-              });
-            }
 
             const redirect = redirectUrl || '/';
             window.location.href = redirect.startsWith('/') ? redirect : `/?redirect=${encodeURIComponent(redirect)}`;
@@ -177,9 +163,7 @@
   <title>Join Celluloplast Academy</title>
 </svelte:head>
 
-{#if !$globalStore.isOrgSite || $isFreePlan}
-  <SenjaEmbed id="aa054658-1e15-4d00-8920-91f424326c4e" />
-{/if}
+{#if !$globalStore.isOrgSite || $isFreePlan}{/if}
 
 {#if signupRestricted}
   <div
