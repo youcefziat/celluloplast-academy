@@ -31,7 +31,6 @@ import { getCourseTags, replaceCourseTags } from '@api/services/tag';
 
 import { Hono } from '@api/utils/hono';
 import { attendanceRouter } from '@api/routes/course/attendance';
-import { courseAiTutorRouter } from '@api/routes/course/ai-tutor';
 import { authMiddleware } from '@api/middlewares/auth';
 import { authOrAutomationKeyMiddleware } from '@api/middlewares/auth-or-automation-key';
 import { cloneCourse } from '@api/services/course/clone';
@@ -679,5 +678,4 @@ export const courseRouter = new Hono()
   .route('/:courseId/newsfeed', newsfeedRouter)
   .route('/:courseId/members', membersRouter)
   .route('/:courseId/invites', invitesRouter)
-  .route('/:courseId/ai-tutor', courseAiTutorRouter)
   .route('/presign', presignRouter);

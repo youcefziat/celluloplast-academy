@@ -15,7 +15,6 @@ import {
 import { Hono } from '@api/utils/hono';
 import { ErrorCodes, handlePublicApiError } from '@api/utils/errors';
 import { accountRouter } from '@api/routes/account';
-import { agentRouter } from '@api/routes/agent';
 import { auth } from '@cio/db/auth';
 import { communityRouter } from '@api/routes/community';
 import { courseRouter } from '@api/routes/course';
@@ -255,7 +254,6 @@ export const app = new Hono()
   .route('/unsplash', unsplashRouter)
   .route('/widgets', publicWidgetsRouter)
   .route('/internal', internalRouter)
-  .route('/agent', agentRouter)
 
   // Error handling
   .onError((err, c) => {

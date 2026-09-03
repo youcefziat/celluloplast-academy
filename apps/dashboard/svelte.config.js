@@ -10,6 +10,10 @@ const IS_CLOUDFLARE = process.env.CI_ENVIRONMENT === 'cloudflare';
 const adapterCloudflare = IS_CLOUDFLARE ? (await import('@sveltejs/adapter-cloudflare')).default : null;
 const isSelfHosted = process.env.PUBLIC_IS_SELFHOSTED === 'true';
 const csp = getCspDomains(isSelfHosted, process.env.PUBLIC_SERVER_URL);
+const dashboardOrigin = process.env.DASHBOARD_ORIGIN || process.env.ORIGIN || '';
+const upgradeInsecureRequests =
+  process.env.CSP_UPGRADE_INSECURE_REQUESTS === 'true' ||
+  (process.env.CSP_UPGRADE_INSECURE_REQUESTS !== 'false' && dashboardOrigin.startsWith('https://'));
 
 /**
  * SvelteKit CSRF runs before hooks.server.ts, so multipart uploads to `/proxy/*`
@@ -91,7 +95,7 @@ const config = {
         'form-action': ['self'],
         // 'self' allows same-origin iframes (e.g. widget preview at /widget-preview). 'none' blocks all embedding.
         'frame-ancestors': ['self'],
-        'upgrade-insecure-requests': true
+        ...(upgradeInsecureRequests ? { 'upgrade-insecure-requests': true } : {})
       },
       reportOnly: {
         'default-src': ['self'],

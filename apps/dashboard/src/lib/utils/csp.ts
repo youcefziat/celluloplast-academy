@@ -79,15 +79,34 @@ function extendHeader(header: string, extensions: Record<string, string[]>): str
     .join('; ');
 }
 
+function shouldStripUpgradeInsecureRequests(): boolean {
+  if (process.env.CSP_UPGRADE_INSECURE_REQUESTS === 'true') return false;
+  if (process.env.CSP_UPGRADE_INSECURE_REQUESTS === 'false') return true;
+
+  const origin = process.env.DASHBOARD_ORIGIN || process.env.ORIGIN || '';
+  return origin.startsWith('http://');
+}
+
+function stripUpgradeInsecureRequests(header: string): string {
+  return header
+    .split(';')
+    .map((directive) => directive.trim())
+    .filter((directive) => directive && directive !== 'upgrade-insecure-requests')
+    .join('; ');
+}
+
 export function applyCspExtensions(response: Response): Response {
   const extensions = getExtensions();
-  if (Object.keys(extensions).length === 0) return response;
 
   for (const name of ['content-security-policy', 'content-security-policy-report-only']) {
     const header = response.headers.get(name);
-    if (header) {
-      response.headers.set(name, extendHeader(header, extensions));
+    if (!header) continue;
+
+    let next = Object.keys(extensions).length ? extendHeader(header, extensions) : header;
+    if (shouldStripUpgradeInsecureRequests()) {
+      next = stripUpgradeInsecureRequests(next);
     }
+    response.headers.set(name, next);
   }
 
   return response;
