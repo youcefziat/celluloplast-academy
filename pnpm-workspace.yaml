@@ -2,7 +2,6 @@ packages:
   - apps/*
   - '!apps/db-agent'
   - packages/*
-  - packages/course-app/src/*
 onlyBuiltDependencies:
   - esbuild
   - '@tailwindcss/oxide'

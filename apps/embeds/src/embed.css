@@ -1,6 +1,0 @@
-@import 'tailwindcss';
-
-@import '@cio/ui/output.css';
-
-@source '../node_modules/@cio/ui/src/**/*.svelte';
-@source './**/*.svelte';

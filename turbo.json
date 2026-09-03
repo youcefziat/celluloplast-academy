@@ -29,10 +29,6 @@
       "cache": false,
       "persistent": true
     },
-    "storybook:dev": {
-      "cache": false,
-      "persistent": true
-    },
     "prepare": {
       "dependsOn": ["^build"],
       "persistent": true
