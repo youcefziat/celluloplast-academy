@@ -1,0 +1,33 @@
+# Surcouche VPS — publie le dashboard et MinIO derriere le conteneur Caddy existant.
+#
+# Usage :
+#   docker compose -f docker-compose.celluloplast.yaml -f docker-compose.vps.yaml up -d --build
+#
+# Le fichier de base lie deja tous ses ports a 127.0.0.1 : rien n'est joignable
+# depuis Internet. Ces bindings sont conserves volontairement, ils servent au
+# debogage par tunnel SSH, par exemple pour lire les e-mails de MailHog :
+#
+#   ssh -L 8025:127.0.0.1:8025 deploy@<vps>   puis   http://localhost:8025
+#
+# Seul ajout : `dashboard` et `minio` rejoignent le reseau `proxy` (externe, cree
+# par la stack cellulo-forecast) pour que Caddy puisse les atteindre par leur nom
+# de conteneur. Aucune autre application du VPS n'est touchee.
+#
+# MinIO doit etre expose publiquement : le navigateur y televerse les videos et
+# documents en direct via des URL presignees (voir packages/core/src/config/storage.ts,
+# getPresignS3Client). Sans cela, les uploads echouent.
+
+services:
+  dashboard:
+    networks:
+      - default
+      - proxy
+
+  minio:
+    networks:
+      - default
+      - proxy
+
+networks:
+  proxy:
+    external: true
