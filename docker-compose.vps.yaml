@@ -16,6 +16,11 @@
 # MinIO doit etre expose publiquement : le navigateur y televerse les videos et
 # documents en direct via des URL presignees (voir packages/core/src/config/storage.ts,
 # getPresignS3Client). Sans cela, les uploads echouent.
+#
+# Attention : exposer MinIO expose aussi la politique anonyme du bucket `media`.
+# Voir le commentaire de `minio-init` dans docker-compose.celluloplast.yaml — la
+# politique accorde s3:GetObject seul, jamais s3:ListBucket, sinon le bucket devient
+# enumerable depuis Internet.
 
 services:
   dashboard:

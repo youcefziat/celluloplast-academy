@@ -70,6 +70,11 @@ services:
       - minio-data:/data
     restart: unless-stopped
 
+  # Le bucket `media` sert des images non signees (avatars, logo, couvertures) : il doit
+  # etre lisible anonymement. On accorde s3:GetObject seul et PAS s3:ListBucket --
+  # `mc anonymous set download` accorde les deux, ce qui rend le bucket enumerable par
+  # n'importe qui des lors que MinIO est publie sur Internet.
+  # `videos` et `documents` restent prives : ils passent par des URL presignees.
   minio-init:
     image: minio/mc:latest
     container_name: celluloplast-minio-init
@@ -83,7 +88,8 @@ services:
       mc mb local/videos --ignore-existing;
       mc mb local/documents --ignore-existing;
       mc mb local/media --ignore-existing;
-      mc anonymous set download local/media;
+      printf '%s' '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},"Action":["s3:GetObject"],"Resource":["arn:aws:s3:::media/*"]}]}' > /tmp/media-policy.json;
+      mc anonymous set-json /tmp/media-policy.json local/media;
       echo 'MinIO buckets ready';
       exit 0;
       "
