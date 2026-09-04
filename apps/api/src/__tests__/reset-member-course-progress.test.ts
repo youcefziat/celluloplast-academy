@@ -17,6 +17,17 @@ vi.mock('@cio/db/queries/course/reset-progress', () => ({
   resetStudentCourseProgress: vi.fn()
 }));
 
+// The happy path invalidates the org stats cache after resetting, which reaches the database
+// and then Redis. Neither is available here, and neither is what this suite is checking.
+vi.mock('@cio/db/queries/course', () => ({
+  getOrgIdByCourseId: vi.fn().mockResolvedValue('org-1'),
+  getCourseWithOrgData: vi.fn()
+}));
+
+vi.mock('@cio/core/utils/redis/org-stats-cache', () => ({
+  invalidateOrgStats: vi.fn()
+}));
+
 import { AppError } from '@api/utils/errors';
 import { ROLE } from '@cio/utils/constants';
 import { getCourseMember } from '@cio/db/queries/course/people';
