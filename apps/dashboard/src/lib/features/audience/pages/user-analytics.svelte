@@ -10,8 +10,24 @@
 
   import { t } from '$lib/utils/functions/translations';
   import type { UserAnalytics } from '$lib/utils/types/analytics';
+  import { Button } from '@cio/ui/base/button';
+  import { invalidateAll } from '$app/navigation';
+  import AssignCoursesModal from '$features/audience/components/assign-courses-modal.svelte';
+  import type { Course } from '$features/course/types';
 
   let { data } = $props();
+
+  let assignModalOpen = $state(false);
+
+  const assignableCourses = $derived((data.courses ?? []) as Course[]);
+  /** The assign endpoint works on profile ids; this page is only reachable with one. */
+  const selectedProfileIds = $derived(data.userId ? [data.userId] : []);
+
+  async function handleAssigned() {
+    assignModalOpen = false;
+    // Re-run the load so the course list and progress reflect the new access.
+    await invalidateAll();
+  }
 
   // Use analytics data from server load function if available
   const userAnalytics: UserAnalytics | undefined = $derived(data.analytics);
@@ -70,9 +86,14 @@
     </div>
 
     <div class="mt-5 rounded-md border p-3 md:p-5">
-      <h3 class="text-2xl">
-        {$t('analytics.courses')}
-      </h3>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h3 class="text-2xl">
+          {$t('analytics.courses')}
+        </h3>
+        <Button size="sm" onclick={() => (assignModalOpen = true)} disabled={selectedProfileIds.length === 0}>
+          {$t('audience.assign_courses')}
+        </Button>
+      </div>
 
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between">
@@ -160,3 +181,11 @@
 {:else}
   <LoadingPage />
 {/if}
+
+<AssignCoursesModal
+  bind:open={assignModalOpen}
+  {selectedProfileIds}
+  courses={assignableCourses}
+  onclose={() => (assignModalOpen = false)}
+  onassigned={handleAssigned}
+/>
