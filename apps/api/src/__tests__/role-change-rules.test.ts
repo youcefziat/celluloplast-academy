@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { assertRoleChangeAllowed } from '../services/organization/role-rules';
+import { assertMemberRemovalAllowed, assertRoleChangeAllowed } from '../services/organization/role-rules';
 import { ROLE } from '@cio/utils/constants';
 
 const ACTOR = 'actor-profile-id';
@@ -71,5 +71,51 @@ describe('assertRoleChangeAllowed', () => {
         adminCount: 1
       })
     ).toThrow(/at least one admin/i);
+  });
+});
+
+describe('assertMemberRemovalAllowed', () => {
+  it('removes a tutor or a student freely', () => {
+    expect(() =>
+      assertMemberRemovalAllowed({
+        currentRoleId: ROLE.STUDENT,
+        memberProfileId: OTHER,
+        actorProfileId: ACTOR,
+        adminCount: 1
+      })
+    ).not.toThrow();
+  });
+
+  it('refuses to let anyone remove their own membership', () => {
+    expect(() =>
+      assertMemberRemovalAllowed({
+        currentRoleId: ROLE.TUTOR,
+        memberProfileId: ACTOR,
+        actorProfileId: ACTOR,
+        adminCount: 5
+      })
+    ).toThrow(/your own membership/i);
+  });
+
+  it('refuses to remove the last admin', () => {
+    expect(() =>
+      assertMemberRemovalAllowed({
+        currentRoleId: ROLE.ADMIN,
+        memberProfileId: OTHER,
+        actorProfileId: ACTOR,
+        adminCount: 1
+      })
+    ).toThrow(/at least one admin/i);
+  });
+
+  it('removes another admin when others remain', () => {
+    expect(() =>
+      assertMemberRemovalAllowed({
+        currentRoleId: ROLE.ADMIN,
+        memberProfileId: OTHER,
+        actorProfileId: ACTOR,
+        adminCount: 2
+      })
+    ).not.toThrow();
   });
 });

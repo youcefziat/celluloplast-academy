@@ -13,6 +13,7 @@ import {
   getLatestOrgInvitesByEmails,
   getOrgIdBySiteName,
   getOrganizationAudience,
+  countOrganizationMembersByRole,
   getOrganizationAudienceMember,
   getOrganizationById,
   getOrganizationBySiteName,
@@ -43,6 +44,7 @@ import { getLastLogin, getProfileCourseProgress, getUserExercisesStats } from '@
 import type { OrganizationWithPlans } from '@cio/db/queries/organization/types';
 import { PLAN } from '@cio/utils/plans';
 import { ROLE } from '@cio/utils/constants';
+import { assertMemberRemovalAllowed } from './organization/role-rules';
 import { createOrganizationWithOwner } from '@api/services/onboarding';
 import { deriveAudienceMemberStatus } from '@api/utils/audience-member-status';
 import { getProfileById, getProfileByEmail } from '@cio/db/queries/auth';
@@ -226,6 +228,23 @@ export async function getOrgAudienceMember(orgId: string, memberId: number): Pro
  */
 export async function removeAudienceMember(orgId: string, memberId: number, removedByProfileId?: string) {
   try {
+    const member = await getOrganizationAudienceMember(orgId, memberId);
+    if (!member) {
+      throw new AppError('Audience member not found', ErrorCodes.ORG_AUDIENCE_REMOVE_FAILED, 404);
+    }
+
+    if (removedByProfileId) {
+      // Only count when it can matter; the query is pointless for a non-admin.
+      const adminCount = member.roleId === ROLE.ADMIN ? await countOrganizationMembersByRole(orgId, ROLE.ADMIN) : 0;
+
+      assertMemberRemovalAllowed({
+        currentRoleId: member.roleId,
+        memberProfileId: member.profileId,
+        actorProfileId: removedByProfileId,
+        adminCount
+      });
+    }
+
     const deleted = await deleteOrganizationAudienceMember(orgId, memberId);
     if (!deleted) {
       throw new AppError('Audience member not found', ErrorCodes.ORG_AUDIENCE_REMOVE_FAILED, 404);

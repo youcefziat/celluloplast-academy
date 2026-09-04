@@ -394,13 +394,7 @@ export const deleteOrganizationMember = async (orgId: string, memberId: number) 
 export const deleteOrganizationAudienceMember = async (orgId: string, memberId: number) => {
   const [deleted] = await db
     .delete(schema.organizationmember)
-    .where(
-      and(
-        eq(schema.organizationmember.organizationId, orgId),
-        eq(schema.organizationmember.id, memberId),
-        eq(schema.organizationmember.roleId, ROLE.STUDENT)
-      )
-    )
+    .where(and(eq(schema.organizationmember.organizationId, orgId), eq(schema.organizationmember.id, memberId)))
     .returning();
 
   return deleted || null;
