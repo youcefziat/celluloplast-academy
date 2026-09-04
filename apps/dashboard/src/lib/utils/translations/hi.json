@@ -745,7 +745,8 @@
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments.",
       "role_label": "भूमिका",
-      "role_hint": "व्यवस्थापक संगठन प्रबंधित करते हैं, ट्यूटर पाठ्यक्रम चलाते हैं, छात्र उनका अनुसरण करते हैं।"
+      "role_hint": "व्यवस्थापक संगठन प्रबंधित करते हैं, ट्यूटर पाठ्यक्रम चलाते हैं, छात्र उनका अनुसरण करते हैं।",
+      "office365_unavailable": "केवल @celluloplast.com पतों पर लागू होता है।"
     },
     "role": "भूमिका",
     "filter_all_roles": "सभी भूमिकाएँ",

@@ -745,7 +745,8 @@
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments.",
       "role_label": "Função",
-      "role_hint": "Os administradores gerenciam a organização, os tutores conduzem os cursos e os alunos os acompanham."
+      "role_hint": "Os administradores gerenciam a organização, os tutores conduzem os cursos e os alunos os acompanham.",
+      "office365_unavailable": "Aplica-se apenas a endereços @celluloplast.com."
     },
     "role": "Função",
     "filter_all_roles": "Todas as funções",

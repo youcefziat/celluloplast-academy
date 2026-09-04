@@ -17,7 +17,16 @@ const OFFICE_365_TENANT_DOMAIN = 'celluloplast.onmicrosoft.com';
 const MIGRATING_MAIL_DOMAIN = 'celluloplast.com';
 
 function readEmailDomain(email: string): string {
-  return email.split('@')[1]?.trim().toLowerCase() ?? '';
+  // The domain is what follows the last '@'; splitting on the first one reads an empty
+  // string out of a mistyped address like `name@@example.com`.
+  const separatorIndex = email.lastIndexOf('@');
+
+  if (separatorIndex === -1) return '';
+
+  return email
+    .slice(separatorIndex + 1)
+    .trim()
+    .toLowerCase();
 }
 
 /**
@@ -29,7 +38,7 @@ export function isOffice365MigrationCandidate(email: string): boolean {
 }
 
 export function toOffice365DeliveryEmail(email: string): string {
-  const localPart = email.split('@')[0];
+  const localPart = email.slice(0, email.lastIndexOf('@'));
 
   return `${localPart}@${OFFICE_365_TENANT_DOMAIN}`;
 }

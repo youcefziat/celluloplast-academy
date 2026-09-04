@@ -41,10 +41,21 @@
   );
 
   /**
-   * Only addresses on the migrating domain can need the Office 365 redirect, so the option
-   * appears where it applies instead of asking every operator to know about the migration.
+   * Only addresses on the migrating domain can need the Office 365 redirect. The option stays
+   * visible either way — a control that vanishes leaves no way to tell the feature exists —
+   * and is simply disabled, with a line saying which addresses it applies to.
+   *
+   * The domain is what follows the last '@': splitting on the first one reads an empty string
+   * out of a mistyped `name@@example.com`.
    */
-  const canUseOffice365 = $derived(email.trim().split('@')[1]?.toLowerCase() === 'celluloplast.com');
+  const emailDomain = $derived.by(() => {
+    const trimmedEmail = email.trim();
+    const separatorIndex = trimmedEmail.lastIndexOf('@');
+
+    return separatorIndex === -1 ? '' : trimmedEmail.slice(separatorIndex + 1).toLowerCase();
+  });
+
+  const canUseOffice365 = $derived(emailDomain === 'celluloplast.com');
 
   onMount(async () => {
     await Promise.all([orgApi.getPositions(), orgApi.getDepartments()]);
@@ -110,7 +121,10 @@
 
   /** Local-part @ celluloplast.onmicrosoft.com — mirrors toOffice365DeliveryEmail on the API. */
   const office365PreviewEmail = $derived.by(() => {
-    const localPart = email.trim().split('@')[0];
+    const trimmedEmail = email.trim();
+    const separatorIndex = trimmedEmail.lastIndexOf('@');
+    const localPart = separatorIndex === -1 ? '' : trimmedEmail.slice(0, separatorIndex);
+
     return localPart ? `${localPart}@celluloplast.onmicrosoft.com` : '';
   });
 
@@ -160,16 +174,18 @@
         <Field.Description>{$t('audience.create.role_hint')}</Field.Description>
       </Field.Field>
 
-      {#if canUseOffice365}
-        <Field.Field orientation="horizontal">
-          <Checkbox id="audience-create-office365" bind:checked={office365} />
-          <Field.Label for="audience-create-office365">{$t('audience.create.office365_label')}</Field.Label>
-        </Field.Field>
-        {#if office365 && office365PreviewEmail}
-          <p class="ui:text-muted-foreground text-sm">
-            {$t('audience.create.office365_hint', { email: office365PreviewEmail })}
-          </p>
-        {/if}
+      <Field.Field orientation="horizontal">
+        <Checkbox id="audience-create-office365" bind:checked={office365} disabled={!canUseOffice365} />
+        <Field.Label for="audience-create-office365">{$t('audience.create.office365_label')}</Field.Label>
+      </Field.Field>
+      {#if canUseOffice365 && office365 && office365PreviewEmail}
+        <p class="ui:text-muted-foreground text-sm">
+          {$t('audience.create.office365_hint', { email: office365PreviewEmail })}
+        </p>
+      {:else if !canUseOffice365}
+        <p class="ui:text-muted-foreground text-sm">
+          {$t('audience.create.office365_unavailable')}
+        </p>
       {/if}
 
       <div class="grid gap-4 sm:grid-cols-2">

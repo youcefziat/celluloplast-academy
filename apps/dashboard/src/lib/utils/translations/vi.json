@@ -745,7 +745,8 @@
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments.",
       "role_label": "Vai trò",
-      "role_hint": "Quản trị viên quản lý tổ chức, giảng viên phụ trách khóa học, học viên theo học."
+      "role_hint": "Quản trị viên quản lý tổ chức, giảng viên phụ trách khóa học, học viên theo học.",
+      "office365_unavailable": "Chỉ áp dụng cho địa chỉ @celluloplast.com."
     },
     "role": "Vai trò",
     "filter_all_roles": "Tất cả vai trò",

@@ -745,7 +745,8 @@
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments.",
       "role_label": "Rolle",
-      "role_hint": "Administratorer styrer organisationen, undervisere afvikler kurser, studerende følger dem."
+      "role_hint": "Administratorer styrer organisationen, undervisere afvikler kurser, studerende følger dem.",
+      "office365_unavailable": "Gælder kun for @celluloplast.com-adresser."
     },
     "role": "Rolle",
     "filter_all_roles": "Alle roller",

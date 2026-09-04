@@ -745,7 +745,8 @@
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments.",
       "role_label": "Rola",
-      "role_hint": "Administratorzy zarządzają organizacją, korepetytorzy prowadzą kursy, a studenci w nich uczestniczą."
+      "role_hint": "Administratorzy zarządzają organizacją, korepetytorzy prowadzą kursy, a studenci w nich uczestniczą.",
+      "office365_unavailable": "Dotyczy tylko adresów @celluloplast.com."
     },
     "role": "Rola",
     "filter_all_roles": "Wszystkie role",

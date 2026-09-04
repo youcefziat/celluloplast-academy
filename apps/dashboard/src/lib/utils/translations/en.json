@@ -3528,7 +3528,8 @@
       "submit": "Invite employee",
       "snackbar_success": "Employee invited",
       "role_label": "Role",
-      "role_hint": "Admins manage the organization, tutors run courses, students follow them."
+      "role_hint": "Admins manage the organization, tutors run courses, students follow them.",
+      "office365_unavailable": "Only applies to @celluloplast.com addresses."
     },
     "delete": {
       "action": "Delete",

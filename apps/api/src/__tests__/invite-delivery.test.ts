@@ -13,6 +13,11 @@ describe('isOffice365MigrationCandidate', () => {
     expect(isOffice365MigrationCandidate('DZZIYO@Celluloplast.COM')).toBe(true);
   });
 
+  it('reads the domain after the last @, not the first', () => {
+    // A mistyped `name@@domain` used to read an empty domain and silently look ineligible.
+    expect(isOffice365MigrationCandidate('dzziyo@@celluloplast.com')).toBe(true);
+  });
+
   it('rejects every other domain, including the tenant one', () => {
     expect(isOffice365MigrationCandidate('someone@gmail.com')).toBe(false);
     expect(isOffice365MigrationCandidate('someone@celluloplast.onmicrosoft.com')).toBe(false);
@@ -24,6 +29,10 @@ describe('isOffice365MigrationCandidate', () => {
 describe('toOffice365DeliveryEmail', () => {
   it('keeps the local part and swaps in the tenant domain', () => {
     expect(toOffice365DeliveryEmail('dzziyo@celluloplast.com')).toBe('dzziyo@celluloplast.onmicrosoft.com');
+  });
+
+  it('splits on the last @ so a stray one stays in the local part', () => {
+    expect(toOffice365DeliveryEmail('dzziyo@@celluloplast.com')).toBe('dzziyo@@celluloplast.onmicrosoft.com');
   });
 });
 

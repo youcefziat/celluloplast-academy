@@ -680,7 +680,8 @@
       "submit": "Inviter l’employé",
       "snackbar_success": "Employé invité",
       "role_label": "Rôle",
-      "role_hint": "Les admins gèrent l'organisation, les tuteurs animent les cours, les étudiants les suivent."
+      "role_hint": "Les admins gèrent l'organisation, les tuteurs animent les cours, les étudiants les suivent.",
+      "office365_unavailable": "Uniquement pour les adresses @celluloplast.com."
     },
     "invite": {
       "row_actions_aria": "Actions ouvertes",
