@@ -744,7 +744,10 @@
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments."
-    }
+    },
+    "role": "भूमिका",
+    "filter_all_roles": "सभी भूमिकाएँ",
+    "filter_all_statuses": "सभी स्थितियाँ"
   },
   "community": {
     "title": "समुदाय",

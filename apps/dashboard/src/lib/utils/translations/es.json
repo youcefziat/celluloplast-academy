@@ -744,7 +744,10 @@
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments."
-    }
+    },
+    "role": "Rol",
+    "filter_all_roles": "Todos los roles",
+    "filter_all_statuses": "Todos los estados"
   },
   "community": {
     "title": "Comunidad",

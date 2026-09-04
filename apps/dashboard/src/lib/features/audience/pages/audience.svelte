@@ -43,6 +43,7 @@
   const headers = $derived([
     { key: 'name', value: t.get('audience.name') },
     { key: 'email', value: t.get('audience.email') },
+    { key: 'role', value: t.get('audience.role') },
     { key: 'job_title', value: t.get('audience.job_title') },
     { key: 'department', value: t.get('audience.department') },
     { key: 'manager', value: t.get('audience.manager') },
@@ -186,6 +187,18 @@
     void navigateAudience({ ...query, page: 1, sortBy, sortOrder });
   }
 
+  function handleRoleFilterChange(nextRoleFilter: string) {
+    const roleId = nextRoleFilter === 'all' ? undefined : Number(nextRoleFilter);
+
+    void navigateAudience({ ...query, page: 1, roleId });
+  }
+
+  function handleStatusFilterChange(nextStatusFilter: string) {
+    const status = nextStatusFilter === 'all' ? undefined : (nextStatusFilter as 'active' | 'pending');
+
+    void navigateAudience({ ...query, page: 1, status });
+  }
+
   function openDeleteConfirmation(member: OrganizationAudienceMember) {
     deleteCandidate = member;
     deleteDialogOpen = true;
@@ -225,6 +238,10 @@
   sortBy={query.sortBy}
   sortOrder={query.sortOrder}
   onSortChange={handleSortChange}
+  roleFilter={query.roleId ? String(query.roleId) : 'all'}
+  onRoleFilterChange={handleRoleFilterChange}
+  statusFilter={query.status ?? 'all'}
+  onStatusFilterChange={handleStatusFilterChange}
   onOpenAssign={() => (assignModalOpen = true)}
 />
 

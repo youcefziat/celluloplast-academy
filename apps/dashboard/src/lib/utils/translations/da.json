@@ -744,7 +744,10 @@
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments."
-    }
+    },
+    "role": "Rolle",
+    "filter_all_roles": "Alle roller",
+    "filter_all_statuses": "Alle statusser"
   },
   "community": {
     "title": "Fællesskab",

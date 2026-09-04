@@ -20,10 +20,24 @@ export function getAudienceQueryFromSearchParams(
   return {
     page: Number.isFinite(page) && page > 0 ? Math.floor(page) : defaults.page,
     limit: Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : defaults.limit,
-    sortBy: sortBy === 'name' || sortBy === 'email' || sortBy === 'createdAt' ? sortBy : defaults.sortBy,
+    sortBy:
+      sortBy === 'name' || sortBy === 'email' || sortBy === 'createdAt' || sortBy === 'role' ? sortBy : defaults.sortBy,
     sortOrder: sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : defaults.sortOrder,
-    search
+    search,
+    roleId: readRoleId(searchParams.get('roleId')),
+    status: readStatus(searchParams.get('status'))
   };
+}
+
+/** Only the three known roles survive the round trip; anything else clears the filter. */
+function readRoleId(raw: string | null): number | undefined {
+  const roleId = Number(raw);
+
+  return roleId === 1 || roleId === 2 || roleId === 3 ? roleId : undefined;
+}
+
+function readStatus(raw: string | null): 'active' | 'pending' | undefined {
+  return raw === 'active' || raw === 'pending' ? raw : undefined;
 }
 
 export function getAudienceSearchParams(query: OrganizationAudienceQuery): URLSearchParams {
@@ -36,6 +50,14 @@ export function getAudienceSearchParams(query: OrganizationAudienceQuery): URLSe
 
   if (query.search) {
     searchParams.set('search', query.search);
+  }
+
+  if (query.roleId) {
+    searchParams.set('roleId', String(query.roleId));
+  }
+
+  if (query.status) {
+    searchParams.set('status', query.status);
   }
 
   return searchParams;
@@ -53,6 +75,8 @@ export function toAudienceRequestQuery(
     limit: query.limit != null ? String(query.limit) : undefined,
     search: query.search,
     sortBy: query.sortBy,
-    sortOrder: query.sortOrder
+    sortOrder: query.sortOrder,
+    roleIds: query.roleId != null ? String(query.roleId) : undefined,
+    status: query.status
   };
 }

@@ -1,4 +1,22 @@
 import type { BadgeVariant } from '@cio/ui/base/badge';
+import { ROLE } from '@cio/utils/constants';
+import { ROLE_LABEL } from '$lib/utils/constants/roles';
+
+/** Admins stand out, tutors read as a distinct staff role, students are the default. */
+export function roleBadgeVariant(roleId: number): BadgeVariant {
+  switch (roleId) {
+    case ROLE.ADMIN:
+      return 'default';
+    case ROLE.TUTOR:
+      return 'secondary';
+    default:
+      return 'outline';
+  }
+}
+
+export function roleLabelKey(roleId: number): string {
+  return ROLE_LABEL[roleId as keyof typeof ROLE_LABEL] ?? 'course.navItem.people.roles.student';
+}
 
 export function statusBadgeVariant(status: string): BadgeVariant {
   switch (status) {

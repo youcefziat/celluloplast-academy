@@ -3588,7 +3588,10 @@
       "resend_snackbar_success": "Invitation email sent",
       "resend_snackbar_email_failed": "Invite was renewed but the email could not be sent",
       "revoke_snackbar_success": "Pending invitation revoked"
-    }
+    },
+    "role": "Role",
+    "filter_all_roles": "All roles",
+    "filter_all_statuses": "All statuses"
   },
   "analytics": {
     "title": "Analytics",

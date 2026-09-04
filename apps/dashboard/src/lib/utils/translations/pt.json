@@ -744,7 +744,10 @@
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
       "department_empty": "No departments yet — create them under Administration → Departments."
-    }
+    },
+    "role": "Função",
+    "filter_all_roles": "Todas as funções",
+    "filter_all_statuses": "Todos os status"
   },
   "community": {
     "title": "Comunidade",

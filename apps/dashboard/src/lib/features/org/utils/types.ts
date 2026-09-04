@@ -39,6 +39,9 @@ export type OrganizationAudienceQuery = {
   search?: string;
   sortBy: OrganizationAudienceSortBy;
   sortOrder: OrganizationAudienceSortOrder;
+  /** A single role id; absent means every role. */
+  roleId?: number;
+  status?: 'active' | 'pending';
 };
 
 export type OrganizationAudience = OrganizationAudienceSuccess['data'];

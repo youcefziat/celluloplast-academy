@@ -10,6 +10,8 @@
   import {
     canResendAudienceInvite,
     canRevokeAudienceInvite,
+    roleBadgeVariant,
+    roleLabelKey,
     statusBadgeVariant,
     statusLabelKey
   } from '$features/audience/utils/audience-utils';
@@ -65,6 +67,9 @@
     {/if}
   </Table.Cell>
   <Table.Cell>{row.email}</Table.Cell>
+  <Table.Cell>
+    <Badge variant={roleBadgeVariant(row.roleId)}>{$t(roleLabelKey(row.roleId))}</Badge>
+  </Table.Cell>
   <Table.Cell class="hidden md:table-cell">{row.jobTitle || row.position?.name || '—'}</Table.Cell>
   <Table.Cell class="hidden md:table-cell">{row.department?.name || '—'}</Table.Cell>
   <Table.Cell class="hidden lg:table-cell">{row.manager?.name || row.manager?.email || '—'}</Table.Cell>
