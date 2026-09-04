@@ -16,9 +16,18 @@ import type { FirstOrganizationRecord, OrganizationRecord } from '../utils/types
  * @param apiKeyHeaders API key headers for server-side authentication
  * @returns First organization or null
  */
-export async function getFirstOrg(apiKeyHeaders: { headers: Record<string, string> }) {
+export async function getFirstOrg(
+  apiKeyHeaders: { headers: Record<string, string> },
+  options: { timeoutMs?: number } = {}
+) {
+  // Without a caller signal this inherits the client's 30s default, which is far too
+  // long for a call that blocks every page render.
+  const requestOptions = options.timeoutMs
+    ? { ...apiKeyHeaders, init: { signal: AbortSignal.timeout(options.timeoutMs) } }
+    : apiKeyHeaders;
+
   const result = await safeServerApi<{ success: true; data: FirstOrganizationRecord[] }>(() =>
-    classroomio.organization.first.$get(undefined, apiKeyHeaders)
+    classroomio.organization.first.$get(undefined, requestOptions)
   );
 
   if (!result.ok) {

@@ -7,6 +7,39 @@ import { blockedSubdomain } from '$lib/utils/constants/app';
 import { env } from '$env/dynamic/private';
 import { getApiKeyHeaders } from '$lib/utils/services/api/server';
 
+/**
+ * Self-hosted resolves every request to the same single organization, so the record is
+ * shared configuration rather than per-user data and is safe to hold in module scope.
+ * Before this, the layout hit the API on every single page render.
+ *
+ * The trade-off is staleness: an edit to the org name or branding can take up to
+ * SELF_HOSTED_ORG_CACHE_MS to appear. Keep that window short.
+ */
+const SELF_HOSTED_ORG_CACHE_MS = 30_000;
+/** A failed lookup is re-tried quickly so the layout recovers as soon as the API is back. */
+const SELF_HOSTED_ORG_RETRY_MS = 5_000;
+/** This call blocks every page render, so it must fail fast rather than hang. */
+const SELF_HOSTED_ORG_TIMEOUT_MS = 5_000;
+
+let selfHostedOrgCache: { org: AccountOrg | null; expiresAt: number } | null = null;
+
+async function getSelfHostedOrg(): Promise<AccountOrg | null> {
+  const now = Date.now();
+
+  if (selfHostedOrgCache && now < selfHostedOrgCache.expiresAt) {
+    return selfHostedOrgCache.org;
+  }
+
+  const apiKeyHeaders = getApiKeyHeaders();
+  const firstOrg = await getFirstOrg(apiKeyHeaders, { timeoutMs: SELF_HOSTED_ORG_TIMEOUT_MS });
+  const org = (firstOrg as AccountOrg | null) ?? null;
+  const ttl = org ? SELF_HOSTED_ORG_CACHE_MS : SELF_HOSTED_ORG_RETRY_MS;
+
+  selfHostedOrgCache = { org, expiresAt: now + ttl };
+
+  return org;
+}
+
 export interface OrgSiteInfo {
   isOrgSite: boolean;
   org: AccountOrg | null;
@@ -24,8 +57,7 @@ export async function getOrgSiteInfo(url: URL, cookies: Cookies): Promise<OrgSit
 
   // Self-hosted: single org, single domain
   if (PUBLIC_IS_SELFHOSTED === 'true') {
-    const apiKeyHeaders = getApiKeyHeaders();
-    const firstOrg = await getFirstOrg(apiKeyHeaders);
+    const firstOrg = await getSelfHostedOrg();
     if (firstOrg) {
       response.org = firstOrg as AccountOrg;
       response.isOrgSite = true;

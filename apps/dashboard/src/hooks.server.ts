@@ -5,6 +5,9 @@ import { proxyRequestToApi, shouldForwardToApi } from '$lib/utils/proxy-api-requ
 import { type Handle, type HandleServerError, redirect } from '@sveltejs/kit';
 import { isPublicRoute } from '$lib/utils/functions/routes/isPublicRoute';
 import { ROUTE } from '$lib/utils/constants/routes';
+import { checkPrivateServerUrlIsInternal } from '$lib/utils/services/api/internal-url-check';
+
+checkPrivateServerUrlIsInternal();
 
 export const handleError: HandleServerError = ({ error, event, status, message }) => {
   const err = error as Error;
