@@ -749,7 +749,13 @@
     },
     "role": "Rolle",
     "filter_all_roles": "Alle Rollen",
-    "filter_all_statuses": "Alle Status"
+    "filter_all_statuses": "Alle Status",
+    "edit": {
+      "title": "Mitglied bearbeiten",
+      "submit": "Änderungen speichern",
+      "snackbar_success": "Mitglied aktualisiert",
+      "action": "Bearbeiten"
+    }
   },
   "community": {
     "title": "Gemeinschaft",

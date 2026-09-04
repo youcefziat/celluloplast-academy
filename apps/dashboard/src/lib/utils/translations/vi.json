@@ -749,7 +749,13 @@
     },
     "role": "Vai trò",
     "filter_all_roles": "Tất cả vai trò",
-    "filter_all_statuses": "Tất cả trạng thái"
+    "filter_all_statuses": "Tất cả trạng thái",
+    "edit": {
+      "title": "Chỉnh sửa thành viên",
+      "submit": "Lưu thay đổi",
+      "snackbar_success": "Đã cập nhật thành viên",
+      "action": "Chỉnh sửa"
+    }
   },
   "community": {
     "title": "cộng đồng",

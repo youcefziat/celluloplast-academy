@@ -13,6 +13,7 @@
     OrganizationAudienceQuery
   } from '$features/org/utils/types';
   import AssignCoursesModal from '$features/audience/components/assign-courses-modal.svelte';
+  import EditAudienceMemberDialog from '$features/audience/components/edit-audience-member-dialog.svelte';
   import AudienceDeleteConfirmation from '$features/audience/components/audience-delete-confirmation.svelte';
   import AudienceTableToolbar from '$features/audience/components/audience-table-toolbar.svelte';
   import AudienceTable from '$features/audience/components/audience-table.svelte';
@@ -55,6 +56,8 @@
   let deletingMemberId = $state<string | null>(null);
   let deleteCandidate = $state<OrganizationAudienceMember | null>(null);
   let deleteDialogOpen = $state(false);
+  let editCandidate = $state<OrganizationAudienceMember | null>(null);
+  let editDialogOpen = $state(false);
   let searchValue = $state(query.search ?? '');
 
   async function handleResendInvite(email: string) {
@@ -199,6 +202,11 @@
     void navigateAudience({ ...query, page: 1, status });
   }
 
+  function openEditDialog(member: OrganizationAudienceMember) {
+    editCandidate = member;
+    editDialogOpen = true;
+  }
+
   function openDeleteConfirmation(member: OrganizationAudienceMember) {
     deleteCandidate = member;
     deleteDialogOpen = true;
@@ -260,6 +268,7 @@
       canDeleteMembers={$isOrgAdmin === true}
       onResendInvite={handleResendInvite}
       onRevokeInvite={handleRevokeInvite}
+      onEditRow={openEditDialog}
       onDeleteRow={openDeleteConfirmation}
     />
 
@@ -282,4 +291,11 @@
   member={deleteCandidate}
   isDeleting={deletingMemberId !== null}
   onDelete={handleDeleteAudienceMember}
+/>
+
+<EditAudienceMemberDialog
+  bind:open={editDialogOpen}
+  member={editCandidate}
+  managers={orgApi.audience}
+  onUpdated={() => void refreshAudience()}
 />

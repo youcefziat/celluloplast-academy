@@ -24,6 +24,7 @@
     canDeleteMembers: boolean;
     onResendInvite: (email: string) => void;
     onRevokeInvite: (email: string) => void;
+    onEditRow: (row: OrganizationAudienceMember) => void;
     onDeleteRow: (row: OrganizationAudienceMember) => void;
   }
 
@@ -40,6 +41,7 @@
     canDeleteMembers,
     onResendInvite,
     onRevokeInvite,
+    onEditRow,
     onDeleteRow
   }: Props = $props();
 
@@ -89,6 +91,7 @@
           {canDeleteMembers}
           {onResendInvite}
           {onRevokeInvite}
+          onEdit={() => onEditRow(row)}
           onDelete={() => onDeleteRow(row)}
         />
       {/each}

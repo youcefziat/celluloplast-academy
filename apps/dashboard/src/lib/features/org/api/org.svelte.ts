@@ -1,6 +1,7 @@
 import type {
   AssignAudienceCoursesRequest,
   CreateAudienceMemberRequest,
+  UpdateAudienceMemberRequest,
   CreateDepartmentRequest,
   CreateLinkInviteRequest,
   CreatePositionRequest,
@@ -37,6 +38,7 @@ import type {
   TAssignAudienceCourses,
   TAudienceInviteByEmail,
   TCreateAudienceMember,
+  TUpdateAudienceMember,
   TCreateOrganization,
   TCreateOrganizationDepartment,
   TCreateOrganizationPosition,
@@ -49,6 +51,7 @@ import type {
 import type { TCertificateOrganizationDesign } from '@cio/utils/validation/course';
 import {
   ZCreateAudienceMember,
+  ZUpdateAudienceMember,
   ZCreateOrganization,
   ZCreateOrganizationDepartment,
   ZCreateOrganizationPosition,
@@ -612,6 +615,49 @@ class OrgApi extends BaseApiWithErrors {
       logContext: 'creating audience member',
       onSuccess: (response) => {
         snackbar.success('audience.create.snackbar_success');
+        if (response.data.warnings?.length) {
+          for (const warning of response.data.warnings) {
+            snackbar.error(warning);
+          }
+        }
+        this.success = true;
+      },
+      onError: (result) => {
+        if (typeof result === 'string') {
+          snackbar.error(result);
+          return;
+        }
+        if ('error' in result && 'field' in result) {
+          this.errors[result.field as string] = result.error;
+          return;
+        }
+        if ('error' in result) {
+          snackbar.error(result.error);
+        }
+      }
+    });
+  }
+
+  /**
+   * Edits a member, including their role. The API refuses a change that would leave the
+   * organization without an admin, and surfaces it as a field error on `roleId`.
+   */
+  async updateAudienceMember(memberId: number, data: TUpdateAudienceMember) {
+    const parsed = ZUpdateAudienceMember.safeParse(data);
+    if (!parsed.success) {
+      this.errors = mapZodErrorsToTranslations(parsed.error as ZodError);
+      return;
+    }
+
+    return this.execute<UpdateAudienceMemberRequest>({
+      requestFn: () =>
+        classroomio.organization.audience[':memberId'].$patch({
+          param: { memberId: String(memberId) },
+          json: parsed.data
+        }),
+      logContext: 'updating audience member',
+      onSuccess: (response) => {
+        snackbar.success('audience.edit.snackbar_success');
         if (response.data.warnings?.length) {
           for (const warning of response.data.warnings) {
             snackbar.error(warning);

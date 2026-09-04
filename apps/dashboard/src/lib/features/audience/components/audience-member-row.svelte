@@ -26,6 +26,7 @@
     canDeleteMembers: boolean;
     onResendInvite: (email: string) => void;
     onRevokeInvite: (email: string) => void;
+    onEdit: () => void;
     onDelete: () => void;
   }
 
@@ -39,6 +40,7 @@
     canDeleteMembers,
     onResendInvite,
     onRevokeInvite,
+    onEdit,
     onDelete
   }: Props = $props();
 
@@ -89,6 +91,9 @@
           <EllipsisVerticalIcon class="ui:size-4 ui:text-muted-foreground" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end">
+          <DropdownMenu.Item disabled={isActionDisabled} onclick={onEdit}>
+            {$t('audience.edit.action')}
+          </DropdownMenu.Item>
           {#if canResendAudienceInvite(row.status)}
             <DropdownMenu.Item disabled={isActionDisabled} onclick={() => onResendInvite(row.email)}>
               {$t('audience.invite.resend')}

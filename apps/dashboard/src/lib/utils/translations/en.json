@@ -3593,7 +3593,13 @@
     },
     "role": "Role",
     "filter_all_roles": "All roles",
-    "filter_all_statuses": "All statuses"
+    "filter_all_statuses": "All statuses",
+    "edit": {
+      "title": "Edit member",
+      "submit": "Save changes",
+      "snackbar_success": "Member updated",
+      "action": "Edit"
+    }
   },
   "analytics": {
     "title": "Analytics",

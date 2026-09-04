@@ -749,7 +749,13 @@
     },
     "role": "Rolle",
     "filter_all_roles": "Alle roller",
-    "filter_all_statuses": "Alle statusser"
+    "filter_all_statuses": "Alle statusser",
+    "edit": {
+      "title": "Rediger medlem",
+      "submit": "Gem ændringer",
+      "snackbar_success": "Medlem opdateret",
+      "action": "Rediger"
+    }
   },
   "community": {
     "title": "Fællesskab",

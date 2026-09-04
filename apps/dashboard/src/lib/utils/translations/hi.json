@@ -749,7 +749,13 @@
     },
     "role": "भूमिका",
     "filter_all_roles": "सभी भूमिकाएँ",
-    "filter_all_statuses": "सभी स्थितियाँ"
+    "filter_all_statuses": "सभी स्थितियाँ",
+    "edit": {
+      "title": "सदस्य संपादित करें",
+      "submit": "परिवर्तन सहेजें",
+      "snackbar_success": "सदस्य अपडेट किया गया",
+      "action": "संपादित करें"
+    }
   },
   "community": {
     "title": "समुदाय",

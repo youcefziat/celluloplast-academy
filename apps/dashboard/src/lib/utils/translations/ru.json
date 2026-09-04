@@ -749,7 +749,13 @@
     },
     "role": "Роль",
     "filter_all_roles": "Все роли",
-    "filter_all_statuses": "Все статусы"
+    "filter_all_statuses": "Все статусы",
+    "edit": {
+      "title": "Изменить участника",
+      "submit": "Сохранить изменения",
+      "snackbar_success": "Участник обновлён",
+      "action": "Изменить"
+    }
   },
   "community": {
     "title": "Сообщество",

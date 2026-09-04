@@ -132,6 +132,7 @@ export type ImportAudienceData = ImportAudienceSuccess['data'];
 
 // Audience create types
 export type CreateAudienceMemberRequest = (typeof classroomio.organization)['audience']['$post'];
+export type UpdateAudienceMemberRequest = (typeof classroomio.organization)['audience'][':memberId']['$patch'];
 export type CreateAudienceMemberSuccess = Extract<InferResponseType<CreateAudienceMemberRequest>, { success: true }>;
 export type CreateAudienceMemberData = CreateAudienceMemberSuccess['data'];
 

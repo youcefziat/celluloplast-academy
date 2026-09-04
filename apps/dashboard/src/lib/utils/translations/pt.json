@@ -749,7 +749,13 @@
     },
     "role": "Função",
     "filter_all_roles": "Todas as funções",
-    "filter_all_statuses": "Todos os status"
+    "filter_all_statuses": "Todos os status",
+    "edit": {
+      "title": "Editar membro",
+      "submit": "Salvar alterações",
+      "snackbar_success": "Membro atualizado",
+      "action": "Editar"
+    }
   },
   "community": {
     "title": "Comunidade",
