@@ -1,6 +1,7 @@
 import {
   assignAudienceToCourses,
   createAudienceMember,
+  getAssignableCoursesForMember,
   updateAudienceMember,
   importAudienceMembers,
   resendAudienceInvite,
@@ -464,6 +465,22 @@ export const organizationRouter = new Hono()
       );
     } catch (error) {
       return handleError(c, error, 'Failed to create audience member');
+    }
+  })
+  /**
+   * GET /organization/audience/:userId/assignable-courses
+   * The courses this person may be given, filtered by each course's own audience rule.
+   */
+  .get('/audience/:userId/assignable-courses', authMiddleware, orgTeamMemberMiddleware, async (c) => {
+    try {
+      const orgId = c.req.header('cio-org-id')!;
+      const userId = c.req.param('userId')!;
+
+      const data = await getAssignableCoursesForMember(orgId, userId);
+
+      return c.json({ success: true, data }, 200);
+    } catch (error) {
+      return handleError(c, error, 'Failed to fetch assignable courses');
     }
   })
   /**

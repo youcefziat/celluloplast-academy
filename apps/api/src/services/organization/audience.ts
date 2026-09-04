@@ -1325,6 +1325,43 @@ export async function revokeAudiencePendingInvite(
 }
 
 /**
+ * The courses a specific person can actually be given, so the picker offers only what the
+ * rules allow instead of letting someone choose a course the server will then refuse.
+ *
+ * Courses with no audience rule are ungoverned and always assignable.
+ */
+export async function getAssignableCoursesForMember(orgId: string, profileId: string) {
+  const [allCourses, governedCourses, members] = await Promise.all([
+    getOrgCourses({ orgId }),
+    getPublishedCoursesWithAudienceAssignment(orgId),
+    getOrgMembersByProfileIds(orgId, [profileId])
+  ]);
+
+  const member = members[0];
+
+  if (!member) {
+    throw new AppError('Audience member not found', ErrorCodes.NOT_FOUND, 404);
+  }
+
+  const governedById = new Map(governedCourses.map((course) => [course.id, course]));
+  const eligibilityMember = {
+    memberId: member.memberId,
+    jobTitle: member.jobTitle,
+    department: member.department
+  };
+
+  return allCourses.items
+    .filter((course) => {
+      const governed = governedById.get(course.id);
+
+      if (!governed) return true;
+
+      return resolveDirectAssignment(eligibilityMember, governed.audienceAssignment) !== 'refused';
+    })
+    .map((course) => ({ id: course.id, title: course.title }));
+}
+
+/**
  * Direct assignment has to agree with the rule that governs each course, otherwise a course
  * reserved for a department could be handed to someone outside it and the two views of who
  * may take it would disagree.

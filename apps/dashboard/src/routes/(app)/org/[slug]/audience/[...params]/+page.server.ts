@@ -3,8 +3,8 @@ import { safeServerApi } from '$lib/utils/services/api/server';
 
 type GetAudienceAnalyticsRequest = (typeof classroomio.organization.audience)[':userId']['analytics']['$get'];
 type GetAudienceAnalyticsSuccess = Extract<InferResponseType<GetAudienceAnalyticsRequest>, { success: true }>;
-type GetOrganizationCoursesRequest = typeof classroomio.organization.courses.$get;
-type GetOrganizationCoursesSuccess = Extract<InferResponseType<GetOrganizationCoursesRequest>, { success: true }>;
+type GetAssignableCoursesRequest = (typeof classroomio.organization.audience)[':userId']['assignable-courses']['$get'];
+type GetAssignableCoursesSuccess = Extract<InferResponseType<GetAssignableCoursesRequest>, { success: true }>;
 
 export const load = async ({ params, parent, cookies }) => {
   const { orgId } = await parent();
@@ -28,8 +28,10 @@ export const load = async ({ params, parent, cookies }) => {
     safeServerApi<GetAudienceAnalyticsSuccess>(() =>
       classroomio.organization.audience[':userId'].analytics.$get({ param: { userId } }, headers)
     ),
-    safeServerApi<GetOrganizationCoursesSuccess>(() =>
-      classroomio.organization.courses.$get({ query: { tags: undefined } }, headers)
+    // Only the courses this person may actually be given, so the picker cannot offer one
+    // the server would refuse.
+    safeServerApi<GetAssignableCoursesSuccess>(() =>
+      classroomio.organization.audience[':userId']['assignable-courses'].$get({ param: { userId } }, headers)
     )
   ]);
 
