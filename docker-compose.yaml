@@ -119,6 +119,9 @@ services:
       NODE_ENV: production
       PORT: 3081
       PUBLIC_SERVER_URL: ${PUBLIC_SERVER_URL:-http://localhost:3081}
+      # The api decides self-hosted behaviour from its own env: certificates, student seat
+      # limits, licence and signup rules. Without it the paid-cloud branch applies here.
+      PUBLIC_IS_SELFHOSTED: ${PUBLIC_IS_SELFHOSTED:-true}
       TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-classroomio}
       REDIS_URL: redis://redis:6379
