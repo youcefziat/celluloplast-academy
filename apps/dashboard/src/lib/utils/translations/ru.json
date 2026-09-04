@@ -743,7 +743,9 @@
       "job_title_placeholder": "Select a job title",
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
-      "department_empty": "No departments yet — create them under Administration → Departments."
+      "department_empty": "No departments yet — create them under Administration → Departments.",
+      "role_label": "Роль",
+      "role_hint": "Администраторы управляют организацией, преподаватели ведут курсы, студенты их проходят."
     },
     "role": "Роль",
     "filter_all_roles": "Все роли",

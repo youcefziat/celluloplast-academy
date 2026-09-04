@@ -678,7 +678,9 @@
       "manager_placeholder": "Aucun manager",
       "cancel": "Annuler",
       "submit": "Inviter l’employé",
-      "snackbar_success": "Employé invité"
+      "snackbar_success": "Employé invité",
+      "role_label": "Rôle",
+      "role_hint": "Les admins gèrent l'organisation, les tuteurs animent les cours, les étudiants les suivent."
     },
     "invite": {
       "row_actions_aria": "Actions ouvertes",

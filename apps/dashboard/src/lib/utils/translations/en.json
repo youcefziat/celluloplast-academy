@@ -3524,7 +3524,9 @@
       "manager_placeholder": "No manager",
       "cancel": "Cancel",
       "submit": "Invite employee",
-      "snackbar_success": "Employee invited"
+      "snackbar_success": "Employee invited",
+      "role_label": "Role",
+      "role_hint": "Admins manage the organization, tutors run courses, students follow them."
     },
     "delete": {
       "action": "Delete",

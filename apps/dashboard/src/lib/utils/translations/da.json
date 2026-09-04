@@ -743,7 +743,9 @@
       "job_title_placeholder": "Select a job title",
       "department_placeholder": "Select a department",
       "job_title_empty": "No job titles yet — create them under Administration → Job titles.",
-      "department_empty": "No departments yet — create them under Administration → Departments."
+      "department_empty": "No departments yet — create them under Administration → Departments.",
+      "role_label": "Rolle",
+      "role_hint": "Administratorer styrer organisationen, undervisere afvikler kurser, studerende følger dem."
     },
     "role": "Rolle",
     "filter_all_roles": "Alle roller",

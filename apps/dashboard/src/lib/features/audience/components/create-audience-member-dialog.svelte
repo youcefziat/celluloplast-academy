@@ -9,6 +9,8 @@
   import { orgApi } from '$features/org/api/org.svelte';
   import type { OrganizationAudienceMember } from '$features/org/utils/types';
   import { t } from '$lib/utils/functions/translations';
+  import { ROLE } from '@cio/utils/constants';
+  import { ROLE_LABEL } from '$lib/utils/constants/roles';
 
   interface Props {
     open: boolean;
@@ -25,7 +27,24 @@
   let departmentId = $state<string>('none');
   let managerMemberId = $state<string>('none');
   let office365 = $state(false);
+  let roleId = $state<string>(String(ROLE.STUDENT));
   let refsLoaded = $state(false);
+
+  const roleOptions = [
+    { value: String(ROLE.STUDENT), label: t.get(ROLE_LABEL[ROLE.STUDENT]) },
+    { value: String(ROLE.TUTOR), label: t.get(ROLE_LABEL[ROLE.TUTOR]) },
+    { value: String(ROLE.ADMIN), label: t.get(ROLE_LABEL[ROLE.ADMIN]) }
+  ];
+
+  const selectedRoleLabel = $derived(
+    roleOptions.find((option) => option.value === roleId)?.label ?? roleOptions[0].label
+  );
+
+  /**
+   * Only addresses on the migrating domain can need the Office 365 redirect, so the option
+   * appears where it applies instead of asking every operator to know about the migration.
+   */
+  const canUseOffice365 = $derived(email.trim().split('@')[1]?.toLowerCase() === 'celluloplast.com');
 
   onMount(async () => {
     await Promise.all([orgApi.getPositions(), orgApi.getDepartments()]);
@@ -40,6 +59,7 @@
     departmentId = 'none';
     managerMemberId = 'none';
     office365 = false;
+    roleId = String(ROLE.STUDENT);
     orgApi.errors = {};
   }
 
@@ -59,8 +79,10 @@
       positionId: positionId !== 'none' ? Number(positionId) : undefined,
       departmentId: departmentId !== 'none' ? Number(departmentId) : undefined,
       managerMemberId: managerMemberId !== 'none' ? Number(managerMemberId) : undefined,
+      roleId: Number(roleId),
       sendEmail: true,
-      office365
+      // Never send the flag for an address the redirect cannot apply to.
+      office365: office365 && canUseOffice365
     });
 
     if (!result) {
@@ -123,14 +145,31 @@
         {/if}
       </Field.Field>
 
-      <Field.Field orientation="horizontal">
-        <Checkbox id="audience-create-office365" bind:checked={office365} />
-        <Field.Label for="audience-create-office365">{$t('audience.create.office365_label')}</Field.Label>
+      <Field.Field>
+        <Field.Label>{$t('audience.create.role_label')} *</Field.Label>
+        <Select.Root type="single" bind:value={roleId}>
+          <Select.Trigger class="w-full">
+            {selectedRoleLabel}
+          </Select.Trigger>
+          <Select.Content>
+            {#each roleOptions as option (option.value)}
+              <Select.Item value={option.value}>{option.label}</Select.Item>
+            {/each}
+          </Select.Content>
+        </Select.Root>
+        <Field.Description>{$t('audience.create.role_hint')}</Field.Description>
       </Field.Field>
-      {#if office365 && office365PreviewEmail}
-        <p class="ui:text-muted-foreground text-sm">
-          {$t('audience.create.office365_hint', { email: office365PreviewEmail })}
-        </p>
+
+      {#if canUseOffice365}
+        <Field.Field orientation="horizontal">
+          <Checkbox id="audience-create-office365" bind:checked={office365} />
+          <Field.Label for="audience-create-office365">{$t('audience.create.office365_label')}</Field.Label>
+        </Field.Field>
+        {#if office365 && office365PreviewEmail}
+          <p class="ui:text-muted-foreground text-sm">
+            {$t('audience.create.office365_hint', { email: office365PreviewEmail })}
+          </p>
+        {/if}
       {/if}
 
       <div class="grid gap-4 sm:grid-cols-2">
