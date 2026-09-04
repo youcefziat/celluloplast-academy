@@ -201,7 +201,7 @@ describe('mapZodErrorsToTranslations generic parameter coverage', () => {
     {
       code: 'invalid_format',
       issue: {
-        validation: 'email',
+        format: 'email',
         regex: /@/,
         path: ['field'],
         origin: 'zod',
@@ -254,11 +254,6 @@ describe('mapZodErrorsToTranslations generic parameter coverage', () => {
       code: 'invalid_value',
       issue: { expected: 'A', received: 'B', path: ['field'], origin: 'zod', message: 'Field must be a valid value' },
       expectedParams: { expected: 'A', received: 'B' }
-    },
-    {
-      code: 'custom',
-      issue: { params: { reason: 'Invalid' }, message: 'Custom message', path: ['field'], origin: 'zod' },
-      expectedParams: { params: JSON.stringify({ reason: 'Invalid' }), message: 'Custom message' }
     }
   ];
 
@@ -295,5 +290,20 @@ describe('mapZodErrorsToTranslations generic parameter coverage', () => {
     );
 
     expect(result).toEqual({ field: renderedMessage });
+  });
+  it('resolves a custom issue by treating its zod message as the translation key', () => {
+    mockGet.mockImplementation((key) =>
+      key === 'validations.course.slug.taken' ? 'That slug is already taken' : null
+    );
+
+    const error = createError({
+      code: 'custom',
+      message: 'validations.course.slug.taken',
+      path: ['field'],
+      origin: 'zod'
+    } as unknown as z.core.$ZodIssue);
+
+    expect(mapZodErrorsToTranslations(error)).toEqual({ field: 'That slug is already taken' });
+    expect(mockGet).toHaveBeenCalledWith('validations.course.slug.taken');
   });
 });
