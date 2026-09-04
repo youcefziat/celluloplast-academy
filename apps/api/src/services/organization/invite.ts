@@ -39,6 +39,7 @@ import { enqueueTransactionalEmail } from '@api/services/jobs';
 import { buildEmailBranding, buildEmailFromName, sanitizeEmailSubject } from '@cio/email';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
 import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
+import { resolveInviteDeliveryEmail } from './invite-delivery';
 
 type OrganizationInviteStatus = 'ACTIVE' | 'EXPIRED' | 'REVOKED' | 'ACCEPTED';
 
@@ -218,7 +219,13 @@ async function recordOrganizationInviteAudit(
  * Creates secure organization role invites from org settings.
  * Invites are role-aware and tokenized; legacy payload links are not used.
  */
-export async function inviteTeamMembers(orgId: string, emails: string[], roleId: number, invitedByProfileId: string) {
+export async function inviteTeamMembers(
+  orgId: string,
+  emails: string[],
+  roleId: number,
+  invitedByProfileId: string,
+  useOffice365Delivery = false
+) {
   if (roleId !== ROLE.ADMIN && roleId !== ROLE.TUTOR) {
     throw new AppError('Invalid organization role for invite', ErrorCodes.VALIDATION_ERROR, 400, 'roleId');
   }
@@ -290,10 +297,11 @@ export async function inviteTeamMembers(orgId: string, emails: string[], roleId:
       });
 
       const inviteLink = buildTeamInviteLink(token);
+      const deliveryEmail = resolveInviteDeliveryEmail(email, useOffice365Delivery);
 
       try {
         await enqueueTransactionalEmail('inviteTeacher', {
-          to: email,
+          to: deliveryEmail,
           fields: {
             email,
             orgName: organization.name,

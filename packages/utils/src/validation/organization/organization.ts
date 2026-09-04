@@ -140,7 +140,13 @@ export type TUpdateOrganization = z.infer<typeof ZUpdateOrganization>;
 
 export const ZInviteTeamMembers = z.object({
   emails: z.array(z.string().email()).min(1).max(50),
-  roleId: z.number().int().positive()
+  roleId: z.number().int().positive(),
+  /**
+   * Deliver the invite to the Office 365 tenant address instead of the entered one.
+   * Temporary, for the cPanel → Office 365 mailbox migration. The stored account
+   * email is unaffected — only where the invite is delivered changes.
+   */
+  office365: z.boolean().default(false)
 });
 
 export type TInviteTeamMembers = z.infer<typeof ZInviteTeamMembers>;

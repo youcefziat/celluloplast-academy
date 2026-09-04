@@ -40,24 +40,12 @@ import { getProfilesByEmails } from '@cio/db/queries/auth';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
 import { getWelcomeSessionIcs } from '../course/session-invite';
 import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
+import { buildDeliveryEmailOverrides } from './invite-delivery';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORG_INVITE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 /** Parallel outbound invite emails; avoids sequential SMTP/API latency per recipient. */
 const EMAIL_SEND_CONCURRENCY = 5;
-
-/**
- * cPanel/Office 365 mailbox migration (coexistence period, cPanel as internal relay):
- * some @celluloplast.com mailboxes are only reachable, right now, through the O365 tenant
- * domain. The account's email stays @celluloplast.com everywhere (login, identity, DB) — only
- * where THIS ONE invite email is delivered changes.
- */
-const OFFICE_365_TENANT_DOMAIN = 'celluloplast.onmicrosoft.com';
-
-function toOffice365DeliveryEmail(email: string): string {
-  const localPart = email.split('@')[0];
-  return `${localPart}@${OFFICE_365_TENANT_DOMAIN}`;
-}
 
 type ResolvedHrRefs = {
   positionId: number | null;
@@ -415,7 +403,7 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     accessNamesLabel,
     invitedByProfileId,
     shouldSendEmail: data.sendEmail,
-    deliveryEmailOverrides: data.office365 ? new Map([[email, toOffice365DeliveryEmail(email)]]) : undefined
+    deliveryEmailOverrides: buildDeliveryEmailOverrides([email], data.office365)
   });
 
   const member = await getOrganizationAudienceMember(orgId, created.id);

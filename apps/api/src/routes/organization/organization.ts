@@ -187,9 +187,9 @@ export const organizationRouter = new Hono()
     try {
       const orgId = c.req.header('cio-org-id')!;
       const user = c.get('user')!;
-      const { emails, roleId } = c.req.valid('json');
+      const { emails, roleId, office365 } = c.req.valid('json');
 
-      const members = await inviteTeamMembers(orgId, emails, roleId, user.id);
+      const members = await inviteTeamMembers(orgId, emails, roleId, user.id, office365);
 
       return c.json(
         {
