@@ -40,9 +40,9 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.388.0",
     "@aws-sdk/s3-request-presigner": "^3.675.0",
-    "@cio/core": "workspace:*",
     "@cio/analytics": "workspace:*",
     "@cio/certificates": "workspace:*",
+    "@cio/core": "workspace:*",
     "@cio/db": "workspace:*",
     "@cio/email": "workspace:*",
     "@cio/jobs": "workspace:*",
@@ -65,6 +65,7 @@
     "katex": "^0.16.10",
     "marked": "^7.0.3",
     "nanoid": "^5.1.5",
+    "puppeteer-core": "^23.11.1",
     "tldts": "^6.1.86",
     "zod": "^4.1.8",
     "zod-openapi": "^5.4.1"

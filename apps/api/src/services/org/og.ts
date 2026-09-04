@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 
 import { AppError, ErrorCodes } from '@api/utils/errors';
-import { getCloudflarePngBuffer } from '@api/utils/cloudflare';
+import { getPngBuffer } from '@api/utils/browser-render';
 import { resolveThemeColor } from '@cio/email';
 import { getActiveOrganizationPlan, getOrganizationBySiteName } from '@cio/db/queries/organization';
 import { extractOrgTagline, renderOrgSiteOg } from '@api/utils/org-site-og';
@@ -68,7 +68,7 @@ export async function generateOrgSiteOgImage(siteName: string): Promise<{ buffer
   }
 
   const { html, styles } = renderOrgSiteOg(renderInput);
-  const buffer = await getCloudflarePngBuffer(html, styles, OG_VIEWPORT);
+  const buffer = await getPngBuffer(html, styles, OG_VIEWPORT);
 
   await persistOrgSiteOgImage(siteName, buffer, etag);
 

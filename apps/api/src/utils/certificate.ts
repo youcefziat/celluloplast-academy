@@ -1,6 +1,6 @@
 import { renderCertificate, type CertificateLayout, type CertificateRenderData } from '@cio/certificates';
 
-import { getCloudflarePdfBuffer, getCloudflarePngBuffer } from '@api/utils/cloudflare';
+import { getPdfBuffer, getPngBuffer } from '@api/utils/browser-render';
 
 export interface CertificateRenderInput {
   design: CertificateLayout;
@@ -10,11 +10,11 @@ export interface CertificateRenderInput {
 export async function generateCertificatePdf(input: CertificateRenderInput) {
   const { html, styles } = renderCertificate(input.design, input.data);
 
-  return getCloudflarePdfBuffer(html, styles);
+  return getPdfBuffer(html, styles);
 }
 
 export async function generateCertificatePng(input: CertificateRenderInput) {
   const { html, styles } = renderCertificate(input.design, input.data);
 
-  return getCloudflarePngBuffer(html, styles);
+  return getPngBuffer(html, styles);
 }

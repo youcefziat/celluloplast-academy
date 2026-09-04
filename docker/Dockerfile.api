@@ -1,5 +1,13 @@
 FROM node:20.19.3-slim
 
+# Chromium renders certificates, course PDFs and OG images in-process. This replaces a
+# dependency on Cloudflare Browser Rendering, which never worked self-hosted and would have
+# sent employee names to a third party on every download. puppeteer-core drives this binary,
+# so nothing is downloaded at install time.
+RUN apt-get update     && apt-get install -y --no-install-recommends         ca-certificates         chromium         fonts-dejavu-core         fonts-liberation     && rm -rf /var/lib/apt/lists/*
+
+ENV CHROMIUM_PATH=/usr/bin/chromium
+
 WORKDIR /app
 
 # Keep install non-interactive and deterministic in CI/container contexts.

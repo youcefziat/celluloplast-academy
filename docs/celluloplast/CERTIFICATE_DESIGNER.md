@@ -19,7 +19,22 @@ Les responsabilités sont séparées ainsi :
 - `apps/dashboard/src/lib/features/certificate-designer` contient l’état Svelte 5, les interactions et l’interface;
 - `apps/api/src/utils/certificate.ts` migre la valeur stockée avant tout rendu;
 - `apps/api/src/services/course/certificate.ts` charge les vraies données de l’apprenant, de la formation et de l’organisation;
-- Cloudflare Browser Rendering transforme le même HTML/CSS en PNG ou PDF.
+- `apps/api/src/utils/browser-render.ts` transforme le même HTML/CSS en PNG ou PDF avec le Chromium embarqué dans l’image `api`.
+
+### Rendu local plutôt que Cloudflare
+
+Le rendu passait par Cloudflare Browser Rendering, un service cloud payant exigeant
+`CLOUDFLARE_ACCOUNT_ID` et `CLOUDFLARE_RENDERING_API_KEY`. Ces variables n’étaient ni dans les
+fichiers de composition ni dans `.env.example` : la fonctionnalité ne pouvait donc fonctionner
+sur aucune installation self-hosted, et échouait avec une erreur générique.
+
+Le rendu est désormais local, pour deux raisons : le HTML du certificat contient le nom et le
+prénom de l’apprenant, qui n’ont pas à sortir du réseau à chaque téléchargement ; et une
+plateforme interne ne doit pas dépendre d’un service tiers payant pour délivrer ses
+attestations. Chromium ajoute environ 266 Mo à l’image `api` (71 Mo → 337 Mo pour la couche de
+base, mesuré avec `docker image inspect`).
+
+Le même moteur sert aussi l’export PDF de formation et les images Open Graph.
 
 ## Schéma de sérialisation V1
 
@@ -126,7 +141,7 @@ Le PDF et le PNG suivent le flux suivant :
 2. le document historique éventuel est migré en V1;
 3. les variables sont résolues avec les données réelles;
 4. `renderCertificate` produit le HTML et le CSS absolus;
-5. Cloudflare Browser Rendering produit le PDF ou le PNG.
+5. Chromium headless, piloté par `puppeteer-core`, produit le PDF ou le PNG.
 
 Le CSS déclare une page sans marge de `1100 × 780 px`. Le fond est rendu séparément avec `object-fit: cover`; les images de contenu respectent leur propre `objectFit`.
 
@@ -159,4 +174,4 @@ Pour une recette visuelle complète, suivre la section dédiée de `docs/cellulo
 - pas de formes vectorielles ni de filtres d’image;
 - pas de recadrage interne d’image, uniquement `contain` ou `cover`;
 - les polices Google nécessitent un accès réseau au moment du rendu;
-- le PDF de bout en bout nécessite des identifiants Cloudflare Browser Rendering valides.
+- le rendu exige le binaire Chromium présent dans l’image `api` (`CHROMIUM_PATH`, par défaut `/usr/bin/chromium`).
