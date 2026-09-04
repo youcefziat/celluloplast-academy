@@ -4,23 +4,19 @@
   import CopyIcon from '@lucide/svelte/icons/copy';
 
   import { profile } from '$lib/utils/store/user';
-  import { getAppOrigin, isFreePlan, currentOrg } from '$lib/utils/store/org';
+  import { getAppOrigin, isFreePlan, currentOrg, currentOrgPath } from '$lib/utils/store/org';
   import { orgApi } from '$features/org/api/org.svelte';
   import { t } from '$lib/utils/functions/translations';
   import { snackbar } from '$features/ui/snackbar/store';
   import type { OrgTeamMember } from '$lib/utils/types/org';
   import { ROLE } from '@cio/utils/constants';
   import { ROLE_LABEL } from '$lib/utils/constants/roles';
-  import { validateEmailInString } from '$lib/utils/functions/validator';
 
   import { Badge } from '@cio/ui/base/badge';
-  import { Input } from '@cio/ui/base/input';
   import { Button } from '@cio/ui/base/button';
   import { ComingSoon } from '$features/ui';
   import * as Field from '@cio/ui/base/field';
 
-  let emailsStr = $state('');
-  let errorMessage = $state('');
   let role = $state(ROLE.TUTOR.toString());
   let isRemoving: number | null = $state(null);
 
@@ -40,36 +36,6 @@
     if (!linkInviteToken) return;
 
     await navigator.clipboard.writeText(buildLinkInviteUrl(linkInviteToken));
-  }
-
-  async function onSendInvite() {
-    // Prevent free plan users from bypassing UI restrictions
-    if ($isFreePlan) {
-      snackbar.error('upgrade.required');
-      return;
-    }
-
-    const { hasError, error: _error, emails } = validateEmailInString(emailsStr);
-
-    if (hasError) {
-      errorMessage = _error;
-      return;
-    }
-
-    errorMessage = '';
-    await orgApi.inviteTeamMembers(emails, parseInt(role));
-
-    if (orgApi.success) {
-      snackbar.success('snackbar.team_members.invite_sent');
-      emailsStr = '';
-    } else {
-      // Errors are handled by orgApi, but check for field-specific errors
-      if (orgApi.errors.emails) {
-        errorMessage = orgApi.errors.emails;
-      } else if (orgApi.errors.general) {
-        snackbar.error(orgApi.errors.general);
-      }
-    }
   }
 
   async function onRemove(id: number) {
@@ -105,21 +71,14 @@
 <Field.Group class="w-full max-w-3xl! px-2">
   <Field.Set>
     <Field.Legend>{$t('course.navItem.people.teams.add')}</Field.Legend>
-    <Field.Description class="mb-5">{$t('course.navItem.people.teams.add_team')}</Field.Description>
+    <Field.Description class="mb-5">
+      {$t('course.navItem.people.teams.link_invite_only')}
+      <a class="ui:text-primary hover:underline" href={`${$currentOrgPath}/audience`}>
+        {$t('course.navItem.people.teams.go_to_users')}
+      </a>
+    </Field.Description>
 
-    <div class="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem_auto] lg:items-start">
-      <Field.Field class="min-w-0">
-        <Input
-          placeholder={$t('course.navItem.people.teams.placeholder')}
-          bind:value={emailsStr}
-          class="w-full"
-          disabled={$isFreePlan}
-        />
-        {#if errorMessage}
-          <Field.Error>{errorMessage}</Field.Error>
-        {/if}
-      </Field.Field>
-
+    <div class="flex flex-col gap-4 lg:grid lg:grid-cols-[16rem_auto] lg:items-start">
       <div class="w-full lg:w-64">
         <Select.Root type="single" bind:value={role} disabled={$isFreePlan}>
           <Select.Trigger id="invite-role" class="ui:w-full ui:max-w-none">
@@ -130,28 +89,17 @@
             <Select.Item value={ROLE.TUTOR.toString()}>{$t(ROLE_LABEL[ROLE.TUTOR])}</Select.Item>
           </Select.Content>
         </Select.Root>
+      </div>
 
+      <div class="lg:self-start">
         <Button
-          variant="link"
-          size="sm"
-          class="h-auto justify-start"
+          variant="default"
           onclick={onCopyInviteLink}
           loading={orgApi.isLoading}
           disabled={orgApi.isLoading || $isFreePlan}
         >
           <CopyIcon size={14} />
           {$t('course.navItem.people.teams.link_invite.copy_invite_link')}
-        </Button>
-      </div>
-
-      <div class="lg:self-start">
-        <Button
-          variant="default"
-          onclick={onSendInvite}
-          loading={orgApi.isLoading}
-          disabled={orgApi.isLoading || $isFreePlan}
-        >
-          {$t('course.navItem.people.teams.send_invite')}
         </Button>
       </div>
     </div>

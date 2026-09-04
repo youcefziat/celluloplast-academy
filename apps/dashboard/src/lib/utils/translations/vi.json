@@ -1173,7 +1173,9 @@
             "toggle_label": "Liên kết lời mời đang hoạt động",
             "disabled_notice": "Liên kết này bị vô hiệu hóa. Kích hoạt nó để cho phép thành viên mới tham gia thông qua liên kết.",
             "select_role": "Chọn một vai trò"
-          }
+          },
+          "link_invite_only": "Tạo liên kết mời có thể chia sẻ cho một vai trò. Để thêm ai đó trực tiếp, hãy vào",
+          "go_to_users": "Nhân viên"
         },
         "roles": {
           "admin": "Quản trị viên",

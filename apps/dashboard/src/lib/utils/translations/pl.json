@@ -1173,7 +1173,9 @@
             "toggle_label": "Zaproszenie do linku aktywne",
             "disabled_notice": "To łącze jest wyłączone. Włącz tę opcję, aby umożliwić nowym członkom dołączanie za pośrednictwem łącza.",
             "select_role": "Wybierz rolę"
-          }
+          },
+          "link_invite_only": "Wygeneruj link zapraszający dla roli. Aby dodać kogoś bezpośrednio, przejdź do",
+          "go_to_users": "Pracownicy"
         },
         "roles": {
           "admin": "Administrator",

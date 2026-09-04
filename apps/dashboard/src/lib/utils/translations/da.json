@@ -1173,7 +1173,9 @@
             "toggle_label": "Linkinvitation aktiv",
             "disabled_notice": "Dette link er deaktiveret. Aktiver det for at tillade nye medlemmer at deltage via link.",
             "select_role": "Vælg en rolle"
-          }
+          },
+          "link_invite_only": "Generer et delbart invitationslink til en rolle. For at tilføje nogen direkte, gå til",
+          "go_to_users": "Medarbejdere"
         },
         "roles": {
           "admin": "Admin",

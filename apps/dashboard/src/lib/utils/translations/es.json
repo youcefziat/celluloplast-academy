@@ -1173,7 +1173,9 @@
             "toggle_label": "Invitación de enlace activa",
             "disabled_notice": "Este enlace está deshabilitado. Habilítelo para permitir que nuevos miembros se unan a través de un enlace.",
             "select_role": "Seleccione un rol"
-          }
+          },
+          "link_invite_only": "Genera un enlace de invitación compartible para un rol. Para añadir a alguien directamente, ve a",
+          "go_to_users": "Empleados"
         },
         "roles": {
           "admin": "Administrador",

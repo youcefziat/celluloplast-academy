@@ -1173,7 +1173,9 @@
             "toggle_label": "Invitation de lien active",
             "disabled_notice": "Ce lien est désactivé. Activez-le pour permettre aux nouveaux membres de rejoindre via un lien.",
             "select_role": "Sélectionnez un rôle"
-          }
+          },
+          "link_invite_only": "Générez un lien d'invitation partageable pour un rôle. Pour ajouter quelqu'un directement, allez dans",
+          "go_to_users": "Employés"
         },
         "roles": {
           "admin": "Admin",

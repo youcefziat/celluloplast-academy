@@ -3095,7 +3095,9 @@
             "toggle_label": "Link invite active",
             "disabled_notice": "This link is disabled. Enable it to allow new members to join via link.",
             "select_role": "Select a role"
-          }
+          },
+          "link_invite_only": "Generate a shareable invite link for a role. To add someone directly, go to",
+          "go_to_users": "Employees"
         }
       },
       "certificates": {

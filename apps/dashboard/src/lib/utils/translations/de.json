@@ -1173,7 +1173,9 @@
             "toggle_label": "Linkeinladung aktiv",
             "disabled_notice": "Dieser Link ist deaktiviert. Aktivieren Sie es, um neuen Mitgliedern den Beitritt über einen Link zu ermöglichen.",
             "select_role": "Wählen Sie eine Rolle aus"
-          }
+          },
+          "link_invite_only": "Erzeugen Sie einen teilbaren Einladungslink für eine Rolle. Um jemanden direkt hinzuzufügen, gehen Sie zu",
+          "go_to_users": "Mitarbeiter"
         },
         "roles": {
           "admin": "Admin",

@@ -1173,7 +1173,9 @@
             "toggle_label": "Link de convite ativo",
             "disabled_notice": "Este link está desativado. Habilite-o para permitir que novos membros participem via link.",
             "select_role": "Selecione uma função"
-          }
+          },
+          "link_invite_only": "Gere um link de convite compartilhável para uma função. Para adicionar alguém diretamente, vá para",
+          "go_to_users": "Funcionários"
         },
         "roles": {
           "admin": "Administrador",
