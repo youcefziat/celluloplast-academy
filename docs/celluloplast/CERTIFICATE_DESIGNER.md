@@ -36,6 +36,26 @@ base, mesuré avec `docker image inspect`).
 
 Le même moteur sert aussi l’export PDF de formation et les images Open Graph.
 
+### Rattrapage des certificats manqués
+
+`certificateEarnedAt` n’est écrit qu’au moment où l’éligibilité est évaluée : fin d’une leçon,
+soumission d’un exercice, ou ouverture de la page certificat d’une formation. Si l’émission
+était désactivée à ce moment-là, rien n’est enregistré et l’apprenant reste sans certificat
+jusqu’à ce qu’il rouvre la formation.
+
+Le script de rattrapage réévalue les inscriptions concernées avec les mêmes règles que
+l’application — il ne réimplémente jamais l’éligibilité :
+
+```bash
+# Simulation : n’écrit rien, liste ce qui serait accordé
+docker exec celluloplast-api node dist/scripts/backfill-certificates.js
+
+# Application : accorde les certificats et envoie l’e-mail de complétion à chacun
+docker exec celluloplast-api node dist/scripts/backfill-certificates.js --apply
+```
+
+La simulation est le mode par défaut, parce qu’appliquer envoie un e-mail par apprenant.
+
 ## Schéma de sérialisation V1
 
 La configuration est enregistrée sous `organization.settings.certificateDesign`.

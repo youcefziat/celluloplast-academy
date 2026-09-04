@@ -145,7 +145,11 @@ async function evaluateFinalExerciseRule(params: {
   return { meetsFinalExerciseRule: true, blockers: [] };
 }
 
-async function buildCertificationEvaluation(
+/**
+ * Eligibility only, with no persistence and no email. Exported so a dry run can report what
+ * would be granted using these exact rules rather than a second copy of them.
+ */
+export async function buildCertificationEvaluation(
   courseId: string,
   profileId: string,
   courseRow: TCourseCertificationRow,

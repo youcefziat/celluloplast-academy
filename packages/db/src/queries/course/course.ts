@@ -557,6 +557,50 @@ export async function deleteCourse(courseId: string) {
  * @param profileId Profile ID
  * @returns Course progress with counts of lessons, completed lessons, exercises, and completed exercises
  */
+export type TCertificateBackfillCandidate = {
+  courseId: string;
+  courseTitle: string;
+  profileId: string;
+  email: string | null;
+};
+
+/**
+ * Students enrolled in a published course who hold no certificate date.
+ *
+ * Deliberately does not judge eligibility: that rule lives in the certification service and
+ * must stay in one place. This only narrows the set worth evaluating.
+ */
+export async function getCertificateBackfillCandidates(): Promise<TCertificateBackfillCandidate[]> {
+  try {
+    const rows = await db
+      .select({
+        courseId: schema.course.id,
+        courseTitle: schema.course.title,
+        profileId: schema.groupmember.profileId,
+        email: schema.profile.email
+      })
+      .from(schema.groupmember)
+      .innerJoin(schema.course, eq(schema.course.groupId, schema.groupmember.groupId))
+      .leftJoin(schema.profile, eq(schema.profile.id, schema.groupmember.profileId))
+      .where(
+        and(
+          isNull(schema.groupmember.certificateEarnedAt),
+          isNotNull(schema.groupmember.profileId),
+          eq(schema.groupmember.roleId, ROLE.STUDENT),
+          eq(schema.course.isPublished, true),
+          eq(schema.course.status, 'ACTIVE')
+        )
+      );
+
+    return rows.flatMap((row) => (row.profileId ? [{ ...row, profileId: row.profileId }] : []));
+  } catch (error) {
+    console.error('getCertificateBackfillCandidates error:', error);
+    throw new Error(
+      `Failed to get certificate backfill candidates: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
+}
+
 export async function getCourseProgress(
   courseId: string,
   profileId: string
