@@ -30,7 +30,14 @@ import {
   hasActiveOrganizationInviteForEmail,
   revokeActiveOrganizationInvitesByEmails
 } from '@cio/db/queries/organization';
-import { getCourseGroupIds, getOrgCourseGroups, getOrgCourses } from '@cio/db/queries/course';
+import {
+  getCourseById,
+  getCourseGroupIds,
+  getOrgCourseGroups,
+  getOrgCourses,
+  getPublishedCoursesWithAudienceAssignment,
+  updateCourse
+} from '@cio/db/queries/course';
 import { countOrganizationMembersByRole, updateOrganizationAudienceMember } from '@cio/db/queries/organization';
 
 import { ROLE } from '@cio/utils/constants';
@@ -40,7 +47,9 @@ import { assertStudentCapacityOrThrow } from './student-limit';
 import { getProfilesByEmails } from '@cio/db/queries/auth';
 import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/compliance';
 import { getWelcomeSessionIcs } from '../course/session-invite';
-import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
+import { resolveDirectAssignment, syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
+import type { TCourseAudienceAssignment } from '@cio/utils/validation/course/course';
+import type { TCourse } from '@cio/db/types';
 import { buildDeliveryEmailOverrides } from './invite-delivery';
 import { sendStaffOrgInvite } from './invite';
 import { assertRoleChangeAllowed } from './role-rules';
@@ -1315,6 +1324,94 @@ export async function revokeAudiencePendingInvite(
   return { revoked: true };
 }
 
+/**
+ * Direct assignment has to agree with the rule that governs each course, otherwise a course
+ * reserved for a department could be handed to someone outside it and the two views of who
+ * may take it would disagree.
+ *
+ * Courses with no audience rule are ungoverned and always assignable. A course targeting an
+ * explicit list of people is the per-employee case: the member joins that list, so the grant
+ * lives in the model rather than as an enrolment the rule knows nothing about.
+ */
+async function assertDirectAssignmentIsEligible(
+  orgId: string,
+  courseIds: string[],
+  profileIds: string[]
+): Promise<void> {
+  if (profileIds.length === 0) {
+    return;
+  }
+
+  const [governedCourses, members] = await Promise.all([
+    getPublishedCoursesWithAudienceAssignment(orgId),
+    getOrgMembersByProfileIds(orgId, profileIds)
+  ]);
+
+  const governedById = new Map(governedCourses.map((course) => [course.id, course]));
+  const refusedCourseTitles = new Set<string>();
+  const memberIdsToAddByCourse = new Map<string, Set<number>>();
+
+  for (const courseId of courseIds) {
+    const course = governedById.get(courseId);
+
+    if (!course) continue;
+
+    for (const member of members) {
+      const outcome = resolveDirectAssignment(
+        { memberId: member.memberId, jobTitle: member.jobTitle, department: member.department },
+        course.audienceAssignment
+      );
+
+      if (outcome === 'refused') {
+        refusedCourseTitles.add(course.title);
+        continue;
+      }
+
+      if (outcome === 'addToMemberList') {
+        const pending = memberIdsToAddByCourse.get(courseId) ?? new Set<number>();
+        pending.add(member.memberId);
+        memberIdsToAddByCourse.set(courseId, pending);
+      }
+    }
+  }
+
+  if (refusedCourseTitles.size > 0) {
+    const titles = [...refusedCourseTitles].join(', ');
+
+    throw new AppError(
+      `These courses are reserved for a department or job title this person is not in: ${titles}`,
+      ErrorCodes.VALIDATION_ERROR,
+      409,
+      'courseIds'
+    );
+  }
+
+  for (const [courseId, memberIds] of memberIdsToAddByCourse) {
+    await addMembersToCourseAudienceList(courseId, memberIds);
+  }
+}
+
+/** Widens a course's explicit member list, preserving the rest of its metadata. */
+async function addMembersToCourseAudienceList(courseId: string, memberIds: Set<number>): Promise<void> {
+  const [course] = await getCourseById(courseId);
+
+  if (!course) return;
+
+  const metadata = (course.metadata ?? {}) as Record<string, unknown>;
+  const assignment = metadata.audienceAssignment as TCourseAudienceAssignment | undefined;
+
+  if (!assignment || assignment.mode !== 'members') return;
+
+  const nextMemberIds = [...new Set([...(assignment.memberIds ?? []), ...memberIds])];
+
+  const nextMetadata = {
+    ...metadata,
+    audienceAssignment: { ...assignment, memberIds: nextMemberIds }
+  } as unknown as TCourse['metadata'];
+
+  await updateCourse(courseId, { metadata: nextMetadata });
+}
+
 export async function assignAudienceToCourses(orgId: string, data: TAssignAudienceCourses) {
   const organization = await getOrganizationById(orgId);
   if (!organization) {
@@ -1332,6 +1429,8 @@ export async function assignAudienceToCourses(orgId: string, data: TAssignAudien
     if (courseGroups.length === 0) {
       throw new AppError('No valid courses found', ErrorCodes.VALIDATION_ERROR, 400, 'courseIds');
     }
+
+    await assertDirectAssignmentIsEligible(orgId, courseIds, data.profileIds);
 
     assignedToCourses = await enrollAudienceStudentProfilesInCourses(
       orgId,

@@ -8,46 +8,14 @@ import {
 } from '@cio/db/queries/organization';
 import { appendCourseIdsToPendingAudienceInvites } from '@cio/db/queries/organization/invite';
 import type { TCourseAudienceAssignment } from '@cio/utils/validation/course/course';
+import { memberMatchesAssignment, type TAudienceAssignmentMember } from './audience-rules';
 
-export type TAudienceAssignmentMember = {
-  memberId: number;
-  profileId: string | null;
-  email: string;
-  jobTitle?: string | null;
-  department?: string | null;
-};
-
-export function memberMatchesAssignment(
-  member: Pick<TAudienceAssignmentMember, 'memberId' | 'jobTitle' | 'department'>,
-  assignment: TCourseAudienceAssignment
-): boolean {
-  switch (assignment.mode) {
-    case 'all':
-      return true;
-    case 'members':
-      return (assignment.memberIds ?? []).includes(member.memberId);
-    case 'jobTitles': {
-      const memberTitle = member.jobTitle?.toLowerCase().trim() ?? '';
-      if (!memberTitle) {
-        return false;
-      }
-
-      const titles = (assignment.jobTitles ?? []).map((title) => title.toLowerCase().trim());
-      return titles.includes(memberTitle);
-    }
-    case 'departments': {
-      const memberDepartment = member.department?.toLowerCase().trim() ?? '';
-      if (!memberDepartment) {
-        return false;
-      }
-
-      const departments = (assignment.departments ?? []).map((department) => department.toLowerCase().trim());
-      return departments.includes(memberDepartment);
-    }
-    default:
-      return false;
-  }
-}
+export {
+  memberMatchesAssignment,
+  resolveDirectAssignment,
+  type DirectAssignmentOutcome,
+  type TAudienceAssignmentMember
+} from './audience-rules';
 
 export async function resolveMembersForAssignment(
   orgId: string,

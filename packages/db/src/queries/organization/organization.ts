@@ -1399,13 +1399,23 @@ export async function getOrgMembersByProfileIds(orgId: string, profileIds: strin
   try {
     if (profileIds.length === 0) return [];
 
+    // memberId, job title and department come along so callers can decide course eligibility
+    // without a second round trip.
     return db
       .select({
+        memberId: schema.organizationmember.id,
         profileId: schema.organizationmember.profileId,
         email: schema.organizationmember.email,
-        roleId: schema.organizationmember.roleId
+        roleId: schema.organizationmember.roleId,
+        jobTitle: schema.organizationPosition.name,
+        department: schema.organizationDepartment.name
       })
       .from(schema.organizationmember)
+      .leftJoin(schema.organizationPosition, eq(schema.organizationmember.positionId, schema.organizationPosition.id))
+      .leftJoin(
+        schema.organizationDepartment,
+        eq(schema.organizationmember.departmentId, schema.organizationDepartment.id)
+      )
       .where(
         and(
           eq(schema.organizationmember.organizationId, orgId),
