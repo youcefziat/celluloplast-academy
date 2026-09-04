@@ -48,10 +48,10 @@ l’application — il ne réimplémente jamais l’éligibilité :
 
 ```bash
 # Simulation : n’écrit rien, liste ce qui serait accordé
-docker exec celluloplast-api node dist/scripts/backfill-certificates.js
+docker exec -w /app/apps/api celluloplast-api node dist/scripts/backfill-certificates.js
 
 # Application : accorde les certificats et envoie l’e-mail de complétion à chacun
-docker exec celluloplast-api node dist/scripts/backfill-certificates.js --apply
+docker exec -w /app/apps/api celluloplast-api node dist/scripts/backfill-certificates.js --apply
 ```
 
 La simulation est le mode par défaut, parce qu’appliquer envoie un e-mail par apprenant.

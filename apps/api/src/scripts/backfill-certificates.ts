@@ -14,8 +14,8 @@
  * Applying sends each learner the course-completion email, exactly as finishing normally
  * would. That is why the dry run is the default.
  *
- *   docker exec celluloplast-api node dist/scripts/backfill-certificates.js
- *   docker exec celluloplast-api node dist/scripts/backfill-certificates.js --apply
+ *   docker exec -w /app/apps/api celluloplast-api node dist/scripts/backfill-certificates.js
+ *   docker exec -w /app/apps/api celluloplast-api node dist/scripts/backfill-certificates.js --apply
  */
 import { getCertificateBackfillCandidates, getCourseCertificationRow } from '@cio/db/queries/course';
 import { buildCertificationEvaluation, evaluateCourseCertification } from '@api/services/course/completion';
