@@ -19,6 +19,7 @@ import {
   ilike,
   inArray,
   isNotNull,
+  isNull,
   ne,
   not,
   notInArray,
@@ -412,6 +413,7 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
   const [row] = await db
     .select({
       memberId: schema.organizationmember.id,
+      roleId: schema.organizationmember.roleId,
       profileId: schema.organizationmember.profileId,
       fullname: schema.profile.fullname,
       firstName: schema.organizationmember.firstName,
@@ -439,13 +441,7 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
     )
     .leftJoin(managerMember, eq(schema.organizationmember.managerMemberId, managerMember.id))
     .leftJoin(managerProfile, eq(managerMember.profileId, managerProfile.id))
-    .where(
-      and(
-        eq(schema.organizationmember.organizationId, orgId),
-        eq(schema.organizationmember.id, memberId),
-        eq(schema.organizationmember.roleId, ROLE.STUDENT)
-      )
-    )
+    .where(and(eq(schema.organizationmember.organizationId, orgId), eq(schema.organizationmember.id, memberId)))
     .limit(1);
 
   if (!row) {
@@ -465,6 +461,7 @@ export const getOrganizationAudienceMember = async (orgId: string, memberId: num
 
   return {
     id: row.memberId,
+    roleId: row.roleId,
     profileId: row.profileId ?? null,
     name,
     email,
@@ -501,20 +498,14 @@ export const updateOrganizationAudienceMember = async (
   data: Partial<
     Pick<
       TNewOrganizationmember,
-      'email' | 'verified' | 'firstName' | 'lastName' | 'positionId' | 'departmentId' | 'managerMemberId'
+      'email' | 'verified' | 'firstName' | 'lastName' | 'positionId' | 'departmentId' | 'managerMemberId' | 'roleId'
     >
   >
 ) => {
   const [updated] = await db
     .update(schema.organizationmember)
     .set(data)
-    .where(
-      and(
-        eq(schema.organizationmember.organizationId, orgId),
-        eq(schema.organizationmember.id, memberId),
-        eq(schema.organizationmember.roleId, ROLE.STUDENT)
-      )
-    )
+    .where(and(eq(schema.organizationmember.organizationId, orgId), eq(schema.organizationmember.id, memberId)))
     .returning();
 
   return updated || null;
@@ -698,7 +689,21 @@ export async function getOrganizationAdminEmails(orgId: string): Promise<Array<{
 }
 
 /**
- * Gets organization audience (all organization members with student role).
+ * Counts members holding a role, so a role change can refuse to remove the last admin and
+ * leave the organization unadministrable.
+ */
+export const countOrganizationMembersByRole = async (orgId: string, roleId: number): Promise<number> => {
+  const [row] = await db
+    .select({ count: count(schema.organizationmember.id) })
+    .from(schema.organizationmember)
+    .where(and(eq(schema.organizationmember.organizationId, orgId), eq(schema.organizationmember.roleId, roleId)));
+
+  return Number(row?.count ?? 0);
+};
+
+/**
+ * Gets organization members of any role, so one screen can manage admins, tutors and
+ * students together. Callers that still want only learners pass `roleIds: [ROLE.STUDENT]`.
  * Includes invited members without a profile (LEFT JOIN profile).
  * Row id is organizationmember.id; use profileId for profile-backed actions when present.
  */
@@ -708,6 +713,12 @@ type GetOrganizationAudienceOptions = {
   search?: string;
   sortBy?: TAudienceSortBy;
   sortOrder?: TAudienceSortOrder;
+  /** Absent means every role. */
+  roleIds?: number[];
+  departmentId?: number;
+  positionId?: number;
+  /** `active` has a linked profile; `pending` is still an unaccepted invite. */
+  status?: 'active' | 'pending';
 };
 
 export const getOrganizationAudience = async (orgId: string, options: GetOrganizationAudienceOptions = {}) => {
@@ -730,10 +741,25 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
   const audienceEmailSql = sql<string>`COALESCE(${schema.profile.email}, ${schema.organizationmember.email})`;
   const audienceCreatedAtSql = sql<string>`COALESCE(${schema.profile.createdAt}, ${schema.organizationmember.createdAt})`;
 
-  const conditions = [
-    eq(schema.organizationmember.organizationId, orgId),
-    eq(schema.organizationmember.roleId, ROLE.STUDENT)
-  ];
+  const conditions = [eq(schema.organizationmember.organizationId, orgId)];
+
+  if (options.roleIds && options.roleIds.length > 0) {
+    conditions.push(inArray(schema.organizationmember.roleId, options.roleIds));
+  }
+
+  if (options.departmentId) {
+    conditions.push(eq(schema.organizationmember.departmentId, options.departmentId));
+  }
+
+  if (options.positionId) {
+    conditions.push(eq(schema.organizationmember.positionId, options.positionId));
+  }
+
+  if (options.status === 'active') {
+    conditions.push(isNotNull(schema.organizationmember.profileId));
+  } else if (options.status === 'pending') {
+    conditions.push(isNull(schema.organizationmember.profileId));
+  }
 
   if (search) {
     const searchValue = `%${search}%`;
@@ -765,12 +791,19 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
   const total = Number(totalRow?.count ?? 0);
 
   const orderByExpression =
-    sortBy === 'name' ? audienceNameSql : sortBy === 'email' ? audienceEmailSql : audienceCreatedAtSql;
+    sortBy === 'name'
+      ? audienceNameSql
+      : sortBy === 'email'
+        ? audienceEmailSql
+        : sortBy === 'role'
+          ? schema.organizationmember.roleId
+          : audienceCreatedAtSql;
   const orderedExpression = sortOrder === 'asc' ? asc(orderByExpression) : desc(orderByExpression);
 
   const result = await db
     .select({
       memberId: schema.organizationmember.id,
+      roleId: schema.organizationmember.roleId,
       profileId: schema.profile.id,
       fullname: schema.profile.fullname,
       firstName: schema.organizationmember.firstName,
@@ -818,6 +851,7 @@ export const getOrganizationAudience = async (orgId: string, options: GetOrganiz
 
       return {
         id: row.memberId,
+        roleId: row.roleId,
         profileId: row.profileId ?? null,
         name,
         email,

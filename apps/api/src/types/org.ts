@@ -3,6 +3,8 @@ import type { TAudienceSortBy, TAudienceSortOrder } from '@cio/utils/validation/
 
 export type OrgAudienceMember = {
   id: number;
+  /** ADMIN, TUTOR or STUDENT — see ROLE in @cio/utils/constants. */
+  roleId: number;
   profileId: string | null;
   name: string;
   email: string;

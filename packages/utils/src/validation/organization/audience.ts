@@ -1,14 +1,37 @@
 import * as z from 'zod';
 
-export const AudienceSortBy = z.enum(['createdAt', 'name', 'email']);
+export const AudienceSortBy = z.enum(['createdAt', 'name', 'email', 'role']);
 export const AudienceSortOrder = z.enum(['asc', 'desc']);
+
+/** ADMIN, TUTOR or STUDENT — mirrors ROLE in @cio/utils/constants/roles. */
+export const ZOrganizationRoleId = z.coerce
+  .number()
+  .int()
+  .refine((value) => value === 1 || value === 2 || value === 3, {
+    message: 'Role must be admin, tutor or student'
+  });
+
+/** A member is `active` once a profile is linked, otherwise the invite is still pending. */
+export const AudienceStatus = z.enum(['active', 'pending']);
 
 export const ZGetAudienceQuery = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   search: z.string().trim().optional(),
   sortBy: AudienceSortBy.default('createdAt'),
-  sortOrder: AudienceSortOrder.default('desc')
+  sortOrder: AudienceSortOrder.default('desc'),
+  /** Repeatable in the query string; absent means every role. */
+  roleIds: z
+    .union([ZOrganizationRoleId, z.array(ZOrganizationRoleId)])
+    .optional()
+    .transform((value) => {
+      if (value === undefined) return undefined;
+
+      return Array.isArray(value) ? value : [value];
+    }),
+  departmentId: z.coerce.number().int().positive().optional(),
+  positionId: z.coerce.number().int().positive().optional(),
+  status: AudienceStatus.optional()
 });
 
 export type TAudienceSortBy = z.infer<typeof AudienceSortBy>;
@@ -42,6 +65,11 @@ export const ZCreateAudienceMember = z
     managerEmail: z.email().optional(),
     courseIds: z.array(z.string().uuid()).optional(),
     cohortIds: z.array(z.string().uuid()).optional(),
+    /**
+     * Which role the member is created with. Defaults to student so existing callers,
+     * including the CSV import, keep their behaviour.
+     */
+    roleId: ZOrganizationRoleId.default(3),
     sendEmail: z.boolean().default(true),
     /**
      * cPanel/Office 365 migration coexistence: deliver the invite email to
@@ -112,3 +140,37 @@ export const ZAudienceInviteByEmail = z.object({
 });
 
 export type TAudienceInviteByEmail = z.infer<typeof ZAudienceInviteByEmail>;
+
+/**
+ * Editing an existing member. Every field is optional so the form can send only what changed;
+ * `email` is absent on purpose — it is the account identity and has its own flow for pending
+ * invites (`updatePendingAudienceMemberEmail`).
+ */
+export const ZUpdateAudienceMember = z
+  .object({
+    firstName: optionalTrimmedString,
+    lastName: optionalTrimmedString,
+    jobTitle: optionalTrimmedString,
+    department: optionalTrimmedString,
+    positionId: z.coerce.number().int().positive().nullable().optional(),
+    departmentId: z.coerce.number().int().positive().nullable().optional(),
+    managerMemberId: z.coerce.number().int().positive().nullable().optional(),
+    managerEmail: z.email().optional(),
+    roleId: ZOrganizationRoleId.optional()
+  })
+  .refine((data) => !(data.managerMemberId && data.managerEmail), {
+    message: 'Provide either managerMemberId or managerEmail, not both',
+    path: ['managerEmail']
+  })
+  .refine((data) => !(data.positionId && data.jobTitle), {
+    message: 'Provide either positionId or jobTitle, not both',
+    path: ['jobTitle']
+  });
+
+export type TUpdateAudienceMember = z.infer<typeof ZUpdateAudienceMember>;
+
+export const ZAudienceMemberParam = z.object({
+  memberId: z.coerce.number().int().positive()
+});
+
+export type TAudienceMemberParam = z.infer<typeof ZAudienceMemberParam>;

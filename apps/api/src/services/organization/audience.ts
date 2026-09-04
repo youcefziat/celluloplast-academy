@@ -4,7 +4,8 @@ import type {
   TAudienceImportRow,
   TAudienceInviteByEmail,
   TCreateAudienceMember,
-  TImportAudienceMembers
+  TImportAudienceMembers,
+  TUpdateAudienceMember
 } from '@cio/utils/validation/organization';
 import { addGroupMembers, enrollUsersInCourseGroups, getExistingGroupMembers } from '@cio/db/queries/group';
 import { invalidateOrgStats } from '@cio/core/utils/redis/org-stats-cache';
@@ -30,7 +31,7 @@ import {
   revokeActiveOrganizationInvitesByEmails
 } from '@cio/db/queries/organization';
 import { getCourseGroupIds, getOrgCourseGroups, getOrgCourses } from '@cio/db/queries/course';
-import { updateOrganizationAudienceMember } from '@cio/db/queries/organization';
+import { countOrganizationMembersByRole, updateOrganizationAudienceMember } from '@cio/db/queries/organization';
 
 import { ROLE } from '@cio/utils/constants';
 import crypto from 'node:crypto';
@@ -41,6 +42,8 @@ import { ensureComplianceEnrollmentRecordsForProfiles } from '../course/complian
 import { getWelcomeSessionIcs } from '../course/session-invite';
 import { syncMemberToMatchingPublishedCourses } from '../course/audience-assignment';
 import { buildDeliveryEmailOverrides } from './invite-delivery';
+import { sendStaffOrgInvite } from './invite';
+import { assertRoleChangeAllowed } from './role-rules';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ORG_INVITE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
@@ -341,7 +344,12 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     throw new AppError('This email is already in the organization', ErrorCodes.VALIDATION_ERROR, 409, 'email');
   }
 
-  await assertStudentCapacityOrThrow(orgId, 1);
+  const roleId = data.roleId;
+  const isStudent = roleId === ROLE.STUDENT;
+
+  if (isStudent) {
+    await assertStudentCapacityOrThrow(orgId, 1);
+  }
 
   const managerResolution = await resolveManagerMemberId(orgId, {
     managerMemberId: data.managerMemberId,
@@ -363,7 +371,7 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     {
       organizationId: orgId,
       email,
-      roleId: ROLE.STUDENT,
+      roleId,
       verified: false,
       firstName: data.firstName,
       lastName: data.lastName,
@@ -394,21 +402,40 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     accessNamesLabel = labelParts.length > 0 ? labelParts.join(', ') : undefined;
   }
 
-  const inviteOutcome = await createStudentOrgInvitesAndSendEmails({
-    orgId,
-    organization,
-    emails: [email],
-    courseIds,
-    cohortIds,
-    accessNamesLabel,
-    invitedByProfileId,
-    shouldSendEmail: data.sendEmail,
-    deliveryEmailOverrides: buildDeliveryEmailOverrides([email], data.office365)
-  });
+  let inviteOutcome = { created: 1, emailsSent: 0, emailsFailed: 0 };
+
+  if (isStudent) {
+    inviteOutcome = await createStudentOrgInvitesAndSendEmails({
+      orgId,
+      organization,
+      emails: [email],
+      courseIds,
+      cohortIds,
+      accessNamesLabel,
+      invitedByProfileId,
+      shouldSendEmail: data.sendEmail,
+      deliveryEmailOverrides: buildDeliveryEmailOverrides([email], data.office365)
+    });
+  } else if (data.sendEmail) {
+    // Admins and tutors get the role-bearing invite, which names the role and links to the
+    // team accept flow rather than to course access.
+    await sendStaffOrgInvite({
+      orgId,
+      organization: { name: organization.name, siteName: organization.siteName },
+      email,
+      roleId,
+      invitedByProfileId,
+      useOffice365Delivery: data.office365,
+      source: 'ORG_USER_FORM'
+    });
+    inviteOutcome = { created: 1, emailsSent: 1, emailsFailed: 0 };
+  }
 
   const member = await getOrganizationAudienceMember(orgId, created.id);
 
-  if (member) {
+  // Audience rules enrol learners by job title and department; staff should not be pulled
+  // into courses as students by that same matching.
+  if (member && isStudent) {
     const hrStrings = audienceMemberHrStrings(member);
     await syncMemberToMatchingPublishedCourses(orgId, {
       memberId: member.id,
@@ -423,6 +450,87 @@ export async function createAudienceMember(orgId: string, data: TCreateAudienceM
     member,
     emailsSent: inviteOutcome.emailsSent,
     emailsFailed: inviteOutcome.emailsFailed,
+    warnings: managerResolution.warning ? [managerResolution.warning] : []
+  };
+}
+
+/**
+ * Edits an existing member, including their role.
+ *
+ * Two guards protect the organization from locking itself out: an admin cannot demote their
+ * own account, and the last remaining admin cannot be demoted at all. Both are checked here
+ * rather than in the route so every caller inherits them.
+ */
+export async function updateAudienceMember(
+  orgId: string,
+  memberId: number,
+  data: TUpdateAudienceMember,
+  actorProfileId: string
+) {
+  const member = await getOrganizationAudienceMember(orgId, memberId);
+
+  if (!member) {
+    throw new AppError('Audience member not found', ErrorCodes.NOT_FOUND, 404);
+  }
+
+  const nextRoleId = data.roleId;
+  const isRoleChanging = nextRoleId !== undefined && nextRoleId !== member.roleId;
+
+  if (isRoleChanging && member.roleId === ROLE.ADMIN) {
+    // Only count when it can matter; the query is pointless for a non-admin.
+    const adminCount = await countOrganizationMembersByRole(orgId, ROLE.ADMIN);
+
+    assertRoleChangeAllowed({
+      currentRoleId: member.roleId,
+      memberProfileId: member.profileId,
+      actorProfileId,
+      adminCount
+    });
+  }
+
+  const managerResolution = await resolveManagerMemberId(orgId, {
+    managerMemberId: data.managerMemberId ?? undefined,
+    managerEmail: data.managerEmail
+  });
+
+  const hrResolution = await resolveAudienceHrRefs(orgId, {
+    positionId: data.positionId ?? undefined,
+    departmentId: data.departmentId ?? undefined,
+    jobTitle: data.jobTitle,
+    department: data.department
+  });
+
+  if (hrResolution.error) {
+    throw new AppError(hrResolution.error, ErrorCodes.VALIDATION_ERROR, 400, 'jobTitle');
+  }
+
+  const changes: Parameters<typeof updateOrganizationAudienceMember>[2] = {};
+
+  if (data.firstName !== undefined) changes.firstName = data.firstName ?? null;
+  if (data.lastName !== undefined) changes.lastName = data.lastName ?? null;
+  if (isRoleChanging) changes.roleId = nextRoleId;
+
+  // An explicit null clears the reference; leaving the field out keeps the current value.
+  if (data.positionId !== undefined || data.jobTitle !== undefined) {
+    changes.positionId = hrResolution.refs.positionId;
+  }
+
+  if (data.departmentId !== undefined || data.department !== undefined) {
+    changes.departmentId = hrResolution.refs.departmentId;
+  }
+
+  if (data.managerMemberId !== undefined || data.managerEmail !== undefined) {
+    changes.managerMemberId = data.managerMemberId === null ? null : managerResolution.managerMemberId;
+  }
+
+  if (Object.keys(changes).length > 0) {
+    await updateOrganizationAudienceMember(orgId, memberId, changes);
+  }
+
+  const updated = await getOrganizationAudienceMember(orgId, memberId);
+
+  return {
+    member: updated,
     warnings: managerResolution.warning ? [managerResolution.warning] : []
   };
 }

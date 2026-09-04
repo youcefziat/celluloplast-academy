@@ -1,6 +1,7 @@
 import {
   assignAudienceToCourses,
   createAudienceMember,
+  updateAudienceMember,
   importAudienceMembers,
   resendAudienceInvite,
   revokeAudiencePendingInvite
@@ -9,7 +10,9 @@ import {
   ZAssignAudienceCourses,
   ZAudienceInviteByEmail,
   ZCancelOrgPlan,
+  ZAudienceMemberParam,
   ZCreateAudienceMember,
+  ZUpdateAudienceMember,
   ZCreateLinkInvite,
   ZCreateOrgPlan,
   ZCreateOrganization,
@@ -463,6 +466,31 @@ export const organizationRouter = new Hono()
       return handleError(c, error, 'Failed to create audience member');
     }
   })
+  /**
+   * PATCH /organization/audience/:memberId
+   * Edits a member, including their role. Admin-only: this is how someone is promoted.
+   */
+  .patch(
+    '/audience/:memberId',
+    authMiddleware,
+    orgAdminMiddleware,
+    zValidator('param', ZAudienceMemberParam),
+    zValidator('json', ZUpdateAudienceMember),
+    async (c) => {
+      try {
+        const orgId = c.req.header('cio-org-id')!;
+        const user = c.get('user')!;
+        const { memberId } = c.req.valid('param');
+        const data = c.req.valid('json');
+
+        const result = await updateAudienceMember(orgId, memberId, data, user.id);
+
+        return c.json({ success: true, data: result }, 200);
+      } catch (error) {
+        return handleError(c, error, 'Failed to update audience member');
+      }
+    }
+  )
   /**
    * DELETE /organization/audience/:memberId
    * Removes a student from the organization

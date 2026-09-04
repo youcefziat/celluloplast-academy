@@ -71,7 +71,7 @@ function buildTeamInviteLink(token: string): string {
   return `${getAppBaseUrl()}/invite/${encodeURIComponent(token)}`;
 }
 
-function getRoleLabel(roleId: number): string {
+export function getRoleLabel(roleId: number): string {
   if (roleId === ROLE.ADMIN) return 'Admin';
   if (roleId === ROLE.TUTOR) return 'Tutor';
   if (roleId === ROLE.STUDENT) return 'Student';
@@ -269,77 +269,126 @@ export async function inviteTeamMembers(
   const inviterName = inviterProfile?.fullname?.trim() || undefined;
 
   for (const email of emailsToInvite) {
-    try {
-      const token = generateToken();
-      const tokenHash = hashToken(token);
-
-      const invite = await createOrganizationInvite({
-        organizationId: orgId,
-        roleId,
-        email,
-        tokenHash,
-        createdByProfileId: invitedByProfileId,
-        expiresAt,
-        isRevoked: false,
-        metadata: {
-          source: 'ORG_SETTINGS_TEAM_INVITE'
-        }
-      });
-
-      await recordOrganizationInviteAudit(invite.id, orgId, 'CREATED', {
-        actorProfileId: invitedByProfileId,
-        targetEmail: email,
-        metadata: {
-          roleId,
-          roleName,
-          expiresAt
-        }
-      });
-
-      const inviteLink = buildTeamInviteLink(token);
-      const deliveryEmail = resolveInviteDeliveryEmail(email, useOffice365Delivery);
-
-      try {
-        await enqueueTransactionalEmail('inviteTeacher', {
-          to: deliveryEmail,
-          fields: {
-            email,
-            orgName: organization.name,
-            orgSiteName: organization.siteName,
-            roleName,
-            inviterName,
-            expiresAt: getExpiryLabel(expiresAt),
-            inviteLink,
-            branding: buildEmailBranding(organization)
-          },
-          from: buildEmailFromName(`${organization.name} (via Celluloplast Academy)`),
-          subject: sanitizeEmailSubject(`You have been invited to join ${organization.name} on Celluloplast Academy`),
-          idempotencyKey: `org-invite-teacher:${invite.id}`
-        });
-
-        // Record EMAIL_SENT optimistically — the worker retries up to 5 times,
-        // and a final failure flips the email_delivery row to `failed` for
-        // operator follow-up. EMAIL_FAILED here only means the enqueue itself
-        // failed (DB outbox write or transient validation error).
-        await recordOrganizationInviteAudit(invite.id, orgId, 'EMAIL_SENT', {
-          actorProfileId: invitedByProfileId,
-          targetEmail: email
-        });
-      } catch (emailError) {
-        const message = emailError instanceof Error ? emailError.message : 'Unknown email error';
-
-        await recordOrganizationInviteAudit(invite.id, orgId, 'EMAIL_FAILED', {
-          actorProfileId: invitedByProfileId,
-          targetEmail: email,
-          metadata: { error: message }
-        });
-      }
-    } catch (error) {
-      console.error(`Failed to create org invite for ${email}:`, error);
-    }
+    await sendStaffOrgInvite({
+      orgId,
+      organization: { name: organization.name, siteName: organization.siteName },
+      email,
+      roleId,
+      roleName,
+      inviterName,
+      invitedByProfileId,
+      expiresAt,
+      useOffice365Delivery,
+      source: 'ORG_SETTINGS_TEAM_INVITE'
+    });
   }
 
   return members;
+}
+
+/**
+ * Creates one staff invite row and sends its email. Split out of `inviteTeamMembers` so the
+ * unified user form can invite an admin or tutor for a member it has already created, without
+ * a second member row being inserted underneath it.
+ */
+export async function sendStaffOrgInvite(input: {
+  orgId: string;
+  /** Both callers reject an organization without a siteName before reaching here. */
+  organization: { name: string; siteName: string };
+  email: string;
+  roleId: number;
+  roleName?: string;
+  inviterName?: string;
+  invitedByProfileId: string;
+  expiresAt?: string;
+  useOffice365Delivery?: boolean;
+  source?: string;
+}): Promise<void> {
+  const {
+    orgId,
+    organization,
+    email,
+    roleId,
+    invitedByProfileId,
+    useOffice365Delivery = false,
+    source = 'ORG_SETTINGS_TEAM_INVITE'
+  } = input;
+
+  const roleName = input.roleName ?? getRoleLabel(roleId);
+  const expiresAt = input.expiresAt ?? new Date(Date.now() + ORG_INVITE_EXPIRY_MS).toISOString();
+
+  // Only look the inviter up when the caller has not already resolved it (the bulk path has).
+  const inviterProfile = input.inviterName || !invitedByProfileId ? null : await getProfileById(invitedByProfileId);
+  const inviterName = input.inviterName ?? inviterProfile?.fullname?.trim() ?? undefined;
+
+  try {
+    const token = generateToken();
+    const tokenHash = hashToken(token);
+
+    const invite = await createOrganizationInvite({
+      organizationId: orgId,
+      roleId,
+      email,
+      tokenHash,
+      createdByProfileId: invitedByProfileId,
+      expiresAt,
+      isRevoked: false,
+      metadata: {
+        source
+      }
+    });
+
+    await recordOrganizationInviteAudit(invite.id, orgId, 'CREATED', {
+      actorProfileId: invitedByProfileId,
+      targetEmail: email,
+      metadata: {
+        roleId,
+        roleName,
+        expiresAt
+      }
+    });
+
+    const inviteLink = buildTeamInviteLink(token);
+    const deliveryEmail = resolveInviteDeliveryEmail(email, useOffice365Delivery);
+
+    try {
+      await enqueueTransactionalEmail('inviteTeacher', {
+        to: deliveryEmail,
+        fields: {
+          email,
+          orgName: organization.name,
+          orgSiteName: organization.siteName,
+          roleName,
+          inviterName,
+          expiresAt: getExpiryLabel(expiresAt),
+          inviteLink,
+          branding: buildEmailBranding(organization)
+        },
+        from: buildEmailFromName(`${organization.name} (via Celluloplast Academy)`),
+        subject: sanitizeEmailSubject(`You have been invited to join ${organization.name} on Celluloplast Academy`),
+        idempotencyKey: `org-invite-teacher:${invite.id}`
+      });
+
+      // Record EMAIL_SENT optimistically — the worker retries up to 5 times,
+      // and a final failure flips the email_delivery row to `failed` for
+      // operator follow-up. EMAIL_FAILED here only means the enqueue itself
+      // failed (DB outbox write or transient validation error).
+      await recordOrganizationInviteAudit(invite.id, orgId, 'EMAIL_SENT', {
+        actorProfileId: invitedByProfileId,
+        targetEmail: email
+      });
+    } catch (emailError) {
+      const message = emailError instanceof Error ? emailError.message : 'Unknown email error';
+
+      await recordOrganizationInviteAudit(invite.id, orgId, 'EMAIL_FAILED', {
+        actorProfileId: invitedByProfileId,
+        targetEmail: email,
+        metadata: { error: message }
+      });
+    }
+  } catch (error) {
+    console.error(`Failed to create org invite for ${email}:`, error);
+  }
 }
 
 /**
